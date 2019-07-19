@@ -1,42 +1,84 @@
 package com.gahee.rss_v2.retrofit.tags;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Root(name = "channel", strict = false)
-public class Channel implements Serializable {
+public class Channel implements Parcelable {
 
-    @Element(name = "title")
-    private String title;
+    @Element(name = "title", required = false)
+    private String channelTitle;
 
-    @Element(name = "description")
-    private String description;
+    @Element(name = "description", required = false)
+    private String channelDescription;
 
-    @Element(name = "link")
-    private String link;
+    @Path("channel/link")
+    @Element(name = "link", required = false)
+    private String channelLink;
 //    http://www.nasa.gov/
     @ElementList(entry = "item", inline = true, required = false)
-    private Item item;
+    private List<Item> item;
 
     @Element(name = "image", required = false)
     private Image image;
 
-    public String getTitle() {
-        return title;
+    public Channel(){
+
     }
 
-    public String getDescription() {
-        return description;
+    Channel(Parcel in) {
+        channelTitle = in.readString();
+        channelDescription = in.readString();
+        channelLink = in.readString();
+        item = in.createTypedArrayList(Item.CREATOR);
+        image = in.readParcelable(Image.class.getClassLoader());
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(channelTitle);
+        dest.writeString(channelDescription);
+        dest.writeString(channelLink);
+        dest.writeTypedList(item);
+        dest.writeParcelable(image, flags);
     }
 
-    public String getLink() {
-        return link;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public Item getItem() {
+    public static final Creator<Channel> CREATOR = new Creator<Channel>() {
+        @Override
+        public Channel createFromParcel(Parcel in) {
+            return new Channel(in);
+        }
+
+        @Override
+        public Channel[] newArray(int size) {
+            return new Channel[size];
+        }
+    };
+
+    public String getChannelTitle() {
+        return channelTitle;
+    }
+
+    public String getChannelDescription() {
+        return channelDescription;
+    }
+
+    public String getChannelLink() {
+        return channelLink;
+    }
+
+    public List<Item> getItem() {
         return item;
     }
 
