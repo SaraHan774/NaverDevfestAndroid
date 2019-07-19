@@ -24,6 +24,25 @@ public class ChannelObj implements Parcelable {
         this.mChannelImageUrl = mChannelImageUrl;
     }
 
+    public String getmChannelTitle() {
+        return mChannelTitle;
+    }
+
+    public String getmChannelDescription() {
+        return mChannelDescription;
+    }
+
+    public String getmChannelLink() {
+        return mChannelLink;
+    }
+
+    public List<Item> getmItemList() {
+        return mItemList;
+    }
+
+    public String getmChannelImageUrl() {
+        return mChannelImageUrl;
+    }
 
     private ChannelObj(Parcel in) {
         mChannelTitle = in.readString();

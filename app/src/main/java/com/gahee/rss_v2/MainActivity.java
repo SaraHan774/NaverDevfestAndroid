@@ -2,10 +2,13 @@ package com.gahee.rss_v2;
 
 import android.os.Bundle;
 
+import com.gahee.rss_v2.databinding.ActivityMainBinding;
+import com.gahee.rss_v2.retrofit.RemoteViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,12 +21,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        ActivityMainBinding activityMainBinding =
+                DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        activityMainBinding.navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragmentTransactionHelper(new HomeFragment());
+        RemoteViewModel remoteViewModel = new RemoteViewModel();
+        remoteViewModel.fetchDataFromRemote();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
