@@ -1,10 +1,9 @@
-package com.gahee.rss_v2.retrofit.model;
+package com.gahee.rss_v2.retrofitNasa.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.gahee.rss_v2.retrofit.tags.Image;
-import com.gahee.rss_v2.retrofit.tags.Item;
+import com.gahee.rss_v2.retrofitNasa.tags.Item;
 
 import java.util.List;
 

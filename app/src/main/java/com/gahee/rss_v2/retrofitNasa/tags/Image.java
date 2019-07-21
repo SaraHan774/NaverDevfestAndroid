@@ -1,12 +1,10 @@
-package com.gahee.rss_v2.retrofit.tags;
+package com.gahee.rss_v2.retrofitNasa.tags;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
-
-import java.io.Serializable;
 
 @Root(name = "image", strict = false)
 public class Image implements Parcelable {

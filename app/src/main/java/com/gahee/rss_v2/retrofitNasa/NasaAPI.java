@@ -1,6 +1,6 @@
-package com.gahee.rss_v2.retrofit;
+package com.gahee.rss_v2.retrofitNasa;
 
-import com.gahee.rss_v2.retrofit.tags.Rss;
+import com.gahee.rss_v2.retrofitNasa.tags.Rss;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

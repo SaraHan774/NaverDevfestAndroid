@@ -1,12 +1,10 @@
-package com.gahee.rss_v2;
+package com.gahee.rss_v2.myFeed;
 
 import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,11 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
+import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.databinding.FragmentFeedBinding;
-import com.gahee.rss_v2.retrofit.RemoteViewModel;
-import com.gahee.rss_v2.retrofit.model.ChannelObj;
+import com.gahee.rss_v2.remoteData.RemoteViewModel;
+import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
 
 import java.util.ArrayList;
 

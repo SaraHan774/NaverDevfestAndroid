@@ -3,7 +3,8 @@ package com.gahee.rss_v2;
 import android.os.Bundle;
 
 import com.gahee.rss_v2.databinding.ActivityMainBinding;
-import com.gahee.rss_v2.retrofit.RemoteViewModel;
+import com.gahee.rss_v2.myFeed.FeedFragment;
+import com.gahee.rss_v2.remoteData.RemoteViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransactionHelper(new HomeFragment());
         RemoteViewModel remoteViewModel = new RemoteViewModel();
         remoteViewModel.fetchDataFromRemote();
+
+        remoteViewModel.fetchYTDataFromRemote();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_placeholder, fragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 

@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.retrofit.model;
+package com.gahee.rss_v2.retrofitNasa.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

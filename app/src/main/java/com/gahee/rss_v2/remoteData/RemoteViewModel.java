@@ -1,10 +1,10 @@
-package com.gahee.rss_v2.retrofit;
+package com.gahee.rss_v2.remoteData;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gahee.rss_v2.retrofit.model.ArticleObj;
-import com.gahee.rss_v2.retrofit.model.ChannelObj;
+import com.gahee.rss_v2.retrofitNasa.model.ArticleObj;
+import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
 
 import java.util.ArrayList;
 
@@ -27,6 +27,8 @@ public class RemoteViewModel extends ViewModel {
     public void fetchDataFromRemote(){
         mRemoteRepository.fetchData();
     }
+
+    public void fetchYTDataFromRemote(){mRemoteRepository.fetchYtData();}
 
 
 }

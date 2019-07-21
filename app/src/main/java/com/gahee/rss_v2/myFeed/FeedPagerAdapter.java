@@ -1,19 +1,22 @@
-package com.gahee.rss_v2;
+package com.gahee.rss_v2.myFeed;
 
 import android.content.Context;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.PagerAdapter;
+
+import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.databinding.FeedSliderBinding;
-import com.gahee.rss_v2.retrofit.model.ChannelObj;
-import com.gahee.rss_v2.retrofit.tags.Item;
+import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
+import com.gahee.rss_v2.retrofitNasa.tags.Item;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class FeedPagerAdapter extends PagerAdapter {
@@ -55,10 +58,12 @@ public class FeedPagerAdapter extends PagerAdapter {
         feedSliderBinding.tvArticleTitle.setText(item.getTitle());
         feedSliderBinding.tvPubdate.setText(item.getPubDate());
 
+        String imageUrl = item.getEnclosure().getUrl();
+        feedSliderBinding.setImageUrl(stripItokTokenFromImageUrl(imageUrl));
+        feedSliderBinding.setContext(mContext);
 
         Log.d(TAG, "instantiate item running ...." );
         container.addView(feedSliderBinding.getRoot());
-//        Log.d(TAG, "get root () :  " + feedSliderBinding.getRoot());
         return feedSliderBinding.getRoot();
     }
 
@@ -67,5 +72,17 @@ public class FeedPagerAdapter extends PagerAdapter {
         Log.d(TAG, "destroyItem");
         View view = (View) object;
         container.removeView(view);
+    }
+
+    private String stripItokTokenFromImageUrl(String string){
+        Pattern pattern = Pattern.compile("\\?itok");
+        Matcher matcher = pattern.matcher(string);
+        String cleanString = "";
+        while(matcher.find()){
+            int index = matcher.start();
+            cleanString = string.substring(0, index);
+        }
+        Log.d(TAG, cleanString);
+        return cleanString;
     }
 }
