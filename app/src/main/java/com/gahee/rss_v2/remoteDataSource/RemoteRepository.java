@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.remoteData;
+package com.gahee.rss_v2.remoteDataSource;
 
 import android.os.AsyncTask;
 
@@ -6,9 +6,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.gahee.rss_v2.retrofitNasa.model.ArticleObj;
 import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
+import com.gahee.rss_v2.retrofitTime.model.TimeArticle;
+import com.gahee.rss_v2.retrofitTime.model.TimeChannel;
 import com.gahee.rss_v2.retrofitYT.model.YoutubeChannel;
 import com.gahee.rss_v2.retrofitYT.model.YoutubeVideo;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class RemoteRepository {
@@ -50,6 +53,13 @@ public class RemoteRepository {
 
     //Time news
     public void fetchTimeData(){new FetchTimeDataAsync(mRemoteDataUtils).execute();}
+    public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelLiveData(){
+        return mRemoteDataUtils.getmTimeChannelLiveData();
+    }
+
+    public MutableLiveData<ArrayList<TimeArticle>> getTimeArticleLiveData(){
+        return mRemoteDataUtils.getmTimeArticleLiveData();
+    }
 
 
 

@@ -1,6 +1,5 @@
-package com.gahee.rss_v2.remoteData;
+package com.gahee.rss_v2.remoteDataSource;
 
-import android.graphics.LinearGradient;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -12,6 +11,8 @@ import com.gahee.rss_v2.retrofitNasa.tags.Channel;
 import com.gahee.rss_v2.retrofitNasa.tags.Item;
 import com.gahee.rss_v2.retrofitNasa.tags.Rss;
 import com.gahee.rss_v2.retrofitTime.TimeAPI;
+import com.gahee.rss_v2.retrofitTime.model.TimeArticle;
+import com.gahee.rss_v2.retrofitTime.model.TimeChannel;
 import com.gahee.rss_v2.retrofitYT.model.YoutubeChannel;
 import com.gahee.rss_v2.retrofitYT.model.YoutubeVideo;
 import com.gahee.rss_v2.retrofitYT.tags.Entry;
@@ -33,8 +34,12 @@ public class RemoteDataUtils {
 
     private MutableLiveData<ArrayList<ChannelObj>> mChannelMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<ArticleObj>> mArticleMutableLiveData = new MutableLiveData<>();
+
     private MutableLiveData<ArrayList<YoutubeChannel>> mYoutubeChannelLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<YoutubeVideo>> mYoutubeVideoLiveData = new MutableLiveData<>();
+
+    private MutableLiveData<ArrayList<TimeChannel>> mTimeChannelLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<TimeArticle>> mTimeArticleLiveData = new MutableLiveData<>();
 
 
     private static RemoteDataUtils instance;
@@ -118,6 +123,8 @@ public class RemoteDataUtils {
     }
 
 
+    private ArrayList<TimeChannel> timeChannelArrayList = new ArrayList<>();
+    private ArrayList<TimeArticle> timeArticleArrayList = new ArrayList<>();
 
     private void fetchDataFromTime(){
 
@@ -127,8 +134,14 @@ public class RemoteDataUtils {
             @Override
             public void onResponse(Call<com.gahee.rss_v2.retrofitTime.tags.Rss> call, Response<com.gahee.rss_v2.retrofitTime.tags.Rss> response) {
                 if(response.body() != null){
-                    Log.d(TAG, "title : " + response.body().getChannel().getTitle() + " \n" +
-                            "article title : " + response.body().getChannel().getItems().get(3).getArticleTitle());
+                    String channelTitle = response.body().getChannel().getTitle();
+                    String channelDescription = response.body().getChannel().getDescription();
+                    List<com.gahee.rss_v2.retrofitTime.tags.Item> items = response.body().getChannel().getItems();
+
+                    TimeChannel timeChannel = new TimeChannel(channelTitle, channelDescription, items);
+                    timeChannelArrayList.add(timeChannel);
+                    mTimeChannelLiveData.setValue(timeChannelArrayList);
+                    storeEachTimeArticle(items);
                 }
             }
 
@@ -177,6 +190,22 @@ public class RemoteDataUtils {
         }
     }
 
+    private void storeEachTimeArticle(List<com.gahee.rss_v2.retrofitTime.tags.Item> items){
+        if(items != null){
+            for(com.gahee.rss_v2.retrofitTime.tags.Item item : items){
+                String articleTitle = item.getArticleTitle();
+                String articlePubDate = item.getPubDate();
+                String articleDescription = item.getArticleDesc();
+                com.gahee.rss_v2.retrofitTime.tags.Item.Thumbnail thumbnail = item.getThumbnail();
+                String articleLink = item.getArticleLink();
+
+                TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, articleLink);
+                timeArticleArrayList.add(timeArticle);
+            }
+            mTimeArticleLiveData.setValue(timeArticleArrayList);
+        }
+    }
+
 
     public MutableLiveData<ArrayList<ArticleObj>> getmArticleMutableLiveData() {
         return mArticleMutableLiveData;
@@ -192,6 +221,14 @@ public class RemoteDataUtils {
 
     public MutableLiveData<ArrayList<YoutubeVideo>> getmYoutubeVideoLiveData() {
         return mYoutubeVideoLiveData;
+    }
+
+    public MutableLiveData<ArrayList<TimeChannel>> getmTimeChannelLiveData() {
+        return mTimeChannelLiveData;
+    }
+
+    public MutableLiveData<ArrayList<TimeArticle>> getmTimeArticleLiveData() {
+        return mTimeArticleLiveData;
     }
 
     public void fetchRemoteData(){

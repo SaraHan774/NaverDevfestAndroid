@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.databinding.FragmentFeedBinding;
-import com.gahee.rss_v2.remoteData.RemoteViewModel;
+import com.gahee.rss_v2.remoteDataSource.RemoteViewModel;
 import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
 
 import java.util.ArrayList;

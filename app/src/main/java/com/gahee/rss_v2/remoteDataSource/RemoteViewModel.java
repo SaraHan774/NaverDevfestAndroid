@@ -1,10 +1,12 @@
-package com.gahee.rss_v2.remoteData;
+package com.gahee.rss_v2.remoteDataSource;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.gahee.rss_v2.retrofitNasa.model.ArticleObj;
 import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
+import com.gahee.rss_v2.retrofitTime.model.TimeArticle;
+import com.gahee.rss_v2.retrofitTime.model.TimeChannel;
 import com.gahee.rss_v2.retrofitYT.model.YoutubeChannel;
 import com.gahee.rss_v2.retrofitYT.model.YoutubeVideo;
 
@@ -34,12 +36,20 @@ public class RemoteViewModel extends ViewModel {
         return mRemoteRepository.getYoutubeVideoLiveData();
     }
 
-    public void fetchDataFromRemote(){
+    public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelLiveData(){
+        return mRemoteRepository.getTimeChannelLiveData();
+    }
+
+    public MutableLiveData<ArrayList<TimeArticle>> getTimeArticleLiveData(){
+        return mRemoteRepository.getTimeArticleLiveData();
+    }
+
+    public void fetchNasaDataFromRemote(){
         mRemoteRepository.fetchData();
     }
 
-    public void fetchYTDataFromRemote(){mRemoteRepository.fetchYtData();}
+    public void fetchYouTubeDataFromRemote(){mRemoteRepository.fetchYtData();}
 
-    public void fetchTimeDaraFromRemote(){mRemoteRepository.fetchTimeData();}
+    public void fetchTimeDataFromRemote(){mRemoteRepository.fetchTimeData();}
 
 }

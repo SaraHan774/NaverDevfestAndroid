@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.remoteData;
+package com.gahee.rss_v2.remoteDataSource;
 
 import com.gahee.rss_v2.retrofitNasa.NasaAPI;
 import com.gahee.rss_v2.retrofitTime.TimeAPI;
