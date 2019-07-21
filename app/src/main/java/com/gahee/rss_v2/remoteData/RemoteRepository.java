@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.gahee.rss_v2.retrofitNasa.model.ArticleObj;
 import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
+import com.gahee.rss_v2.retrofitYT.model.YoutubeChannel;
+import com.gahee.rss_v2.retrofitYT.model.YoutubeVideo;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,15 @@ public class RemoteRepository {
 
     //youtube
     public void fetchYtData(){new FetchYtDataAsync(mRemoteDataUtils).execute();}
+    public MutableLiveData<ArrayList<YoutubeChannel>> getYoutubeChannelLiveData(){
+        return mRemoteDataUtils.getmYoutubeChannelLiveData();
+    }
+    public MutableLiveData<ArrayList<YoutubeVideo>> getYoutubeVideoLiveData(){
+        return mRemoteDataUtils.getmYoutubeVideoLiveData();
+    }
+
+    //Time news
+    public void fetchTimeData(){new FetchTimeDataAsync(mRemoteDataUtils).execute();}
 
 
 
@@ -65,7 +76,21 @@ public class RemoteRepository {
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            mRemoteDataUtils.fetchYTRemoteData();
+            mRemoteDataUtils.fetchRemoteYoutubeData();
+            return null;
+        }
+    }
+
+    private static class FetchTimeDataAsync extends AsyncTask<Void, Void, Void>{
+        RemoteDataUtils mRemoteDataUtils;
+
+        public FetchTimeDataAsync(RemoteDataUtils remoteDataUtils){
+            this.mRemoteDataUtils = remoteDataUtils;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mRemoteDataUtils.fetchRemoteTimeData();
             return null;
         }
     }

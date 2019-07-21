@@ -30,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransactionHelper(new HomeFragment());
         RemoteViewModel remoteViewModel = new RemoteViewModel();
         remoteViewModel.fetchDataFromRemote();
-
-        remoteViewModel.fetchYTDataFromRemote();
+        remoteViewModel.fetchTimeDaraFromRemote();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

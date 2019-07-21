@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.retrofitYT;
+package com.gahee.rss_v2.retrofitYT.tags;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -17,7 +17,7 @@ public class Feed implements Parcelable {
     }
 
     @Element(name = "channelid", required = false)
-    private String chennelid;
+    private String channelId;
 
     @Element(name = "title", required = false)
     private String title;
@@ -27,8 +27,8 @@ public class Feed implements Parcelable {
 //https://www.youtube.com/channel/UCD_grdLAvD4nqcqck2E-tuw
 
 
-    public String getChennelid() {
-        return chennelid;
+    public String getChannelId() {
+        return channelId;
     }
 
     public String getTitle() {
@@ -40,14 +40,14 @@ public class Feed implements Parcelable {
     }
 
     protected Feed(Parcel in) {
-        chennelid = in.readString();
+        channelId = in.readString();
         title = in.readString();
         entries = in.createTypedArrayList(Entry.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(chennelid);
+        dest.writeString(channelId);
         dest.writeString(title);
         dest.writeTypedList(entries);
     }

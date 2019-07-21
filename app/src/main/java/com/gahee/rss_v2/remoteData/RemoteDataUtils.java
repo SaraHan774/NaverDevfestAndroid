@@ -1,5 +1,6 @@
 package com.gahee.rss_v2.remoteData;
 
+import android.graphics.LinearGradient;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -10,8 +11,13 @@ import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
 import com.gahee.rss_v2.retrofitNasa.tags.Channel;
 import com.gahee.rss_v2.retrofitNasa.tags.Item;
 import com.gahee.rss_v2.retrofitNasa.tags.Rss;
-import com.gahee.rss_v2.retrofitYT.Feed;
+import com.gahee.rss_v2.retrofitTime.TimeAPI;
+import com.gahee.rss_v2.retrofitYT.model.YoutubeChannel;
+import com.gahee.rss_v2.retrofitYT.model.YoutubeVideo;
+import com.gahee.rss_v2.retrofitYT.tags.Entry;
+import com.gahee.rss_v2.retrofitYT.tags.Feed;
 import com.gahee.rss_v2.retrofitYT.YoutubeAPI;
+import com.gahee.rss_v2.retrofitYT.tags.Media;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +30,12 @@ public class RemoteDataUtils {
 
     private static final String TAG = "RemoteDataUtils";
 
-    private ArrayList<ChannelObj> mChannelObjArrayList = new ArrayList<>();
-    private ArrayList<ArticleObj> mArticleObjArrayList = new ArrayList<>();
+
     private MutableLiveData<ArrayList<ChannelObj>> mChannelMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<ArrayList<ArticleObj>> mArticleMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<YoutubeChannel>> mYoutubeChannelLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<YoutubeVideo>> mYoutubeVideoLiveData = new MutableLiveData<>();
+
 
     private static RemoteDataUtils instance;
 
@@ -38,8 +46,9 @@ public class RemoteDataUtils {
         return instance;
     }
 
-
-    private void fetchData(){
+    private ArrayList<ChannelObj> mChannelObjArrayList = new ArrayList<>();
+    private ArrayList<ArticleObj> mArticleObjArrayList = new ArrayList<>();
+    private void fetchDataFromNasa(){
 
         NasaAPI nasaAPI = RetrofitInstanceBuilder.getNasaApi();
         Call<Rss> call = nasaAPI.getBreakingNews();
@@ -75,20 +84,28 @@ public class RemoteDataUtils {
         });
     }
 
-    private void fetchYoutubeData(){
+
+    private ArrayList<YoutubeChannel> youtubeChannelArrayList = new ArrayList<>();
+    private ArrayList<YoutubeVideo> youtubeVideoArrayList = new ArrayList<>();
+    private void fetchDataFromYoutube(){
         YoutubeAPI youtubeAPI = RetrofitInstanceBuilder.getYoutubeApi();
         Call<Feed> call = youtubeAPI.getYoutubeChannel();
-//        channel_id=UCD_grdLAvD4nqcqck2E-tuw
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
-                if(response.body() != null){
-                    for(int i = 0; i < response.body().getEntries().size() ; i++){
-                        Log.d(TAG, "youtube feed title : " + response.body().getTitle() + "\n"
-                                + "author : " + response.body().getEntries().get(i).getAuthor().getName() + "\n"
-                                + "media : " + response.body().getEntries().get(i).getMedia() + "\n"
-                                + "media thumbnail : " + response.body().getEntries().get(i).getMedia().getThumbnail() );
-                    }
+                if(response.body() != null && response.body().getEntries() != null){
+                    String channelId = response.body().getChannelId();
+                    String channelTitle = response.body().getTitle();
+                    List<Entry> entries = response.body().getEntries();
+                    YoutubeChannel youtubeChannel = new YoutubeChannel(channelId, channelTitle, entries);
+                    youtubeChannelArrayList.add(youtubeChannel);
+
+                    mYoutubeChannelLiveData.setValue(youtubeChannelArrayList);
+                    storeEachVideos(entries);
+//                        Log.d(TAG, "youtube feed title : " + response.body().getTitle() + "\n"
+//                                + "author : " + response.body().getEntries().get(i).getAuthor().getName() + "\n"
+//                                + "media : " + response.body().getEntries().get(i).getMedia() + "\n"
+//                                + "media thumbnail : " + response.body().getEntries().get(i).getMedia().getThumbnail() )
 
                 }
             }
@@ -98,6 +115,31 @@ public class RemoteDataUtils {
                     Log.d(TAG, "failed to fetch from youtube" + t.getMessage());
             }
         });
+    }
+
+
+
+    private void fetchDataFromTime(){
+
+        TimeAPI timeAPI = RetrofitInstanceBuilder.getTimeApi();
+        Call<com.gahee.rss_v2.retrofitTime.tags.Rss> call = timeAPI.getTimeEntertainment();
+        call.enqueue(new Callback<com.gahee.rss_v2.retrofitTime.tags.Rss>() {
+            @Override
+            public void onResponse(Call<com.gahee.rss_v2.retrofitTime.tags.Rss> call, Response<com.gahee.rss_v2.retrofitTime.tags.Rss> response) {
+                if(response.body() != null){
+                    Log.d(TAG, "title : " + response.body().getChannel().getTitle() + " \n" +
+                            "article title : " + response.body().getChannel().getItems().get(3).getArticleTitle());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<com.gahee.rss_v2.retrofitTime.tags.Rss> call, Throwable t) {
+                Log.d(TAG, "failed to fetch from time : " + "\n\n" +
+                        t.getStackTrace() +
+                        " \n\n\n" + t.getMessage());
+            }
+        });
+
     }
 
     //this will be mainly used for search
@@ -119,6 +161,23 @@ public class RemoteDataUtils {
     }
 
 
+    private void storeEachVideos(List<Entry> entries){
+        if(entries != null){
+            for(Entry entry : entries){
+                String videoId = entry.getVideoid();
+                String videoChannelId = entry.getChannelId();
+                String videoTitle = entry.getTitle();
+                String videoAuthor = entry.getAuthor().getName();
+                String videoPubDate = entry.getPublished();
+                Media media = entry.getMedia();
+                YoutubeVideo youtubeVideo = new YoutubeVideo(videoId, videoChannelId, videoTitle, videoAuthor, videoPubDate, media);
+                youtubeVideoArrayList.add(youtubeVideo);
+            }
+            mYoutubeVideoLiveData.setValue(youtubeVideoArrayList);
+        }
+    }
+
+
     public MutableLiveData<ArrayList<ArticleObj>> getmArticleMutableLiveData() {
         return mArticleMutableLiveData;
     }
@@ -127,11 +186,23 @@ public class RemoteDataUtils {
         return mChannelMutableLiveData;
     }
 
-    public void fetchRemoteData(){
-        fetchData();
+    public MutableLiveData<ArrayList<YoutubeChannel>> getmYoutubeChannelLiveData() {
+        return mYoutubeChannelLiveData;
     }
 
-    public void fetchYTRemoteData(){
-        fetchYoutubeData();
+    public MutableLiveData<ArrayList<YoutubeVideo>> getmYoutubeVideoLiveData() {
+        return mYoutubeVideoLiveData;
+    }
+
+    public void fetchRemoteData(){
+        fetchDataFromNasa();
+    }
+
+    public void fetchRemoteYoutubeData(){
+        fetchDataFromYoutube();
+    }
+
+    public void fetchRemoteTimeData(){
+        fetchDataFromTime();
     }
 }

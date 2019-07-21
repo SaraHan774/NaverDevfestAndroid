@@ -1,11 +1,9 @@
-package com.gahee.rss_v2.retrofitYT;
+package com.gahee.rss_v2.retrofitYT.tags;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
-import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 @Root(name = "entry", strict = false)

@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.retrofitYT;
+package com.gahee.rss_v2.retrofitYT.tags;
 
 import android.os.Parcel;
 import android.os.Parcelable;

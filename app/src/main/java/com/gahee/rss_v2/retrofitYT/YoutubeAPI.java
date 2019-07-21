@@ -1,7 +1,8 @@
 package com.gahee.rss_v2.retrofitYT;
+import com.gahee.rss_v2.retrofitYT.tags.Feed;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
 
 public interface YoutubeAPI {
 
