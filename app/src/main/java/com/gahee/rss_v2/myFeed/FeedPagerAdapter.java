@@ -12,8 +12,8 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.databinding.FeedSliderBinding;
-import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
-import com.gahee.rss_v2.retrofitNasa.tags.Item;
+import com.gahee.rss_v2.data.nasa.model.ChannelObj;
+import com.gahee.rss_v2.data.nasa.tags.Item;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,9 +58,11 @@ public class FeedPagerAdapter extends PagerAdapter {
         feedSliderBinding.tvArticleTitle.setText(item.getTitle());
         feedSliderBinding.tvPubdate.setText(item.getPubDate());
 
-        String imageUrl = item.getEnclosure().getUrl();
-        feedSliderBinding.setImageUrl(stripItokTokenFromImageUrl(imageUrl));
-        feedSliderBinding.setContext(mContext);
+//        String imageUrl = item.getEnclosure().getUrl();
+//        feedSliderBinding.setImageUrl(stripItokTokenFromImageUrl(imageUrl));
+//        feedSliderBinding.setContext(mContext);
+
+//        feedSliderBinding.setVideoUrl(item.getEnclosure().getUrl());
 
         Log.d(TAG, "instantiate item running ...." );
         container.addView(feedSliderBinding.getRoot());

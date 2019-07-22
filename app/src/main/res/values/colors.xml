@@ -19,8 +19,14 @@
     <color name="myColorOldBeige">#8c735D</color>
     <color name="myColorLightBeige">#D9D3D0</color>
 
+    <!--NASA color-->
     <color name="nasaBlue">#0E3C91</color>
     <color name="nasaAccent">#fc3d21</color>
     <color name="nasaBlack">#000000</color>
     <color name="nasaWhite">#ffffff</color>
+
+    <!--Youtube color-->
+    <color name="youtubeRed">#FF0000</color>
+    <color name="youtubeBlack">#282828</color>
+    <color name="youtubeWhite">#FFFFFF</color>
 </resources>

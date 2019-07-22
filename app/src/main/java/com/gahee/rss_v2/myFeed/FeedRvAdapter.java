@@ -11,7 +11,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.databinding.ViewHolderFeedBinding;
-import com.gahee.rss_v2.retrofitNasa.model.ChannelObj;
+import com.gahee.rss_v2.data.nasa.model.ChannelObj;
 
 import java.util.ArrayList;
 

@@ -11,6 +11,10 @@
         <variable
             name="context"
             type="android.content.Context" />
+
+        <variable
+            name="videoUrl"
+            type="String" />
     </data>
 
 
@@ -41,14 +45,20 @@
         android:layout_height="wrap_content" />
 
 
+    <!--<ImageView-->
+        <!--android:id="@+id/img_article"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:articleImage="@{imageUrl}"-->
+        <!--app:context="@{context}"-->
+        <!--/>-->
+
     <ImageView
-        android:id="@+id/img_article"
-        android:scaleType="centerCrop"
+        android:id="@+id/thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:articleImage="@{imageUrl}"
-        app:context="@{context}"
-        />
+        app:thumbnailFromVideo="@{videoUrl}"/>
 
 
 </LinearLayout>

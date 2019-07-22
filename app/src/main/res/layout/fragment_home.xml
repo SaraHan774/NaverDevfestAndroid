@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:mContext=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:id="@+id/logo_time_news"
+        android:background="@color/colorWhite"
+        android:src="@drawable/home_time_logo"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HOME" />
+        android:layout_height="150dp" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/logo_nasa"
+        android:background="@color/nasaBlack"
+        android:layout_weight="1"
+        android:src="@drawable/home_nasa_logo"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+
+    <ImageView
+        android:id="@+id/logo_youtube"
+        android:background="@color/youtubeWhite"
+        android:src="@drawable/home_youtube_logo"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+
+
+</LinearLayout>

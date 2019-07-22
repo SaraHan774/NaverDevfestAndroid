@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.gahee.rss_v2.databinding.ActivityMainBinding;
 import com.gahee.rss_v2.myFeed.FeedFragment;
-import com.gahee.rss_v2.remoteDataSource.RemoteViewModel;
+import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fragmentTransactionHelper(new HomeFragment());
         RemoteViewModel remoteViewModel = new RemoteViewModel();
-        remoteViewModel.fetchNasaDataFromRemote();
-        remoteViewModel.fetchTimeDataFromRemote();
+
+//        remoteViewModel.fetchNasaDataFromRepo();
+//        remoteViewModel.fetchTimeDataFromRepo();
+        remoteViewModel.fetchWWFDataFromRepo();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
