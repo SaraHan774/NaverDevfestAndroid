@@ -146,9 +146,9 @@ public class URLReader {
         Document document = Jsoup.parse(item.getContentEncoded());
         Elements links = document.select("img");
         for(Element element : links){
-            Log.d("image links : ", element.attr("src") + "\n");
             String link = element.attr("src");
             if(link.contains("jpg")){
+                Log.d("image links : ", link);
                 mediaLinks.add(link);
             }
         }

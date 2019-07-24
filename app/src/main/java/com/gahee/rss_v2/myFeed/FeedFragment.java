@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.databinding.FragmentFeedBinding;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.gahee.rss_v2.data.nasa.model.ChannelObj;
+import com.gahee.rss_v2.ui.MainFragmentPagerAdapter;
 
 import java.util.ArrayList;
 
@@ -61,13 +63,15 @@ public class FeedFragment extends Fragment {
         remoteViewModel.getChannelMutableLiveData().observe(this, new Observer<ArrayList<ChannelObj>>() {
             @Override
             public void onChanged(ArrayList<ChannelObj> channelObjs) {
-                FeedRvAdapter feedRvAdapter = new FeedRvAdapter(getContext(), channelObjs);
-                RecyclerView recyclerView = fragmentFeedBinding.rvFeedFragment;
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setAdapter(feedRvAdapter);
+
             }
         });
+
+        //set up adapter for the view pager inside dashboard
+        fragmentFeedBinding.viewPagerDashboard.setAdapter(new MainFragmentPagerAdapter(
+                getActivity().getSupportFragmentManager()
+        ));
+
 
         return fragmentFeedBinding.getRoot();
     }

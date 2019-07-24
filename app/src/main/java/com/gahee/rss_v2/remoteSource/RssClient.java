@@ -1,9 +1,7 @@
 package com.gahee.rss_v2.remoteSource;
 
-import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gahee.rss_v2.URLReader;
@@ -28,40 +26,57 @@ import com.gahee.rss_v2.data.youtube.tags.Media;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RemoteDataUtils {
+import static com.gahee.rss_v2.utils.Constants.NETWORK_TIMEOUT;
 
-    private static final String TAG = "RemoteDataUtils";
+public class RssClient {
 
-
-    private MutableLiveData<ArrayList<ChannelObj>> mChannelMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<ArticleObj>> mArticleMutableLiveData = new MutableLiveData<>();
-
-    private MutableLiveData<ArrayList<YoutubeChannel>> mYoutubeChannelLiveData = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<YoutubeVideo>> mYoutubeVideoLiveData = new MutableLiveData<>();
-
-    private MutableLiveData<ArrayList<TimeChannel>> mTimeChannelLiveData = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<TimeArticle>> mTimeArticleLiveData = new MutableLiveData<>();
+    private static final String TAG = "RssClient";
 
 
-    private static RemoteDataUtils instance;
+    private MutableLiveData<ArrayList<ChannelObj>> mChannelMutableLiveData;
+    private MutableLiveData<ArrayList<ArticleObj>> mArticleMutableLiveData;
 
-    public static RemoteDataUtils getInstance() {
+    private MutableLiveData<ArrayList<YoutubeChannel>> mYoutubeChannelLiveData;
+    private MutableLiveData<ArrayList<YoutubeVideo>> mYoutubeVideoLiveData;
+
+    private MutableLiveData<ArrayList<TimeChannel>> mTimeChannelLiveData;
+    private MutableLiveData<ArrayList<TimeArticle>> mTimeArticleLiveData;
+
+
+    private static RssClient instance;
+
+    public static RssClient getInstance() {
         if(instance == null){
-            instance = new RemoteDataUtils();
+            instance = new RssClient();
         }
         return instance;
     }
+
+    private RssClient(){
+
+        mChannelMutableLiveData = new MutableLiveData<>();
+        mArticleMutableLiveData = new MutableLiveData<>();
+
+        mYoutubeChannelLiveData = new MutableLiveData<>();
+        mYoutubeVideoLiveData = new MutableLiveData<>();
+
+        mTimeChannelLiveData = new MutableLiveData<>();
+        mTimeArticleLiveData = new MutableLiveData<>();
+
+    }
+
 
     private ArrayList<ChannelObj> mChannelObjArrayList = new ArrayList<>();
     private ArrayList<ArticleObj> mArticleObjArrayList = new ArrayList<>();
 
     private void fetchDataFromNasa(){
-
         NasaAPI nasaAPI = RetrofitInstanceBuilder.getNasaApi();
         Call<Rss> call = nasaAPI.getNasaEdge();
 
@@ -139,7 +154,7 @@ public class RemoteDataUtils {
         TimeAPI timeAPI = RetrofitInstanceBuilder.getTimeApi();
         Call<com.gahee.rss_v2.data.time.tags.Rss> call = timeAPI.getTimeEntertainment();
         call.enqueue(new Callback<com.gahee.rss_v2.data.time.tags.Rss>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
+
             @Override
             public void onResponse(Call<com.gahee.rss_v2.data.time.tags.Rss> call, Response<com.gahee.rss_v2.data.time.tags.Rss> response) {
                 if(response.body() != null){
@@ -287,7 +302,7 @@ public class RemoteDataUtils {
         return mTimeArticleLiveData;
     }
 
-    public void fetchRemoteData(){
+    public void fetchRemoteNasaData(){
         fetchDataFromNasa();
     }
 

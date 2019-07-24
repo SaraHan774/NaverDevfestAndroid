@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <View
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:background="@drawable/scrim_gradient_to_above"
+                android:id="@+id/view_scrim"
+                />
+
+            <ImageView
+                android:id="@+id/img_fragment_youtube_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tv_youtube_content_title"
+                android:text="@string/sample_text"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/colorWhite"
+                android:layout_margin="@dimen/view_margin_1x"
+                android:layout_above="@id/tv_youtube_content_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_youtube_content_description"
+                android:text="@string/sample_string"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_margin="@dimen/view_margin_1x"
+                android:textColor="@color/colorWhite"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager_youtube"
+            android:layout_weight="2"
+            android:background="@drawable/scrim_gradient_to_below"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </androidx.viewpager.widget.ViewPager>
+
+        <!--video clips inside view pager ... when x comes at a certain point,
+        change the video thumbnail-->
+
+
+    </LinearLayout>
+
+</layout>

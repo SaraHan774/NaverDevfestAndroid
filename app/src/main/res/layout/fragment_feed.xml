@@ -4,16 +4,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:mContext=".FeedFragment">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_feed_fragment"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager_dashboard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 </layout>

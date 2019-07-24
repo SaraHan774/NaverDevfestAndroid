@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class RemoteRepository {
 
-    private final RemoteDataUtils mRemoteDataUtils;
+    private final RssClient mRssClient;
     public static RemoteRepository instance;
 
     public static RemoteRepository getInstance() {
@@ -26,98 +26,111 @@ public class RemoteRepository {
     }
 
     public RemoteRepository(){
-        mRemoteDataUtils = RemoteDataUtils.getInstance();
+        mRssClient = RssClient.getInstance();
     }
 
-    public void fetchData(){
-        new FetchDataAsync(mRemoteDataUtils).execute();
+    private AsyncTask<Void, Void, Void> fetchNasaDataAsync ;
+
+    public void fetchNasaData(){
+        fetchNasaDataAsync = new FetchNasaDataAsync(mRssClient).execute();
     }
+
+    //minimizing memory leak
+    //call this in on stop of the app
+    public void cancelNasaAsync(){
+        if (fetchNasaDataAsync.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchNasaDataAsync.cancel(true);
+        }
+        fetchNasaDataAsync = null;
+    }
+
+
 
     public MutableLiveData<ArrayList<ChannelObj>> getChannelMutableLiveData(){
-        return mRemoteDataUtils.getmChannelMutableLiveData();
+        return mRssClient.getmChannelMutableLiveData();
     }
 
     public MutableLiveData<ArrayList<ArticleObj>> getArticleMutableLiveData(){
-        return mRemoteDataUtils.getmArticleMutableLiveData();
+        return mRssClient.getmArticleMutableLiveData();
     }
 
     //youtube
-    public void fetchYtData(){new FetchYtDataAsync(mRemoteDataUtils).execute();}
+    public void fetchYtData(){new FetchYtDataAsync(mRssClient).execute();}
     public MutableLiveData<ArrayList<YoutubeChannel>> getYoutubeChannelLiveData(){
-        return mRemoteDataUtils.getmYoutubeChannelLiveData();
+        return mRssClient.getmYoutubeChannelLiveData();
     }
     public MutableLiveData<ArrayList<YoutubeVideo>> getYoutubeVideoLiveData(){
-        return mRemoteDataUtils.getmYoutubeVideoLiveData();
+        return mRssClient.getmYoutubeVideoLiveData();
     }
 
     //Time news
-    public void fetchTimeData(){new FetchTimeDataAsync(mRemoteDataUtils).execute();}
+    public void fetchTimeData(){new FetchTimeDataAsync(mRssClient).execute();}
     public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelLiveData(){
-        return mRemoteDataUtils.getmTimeChannelLiveData();
+        return mRssClient.getmTimeChannelLiveData();
     }
 
     public MutableLiveData<ArrayList<TimeArticle>> getTimeArticleLiveData(){
-        return mRemoteDataUtils.getmTimeArticleLiveData();
+        return mRssClient.getmTimeArticleLiveData();
     }
 
     //WWF articles
-    public void fetchWWFData(){new FetchWWFDataAsync(mRemoteDataUtils).execute();}
+    public void fetchWWFData(){new FetchWWFDataAsync(mRssClient).execute();}
 
 
 
 
     //fetching data async task
-    private static class FetchDataAsync extends AsyncTask<Void, Void, Void>{
-        RemoteDataUtils mRemoteDataUtils;
+    private static class FetchNasaDataAsync extends AsyncTask<Void, Void, Void>{
+        RssClient mRssClient;
 
-        public FetchDataAsync(RemoteDataUtils remoteDataUtils){
-            this.mRemoteDataUtils = remoteDataUtils;
+        public FetchNasaDataAsync(RssClient rssClient){
+            this.mRssClient = rssClient;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mRemoteDataUtils.fetchRemoteData();
+            mRssClient.fetchRemoteNasaData();
             return null;
         }
     }
 
     private static class FetchYtDataAsync extends AsyncTask<Void, Void, Void>{
-        RemoteDataUtils mRemoteDataUtils;
+        RssClient mRssClient;
 
-        public FetchYtDataAsync(RemoteDataUtils remoteDataUtils){
-            this.mRemoteDataUtils = remoteDataUtils;
+        public FetchYtDataAsync(RssClient rssClient){
+            this.mRssClient = rssClient;
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            mRemoteDataUtils.fetchRemoteYoutubeData();
+            mRssClient.fetchRemoteYoutubeData();
             return null;
         }
     }
 
     private static class FetchTimeDataAsync extends AsyncTask<Void, Void, Void>{
-        RemoteDataUtils mRemoteDataUtils;
+        RssClient mRssClient;
 
-        public FetchTimeDataAsync(RemoteDataUtils remoteDataUtils){
-            this.mRemoteDataUtils = remoteDataUtils;
+        public FetchTimeDataAsync(RssClient rssClient){
+            this.mRssClient = rssClient;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mRemoteDataUtils.fetchRemoteTimeData();
+            mRssClient.fetchRemoteTimeData();
             return null;
         }
     }
 
     private static class FetchWWFDataAsync extends AsyncTask<Void, Void, Void>{
-        RemoteDataUtils mRemoteDataUtils;
+        RssClient mRssClient;
 
-        public FetchWWFDataAsync(RemoteDataUtils remoteDataUtils){
-            this.mRemoteDataUtils = remoteDataUtils;
+        public FetchWWFDataAsync(RssClient rssClient){
+            this.mRssClient = rssClient;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mRemoteDataUtils.fetchRemoteWWFData();
+            mRssClient.fetchRemoteWWFData();
             return null;
         }
     }

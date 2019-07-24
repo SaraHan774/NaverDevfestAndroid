@@ -45,7 +45,7 @@ public class RemoteViewModel extends ViewModel {
     }
 
     public void fetchNasaDataFromRepo(){
-        mRemoteRepository.fetchData();
+        mRemoteRepository.fetchNasaData();
     }
 
     public void fetchYouTubeDataFromRepo(){mRemoteRepository.fetchYtData();}

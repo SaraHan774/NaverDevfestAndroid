@@ -17,7 +17,7 @@
 
     <ImageView
         android:id="@+id/logo_nasa"
-        android:background="@color/nasaBlack"
+        android:background="@color/colorWhite"
         android:layout_weight="1"
         android:src="@drawable/home_nasa_logo"
         android:layout_width="match_parent"
@@ -31,5 +31,12 @@
         android:layout_width="match_parent"
         android:layout_height="150dp" />
 
+    <ImageView
+        android:id="@+id/logo_wwf"
+        android:background="@color/colorWhite"
+        android:src="@drawable/logo_wwf"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
 
 </LinearLayout>
