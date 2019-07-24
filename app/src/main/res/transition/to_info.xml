@@ -7,7 +7,6 @@
         android:startDelay="300">
         <targets>
             <target android:targetId="@id/tv_nasa_video_description"/>
-            <target android:targetId="@id/img_btn_nasa_video_info"/>
         </targets>
     </fade>
     <!--tv_content_title, tv_artist_name-->
@@ -18,5 +17,6 @@
             <target android:targetId="@id/tv_nasa_video_pubDate"/>
         </targets>
     </fade>
+
 
 </transitionSet>

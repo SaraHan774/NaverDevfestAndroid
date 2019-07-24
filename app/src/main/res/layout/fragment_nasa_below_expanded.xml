@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nested_scroll_view_nasa"
+    tools:mContext=".ui.NasaInnerFragment"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/tv_nasa_video_title"
+                android:text="@string/sample_string"
+                android:layout_margin="@dimen/view_margin_1x"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/img_info_button_nasa_below"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/view_margin_2x"
+                android:layout_marginEnd="@dimen/view_margin_2x"
+                android:background="@color/colorTransparent"
+                android:src="@drawable/ic_info_outline_black_24dp"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_nasa_video_pubDate"
+            android:text="@string/sample_text"
+            android:layout_marginStart="@dimen/view_margin_1x"
+            android:layout_marginBottom="@dimen/view_margin_1x"
+            android:layout_marginEnd="@dimen/view_margin_1x"
+            android:layout_below="@id/tv_nasa_video_title"
+            android:textSize="@dimen/text_size_small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+        android:id="@+id/tv_nasa_video_description"
+        android:layout_below="@id/tv_nasa_video_pubDate"
+        android:text="@string/sample_text_medium"
+        android:layout_marginStart="@dimen/view_margin_1x"
+        android:layout_marginEnd="@dimen/view_margin_1x"
+        android:layout_marginBottom="@dimen/view_margin_1x"
+        android:textSize="@dimen/text_size_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager_nasa_more_videos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingEnd="100dp"
+            android:paddingStart="100dp"
+            >
+        </androidx.viewpager.widget.ViewPager>
+
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

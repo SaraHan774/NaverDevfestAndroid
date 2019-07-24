@@ -5,29 +5,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.nasa.model.ChannelObj;
 import com.gahee.rss_v2.data.nasa.tags.Item;
-import com.google.android.exoplayer2.ui.PlayerView;
+import com.gahee.rss_v2.ui.NasaVideoViewModel;
+import com.gahee.rss_v2.ui.fragments.NasaInnerFragment;
 
 public class NasaInnerPagerAdapter extends PagerAdapter {
 
         private static final String TAG = "NasaPagerAdapter";
         private final Context mContext;
         private ChannelObj mChannelObj;
+        private NasaVideoViewModel nasaVideoViewModel;
+        private NasaInnerFragment nasaInnerFragment;
 
-        public NasaInnerPagerAdapter(Context context, ChannelObj channelObjs){
+        public NasaInnerPagerAdapter(Context context, NasaInnerFragment fragment, ChannelObj channelObjs){
             Log.d(TAG, "feed pager adapter instantiating ... ");
             mContext = context;
             mChannelObj = channelObjs;
+            nasaInnerFragment = fragment;
         }
 
         @Override
@@ -45,21 +48,23 @@ public class NasaInnerPagerAdapter extends PagerAdapter {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
 
             View view = LayoutInflater.from(mContext).inflate(R.layout.nasa_inner_slider, container, false);
-
-            Item item = mChannelObj.getmItemList().get(position);
+            final Item item = mChannelObj.getmItemList().get(position);
             Log.d(TAG, "item check : " + item.getDescription());
 
-            String source = item.getSource();
             String videoTitle = item.getTitle();
-            String videoPubDate = item.getPubDate();
             String videoUrl = item.getEnclosure().getUrl();
-            String pageLink = item.getLink();
-            String videoDescription = item.getDescription();
 
-            PlayerView playerView = view.findViewById(R.id.nasa_video_thumbnail);
-
+            nasaVideoViewModel = ViewModelProviders.of(nasaInnerFragment).get(NasaVideoViewModel.class);
             TextView tvVideoTitle = view.findViewById(R.id.tv_nasa_inner_video_title);
             tvVideoTitle.setText(videoTitle);
+            ImageView imgVideoImage = view.findViewById(R.id.nasa_video_thumbnail);
+            imgVideoImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "set selected video ... item : " + item);
+                    nasaVideoViewModel.setSelectedVideo(item);
+                }
+            });
 
             Log.d(TAG, "instantiate item running ...." );
             container.addView(view);
@@ -73,5 +78,8 @@ public class NasaInnerPagerAdapter extends PagerAdapter {
             container.removeView(view);
         }
 
-
-    }
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return super.getItemPosition(object);
+        }
+}

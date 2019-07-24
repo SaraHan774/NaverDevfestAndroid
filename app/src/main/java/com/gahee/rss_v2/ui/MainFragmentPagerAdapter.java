@@ -50,7 +50,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
                 Log.d(TAG, "get item position : " + position);
                 return fragments[position];
             default:
-                return null;
+                return fragments[0];
         }
     }
 

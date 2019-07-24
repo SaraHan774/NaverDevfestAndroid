@@ -3,7 +3,7 @@ package com.gahee.rss_v2;
 import android.os.Bundle;
 
 import com.gahee.rss_v2.databinding.ActivityMainBinding;
-import com.gahee.rss_v2.myFeed.FeedFragment;
+import com.gahee.rss_v2.ui.HostFragment;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransactionHelper(new HomeFragment());
         RemoteViewModel remoteViewModel = new RemoteViewModel();
 
-//        remoteViewModel.fetchNasaDataFromRepo();
+        remoteViewModel.fetchNasaDataFromRepo();
 //        remoteViewModel.fetchTimeDataFromRepo();
-        remoteViewModel.fetchWWFDataFromRepo();
+//        remoteViewModel.fetchWWFDataFromRepo();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                     fragmentTransactionHelper(new HomeFragment());
                     return true;
                 case R.id.navigation_dashboard:
-                    fragmentTransactionHelper(new FeedFragment());
+                    fragmentTransactionHelper(new HostFragment());
                     return true;
             }
             return false;
