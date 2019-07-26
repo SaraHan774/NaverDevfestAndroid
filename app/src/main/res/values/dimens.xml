@@ -11,6 +11,7 @@
     <dimen name="text_size_x_small">12sp</dimen>
     <dimen name="text_size_xx_small">8sp</dimen>
 
+    <dimen name="view_margin_x_min">4dp</dimen>
     <dimen name="view_margin_min">8dp</dimen>
     <dimen name="view_margin_1x">16dp</dimen>
     <dimen name="view_margin_2x">32dp</dimen>

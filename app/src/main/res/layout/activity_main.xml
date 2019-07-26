@@ -1,24 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
-<androidx.constraintlayout.widget.ConstraintLayout
+
+<LinearLayout
     android:id="@+id/container"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/nasaBlack"
-    tools:mContext=".MainActivity">
+    android:background="@color/colorWhite"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
-        android:id="@+id/fragment_placeholder"
+        android:id="@+id/fragment_placeholder_nasa"
+        android:background="@drawable/rect_round_corner"
+        android:layout_marginStart="@dimen/view_margin_2x"
+        android:layout_marginEnd="@dimen/view_margin_2x"
+        android:layout_marginTop="@dimen/view_margin_1x"
+        android:layout_marginBottom="@dimen/view_margin_1x"
+        android:layout_weight="1"
+        android:elevation="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager_nasa_outer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/place_holder_slider_progress"
+            android:layout_gravity="bottom"
+            android:padding="@dimen/view_margin_x_min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <include layout="@layout/slider_bottom_progress_bars"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_placeholder_wwf"
+        android:background="@color/colorLightGrey"
+        android:layout_marginStart="@dimen/view_margin_2x"
+        android:layout_marginEnd="@dimen/view_margin_2x"
+        android:layout_marginTop="@dimen/view_margin_1x"
+        android:layout_marginBottom="@dimen/view_margin_1x"
+        android:layout_weight="1"
+        android:elevation="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:background="@color/colorLightGrey"
+        android:layout_marginStart="@dimen/view_margin_2x"
+        android:layout_marginEnd="@dimen/view_margin_2x"
+        android:layout_marginTop="@dimen/view_margin_1x"
+        android:layout_marginBottom="@dimen/view_margin_1x"
+        android:layout_weight="1"
+        android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
 
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</LinearLayout>

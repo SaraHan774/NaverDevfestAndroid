@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -253,8 +252,6 @@ public class NasaFragment extends Fragment{
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause()");
-        //save current state of the player in onPause() for both SDK > 23 and SDK <= 23
-        //because onSaveInstanceState() is called after onPause and before onStop.
         retrieveCurrentPlayerState(true);
         if(Util.SDK_INT <= 23){
             releasePlayer();
@@ -281,13 +278,11 @@ public class NasaFragment extends Fragment{
     private void retrieveCurrentPlayerState(boolean savePlaybackPosition){
         if(simpleExoPlayer != null && savePlaybackPosition == true){
             playbackPosition = simpleExoPlayer.getCurrentPosition();
-            currentWindow = simpleExoPlayer.getCurrentWindowIndex();
-            playWhenReady = simpleExoPlayer.getPlayWhenReady();
         }else{
             playbackPosition = 0;
-            currentWindow = simpleExoPlayer.getCurrentWindowIndex();
-            playWhenReady = simpleExoPlayer.getPlayWhenReady();
-        }
+         }
+        currentWindow = simpleExoPlayer.getCurrentWindowIndex();
+        playWhenReady = simpleExoPlayer.getPlayWhenReady();
     }
 
     public static DefaultDataSourceFactory createDataSourceFactory(Context context, String userAgent,

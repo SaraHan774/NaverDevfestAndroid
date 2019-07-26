@@ -26,6 +26,7 @@
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/view_margin_min"
         android:maxLines="2"
+        android:textSize="@dimen/text_size_x_small"
         android:text="@string/sample_text" />
 
 </androidx.cardview.widget.CardView>
