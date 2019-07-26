@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_wwf_outer_slider"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rect_round_corner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_wwf_outer_title"
+        android:text="@string/sample_text"
+        android:textColor="@color/colorWhite"
+        android:textStyle="italic"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_margin="@dimen/view_margin_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_wwf_outer_description"
+        android:layout_below="@id/tv_wwf_outer_title"
+        android:textColor="@color/colorWhite"
+        android:text="@string/sample_text_medium"
+        android:layout_margin="@dimen/view_margin_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+
+
+
+</FrameLayout>

@@ -1,9 +1,7 @@
 package com.gahee.rss_v2.utils;
 
 import android.os.Handler;
-import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class ProgressBarUtil{
 

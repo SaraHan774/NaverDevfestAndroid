@@ -49,6 +49,9 @@ public class RssClient {
     private MutableLiveData<ArrayList<TimeChannel>> mTimeChannelLiveData;
     private MutableLiveData<ArrayList<TimeArticle>> mTimeArticleLiveData;
 
+    private MutableLiveData<ArrayList<WWFChannel>> mWwfChannelLiveData;
+    private MutableLiveData<ArrayList<WWFArticle>> mWwfArticleLiveData;
+
 
     private static RssClient instance;
 
@@ -69,6 +72,9 @@ public class RssClient {
 
         mTimeChannelLiveData = new MutableLiveData<>();
         mTimeArticleLiveData = new MutableLiveData<>();
+
+        mWwfArticleLiveData = new MutableLiveData<>();
+        mWwfChannelLiveData = new MutableLiveData<>();
 
     }
 
@@ -195,6 +201,7 @@ public class RssClient {
                 List<com.gahee.rss_v2.data.wwf.tags.Item> items = response.body().getChannel().getItems();
                 wwfChannelArrayList.add(new WWFChannel(title, link, description, items));
                 storeEachWWFArticles(items);
+                mWwfChannelLiveData.setValue(wwfChannelArrayList);
             }
 
             @Override
@@ -273,6 +280,7 @@ public class RssClient {
                 //add article object to the arrayList
                 wwfArticleArrayList.add(wwfArticle);
             }
+            mWwfArticleLiveData.setValue(wwfArticleArrayList);
         }
     }
 
@@ -300,6 +308,14 @@ public class RssClient {
 
     public MutableLiveData<ArrayList<TimeArticle>> getmTimeArticleLiveData() {
         return mTimeArticleLiveData;
+    }
+
+    public MutableLiveData<ArrayList<WWFArticle>> getmWwfArticleLiveData() {
+        return mWwfArticleLiveData;
+    }
+
+    public MutableLiveData<ArrayList<WWFChannel>> getmWwfChannelLiveData() {
+        return mWwfChannelLiveData;
     }
 
     public void fetchRemoteNasaData(){

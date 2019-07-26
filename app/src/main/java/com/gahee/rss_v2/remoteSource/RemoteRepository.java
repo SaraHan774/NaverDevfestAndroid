@@ -8,6 +8,8 @@ import com.gahee.rss_v2.data.nasa.model.ArticleObj;
 import com.gahee.rss_v2.data.nasa.model.ChannelObj;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
+import com.gahee.rss_v2.data.wwf.model.WWFArticle;
+import com.gahee.rss_v2.data.wwf.model.WWFChannel;
 import com.gahee.rss_v2.data.youtube.model.YoutubeChannel;
 import com.gahee.rss_v2.data.youtube.model.YoutubeVideo;
 
@@ -75,6 +77,12 @@ public class RemoteRepository {
 
     //WWF articles
     public void fetchWWFData(){new FetchWWFDataAsync(mRssClient).execute();}
+    public MutableLiveData<ArrayList<WWFChannel>> getWwfChannelLiveData(){
+        return  mRssClient.getmWwfChannelLiveData();
+    }
+    public MutableLiveData<ArrayList<WWFArticle>> getWwfArticleLiveData(){
+        return mRssClient.getmWwfArticleLiveData();
+    }
 
 
 

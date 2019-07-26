@@ -7,6 +7,8 @@ import com.gahee.rss_v2.data.nasa.model.ArticleObj;
 import com.gahee.rss_v2.data.nasa.model.ChannelObj;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
+import com.gahee.rss_v2.data.wwf.model.WWFArticle;
+import com.gahee.rss_v2.data.wwf.model.WWFChannel;
 import com.gahee.rss_v2.data.youtube.model.YoutubeChannel;
 import com.gahee.rss_v2.data.youtube.model.YoutubeVideo;
 
@@ -42,6 +44,14 @@ public class RemoteViewModel extends ViewModel {
 
     public MutableLiveData<ArrayList<TimeArticle>> getTimeArticleLiveData(){
         return mRemoteRepository.getTimeArticleLiveData();
+    }
+
+    public MutableLiveData<ArrayList<WWFArticle>> getWwfArticleLiveData(){
+        return mRemoteRepository.getWwfArticleLiveData();
+    }
+
+    public MutableLiveData<ArrayList<WWFChannel>> getWwfChannelLiveData(){
+        return mRemoteRepository.getWwfChannelLiveData();
     }
 
     public void fetchNasaDataFromRepo(){

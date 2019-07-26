@@ -19,4 +19,6 @@ public class Constants {
     public static final String PUB_DATE = "firstPubDate";
     public static final String DESCRIPTION = "firstDescription";
 
+    public static final String NASA_SLIDER_INDEX = "index_nasa";
+
 }

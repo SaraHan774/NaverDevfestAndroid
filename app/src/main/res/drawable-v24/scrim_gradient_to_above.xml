@@ -8,4 +8,7 @@
         android:angle="-180"
         />
 
+    <corners
+        android:radius="20dp"></corners>
+
 </shape>
