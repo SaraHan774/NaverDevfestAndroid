@@ -14,4 +14,5 @@
         It is based on a modified version of the Linux kernel and other open source software,
         and is designed primarily for touchscreen mobile devices such as smartphones and tablets.
     </string>
+    <string name="no_video_warning">No Video Here!</string>
 </resources>

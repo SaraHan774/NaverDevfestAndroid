@@ -19,6 +19,11 @@ android {
     }
 
     dataBinding.enabled = true
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -53,9 +58,9 @@ dependencies {
     }
 
     //simpleExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.7.3'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.3'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.3'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.10.0'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.0'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.0'
 
     //expandable textview
     implementation 'com.ms-square:expandableTextView:0.1.4'

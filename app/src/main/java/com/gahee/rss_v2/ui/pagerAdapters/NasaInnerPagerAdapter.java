@@ -16,7 +16,7 @@ import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.nasa.model.ChannelObj;
 import com.gahee.rss_v2.data.nasa.tags.Item;
 import com.gahee.rss_v2.ui.NasaVideoViewModel;
-import com.gahee.rss_v2.ui.fragments.NasaInnerFragment;
+import com.gahee.rss_v2.ui.fragments.NasaFragment;
 
 public class NasaInnerPagerAdapter extends PagerAdapter {
 
@@ -24,13 +24,13 @@ public class NasaInnerPagerAdapter extends PagerAdapter {
         private final Context mContext;
         private ChannelObj mChannelObj;
         private NasaVideoViewModel nasaVideoViewModel;
-        private NasaInnerFragment nasaInnerFragment;
+        private NasaFragment nasaFragment;
 
-        public NasaInnerPagerAdapter(Context context, NasaInnerFragment fragment, ChannelObj channelObjs){
+        public NasaInnerPagerAdapter(Context context, NasaFragment fragment, ChannelObj channelObjs){
             Log.d(TAG, "feed pager adapter instantiating ... ");
             mContext = context;
             mChannelObj = channelObjs;
-            nasaInnerFragment = fragment;
+            nasaFragment = fragment;
         }
 
         @Override
@@ -54,7 +54,8 @@ public class NasaInnerPagerAdapter extends PagerAdapter {
             String videoTitle = item.getTitle();
             String videoUrl = item.getEnclosure().getUrl();
 
-            nasaVideoViewModel = ViewModelProviders.of(nasaInnerFragment).get(NasaVideoViewModel.class);
+            nasaVideoViewModel = ViewModelProviders.of(nasaFragment).get(NasaVideoViewModel.class);
+
             TextView tvVideoTitle = view.findViewById(R.id.tv_nasa_inner_video_title);
             tvVideoTitle.setText(videoTitle);
             ImageView imgVideoImage = view.findViewById(R.id.nasa_video_thumbnail);

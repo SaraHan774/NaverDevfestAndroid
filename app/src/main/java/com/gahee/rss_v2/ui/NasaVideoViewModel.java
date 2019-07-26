@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.gahee.rss_v2.data.nasa.tags.Item;
 
-public class NasaVideoViewModel extends ViewModel {
+public class NasaVideoViewModel extends ViewModel{
     private static final String TAG = "NasaVideoViewModel";
+    private static NasaVideoViewModel instance;
 
-    public static NasaVideoViewModel instance = null;
     private final MutableLiveData<Item> selectedVideo = new MutableLiveData<>();
 
     public static NasaVideoViewModel getInstance() {
@@ -29,5 +29,6 @@ public class NasaVideoViewModel extends ViewModel {
         Log.d(TAG, "returning selected video from view model");
         return selectedVideo;
     }
+
 
 }

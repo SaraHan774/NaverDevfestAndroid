@@ -6,6 +6,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:elevation="4dp"
+    android:layout_margin="@dimen/view_margin_min"
     android:orientation="vertical"
     tools:context=".ui.fragments.NasaFragment"
     >
@@ -18,13 +20,16 @@
         android:layout_height="match_parent"/>
 
 
-
     <FrameLayout
         android:id="@+id/nasa_place_holder_below"
         android:layout_weight="1"
-        android:background="@color/colorLightGrey"
+        android:background="@color/nasaBlue"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent">
+
+        <include layout="@layout/fragment_nasa_below"/>
+
+    </FrameLayout>
 
 
 </LinearLayout>

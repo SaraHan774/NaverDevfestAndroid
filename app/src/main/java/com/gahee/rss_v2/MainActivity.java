@@ -3,9 +3,8 @@ package com.gahee.rss_v2;
 import android.os.Bundle;
 
 import com.gahee.rss_v2.databinding.ActivityMainBinding;
-import com.gahee.rss_v2.ui.HostFragment;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.gahee.rss_v2.ui.fragments.NasaFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
@@ -15,6 +14,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,32 +27,16 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding activityMainBinding =
                 DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        activityMainBinding.navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        fragmentTransactionHelper(new HomeFragment());
         RemoteViewModel remoteViewModel = new RemoteViewModel();
-
-        remoteViewModel.fetchNasaDataFromRepo();
+        if(savedInstanceState == null){
+            remoteViewModel.fetchNasaDataFromRepo();
+            fragmentTransactionHelper(NasaFragment.newInstance());
+        }
 //        remoteViewModel.fetchTimeDataFromRepo();
 //        remoteViewModel.fetchWWFDataFromRepo();
+
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    fragmentTransactionHelper(new HomeFragment());
-                    return true;
-                case R.id.navigation_dashboard:
-                    fragmentTransactionHelper(new HostFragment());
-                    return true;
-            }
-            return false;
-        }
-    };
 
     private void fragmentTransactionHelper(final Fragment fragment)   {
         FragmentManager fragmentManager = getSupportFragmentManager();
