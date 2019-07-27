@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.gahee.rss_v2.data.time.tags.Item;
 
+import java.util.List;
+
 public class TimeArticle implements Parcelable {
 
     private String mArticletitle;
@@ -13,6 +15,8 @@ public class TimeArticle implements Parcelable {
     private Item.Thumbnail mArticleThumbnail;
     private String mContentEncoded;
     private String mArticleLink;
+    private List<String> mYoutubeLink;
+
 
     public TimeArticle(String mArticletitle, String mArticlePubDate, String mArticleDescription, Item.Thumbnail mArticleThumbnail, String mContentEncoded, String mArticleLink) {
         this.mArticletitle = mArticletitle;
@@ -22,6 +26,45 @@ public class TimeArticle implements Parcelable {
         this.mContentEncoded = mContentEncoded;
         this.mArticleLink = mArticleLink;
     }
+
+
+    protected TimeArticle(Parcel in) {
+        mArticletitle = in.readString();
+        mArticlePubDate = in.readString();
+        mArticleDescription = in.readString();
+        mArticleThumbnail = in.readParcelable(Item.Thumbnail.class.getClassLoader());
+        mContentEncoded = in.readString();
+        mArticleLink = in.readString();
+        mYoutubeLink = in.createStringArrayList();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mArticletitle);
+        dest.writeString(mArticlePubDate);
+        dest.writeString(mArticleDescription);
+        dest.writeParcelable(mArticleThumbnail, flags);
+        dest.writeString(mContentEncoded);
+        dest.writeString(mArticleLink);
+        dest.writeStringList(mYoutubeLink);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<TimeArticle> CREATOR = new Creator<TimeArticle>() {
+        @Override
+        public TimeArticle createFromParcel(Parcel in) {
+            return new TimeArticle(in);
+        }
+
+        @Override
+        public TimeArticle[] newArray(int size) {
+            return new TimeArticle[size];
+        }
+    };
 
     public String getmArticletitle() {
         return mArticletitle;
@@ -47,39 +90,11 @@ public class TimeArticle implements Parcelable {
         return mArticleLink;
     }
 
-    protected TimeArticle(Parcel in) {
-        mArticletitle = in.readString();
-        mArticlePubDate = in.readString();
-        mArticleDescription = in.readString();
-        mArticleThumbnail = in.readParcelable(Item.Thumbnail.class.getClassLoader());
-        mContentEncoded = in.readString();
-        mArticleLink = in.readString();
+    public List<String> getmYoutubeLink() {
+        return mYoutubeLink;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mArticletitle);
-        dest.writeString(mArticlePubDate);
-        dest.writeString(mArticleDescription);
-        dest.writeParcelable(mArticleThumbnail, flags);
-        dest.writeString(mContentEncoded);
-        dest.writeString(mArticleLink);
+    public void setmYoutubeLink(List<String> mYoutubeLink) {
+        this.mYoutubeLink = mYoutubeLink;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<TimeArticle> CREATOR = new Creator<TimeArticle>() {
-        @Override
-        public TimeArticle createFromParcel(Parcel in) {
-            return new TimeArticle(in);
-        }
-
-        @Override
-        public TimeArticle[] newArray(int size) {
-            return new TimeArticle[size];
-        }
-    };
 }

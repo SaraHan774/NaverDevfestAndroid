@@ -9,4 +9,6 @@
         </shape>
     </item>
 
+    <item android:drawable="@drawable/scrim_gradient_to_above"/>
+
 </layer-list>

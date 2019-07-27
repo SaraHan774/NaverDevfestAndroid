@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.gahee.rss_v2.data.nasa.model.ArticleObj;
-import com.gahee.rss_v2.data.nasa.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.model.ArticleObj;
+import com.gahee.rss_v2.data.reuters.model.ChannelObj;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
@@ -31,28 +31,28 @@ public class RemoteRepository {
         mRssClient = RssClient.getInstance();
     }
 
-    private AsyncTask<Void, Void, Void> fetchNasaDataAsync ;
+    private AsyncTask<Void, Void, Void> fetchReutersDataAsync;
 
-    public void fetchNasaData(){
-        fetchNasaDataAsync = new FetchNasaDataAsync(mRssClient).execute();
+    public void fetchReutersData(){
+        fetchReutersDataAsync = new FetchReutersDataAsync(mRssClient).execute();
     }
 
     //minimizing memory leak
     //call this in on stop of the app
-    public void cancelNasaAsync(){
-        if (fetchNasaDataAsync.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchNasaDataAsync.cancel(true);
+    public void cancelReutersAsync(){
+        if (fetchReutersDataAsync.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchReutersDataAsync.cancel(true);
         }
-        fetchNasaDataAsync = null;
+        fetchReutersDataAsync = null;
     }
 
 
 
-    public MutableLiveData<ArrayList<ChannelObj>> getChannelMutableLiveData(){
+    public MutableLiveData<ArrayList<ChannelObj>> getReutersChannelMutableLiveData(){
         return mRssClient.getmChannelMutableLiveData();
     }
 
-    public MutableLiveData<ArrayList<ArticleObj>> getArticleMutableLiveData(){
+    public MutableLiveData<ArrayList<ArticleObj>> getReutersArticleMutableLiveData(){
         return mRssClient.getmArticleMutableLiveData();
     }
 
@@ -88,16 +88,16 @@ public class RemoteRepository {
 
 
     //fetching data async task
-    private static class FetchNasaDataAsync extends AsyncTask<Void, Void, Void>{
+    private static class FetchReutersDataAsync extends AsyncTask<Void, Void, Void>{
         RssClient mRssClient;
 
-        public FetchNasaDataAsync(RssClient rssClient){
+        public FetchReutersDataAsync(RssClient rssClient){
             this.mRssClient = rssClient;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            mRssClient.fetchRemoteNasaData();
+            mRssClient.fetchRemoteReutersData();
             return null;
         }
     }

@@ -21,8 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gahee.rss_v2.R;
-import com.gahee.rss_v2.data.nasa.model.ChannelObj;
-import com.gahee.rss_v2.data.nasa.tags.Item;
+import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.gahee.rss_v2.ui.NasaVideoViewModel;
 import com.gahee.rss_v2.ui.pagerAdapters.NasaInnerPagerAdapter;
@@ -89,7 +89,7 @@ public class NasaFragment extends Fragment{
             public void onChanged(ArrayList<ChannelObj> channelObjs) {
                 Log.d(TAG, "on changed from remote view model");
                     if(savedInstanceState == null){
-                    initialMediaUrl = channelObjs.get(0).getmItemList().get(0).getEnclosure().getUrl();
+                    initialMediaUrl = channelObjs.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo();
                     setMediaURL(initialMediaUrl);
                     initializePlayer();
                 }else{
@@ -171,7 +171,7 @@ public class NasaFragment extends Fragment{
                     tvVideoTitle.setText(item.getTitle());
                     tvVideoPubDate.setText(item.getPubDate());
                     tvVideoDescription.setText(item.getDescription());
-                    setMediaURL(item.getEnclosure().getUrl());
+                    setMediaURL(item.getGroup().getContent().getUrlVideo());
                     retrieveCurrentPlayerState(false);
                     initializePlayer();
                 }

@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/wwf_outer_slider_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/img_wwf_outer_slider"
+
+    <ImageSwitcher
+        android:id="@+id/image_switcher_wwf_outer_slider"
         android:scaleType="centerCrop"
-        android:background="@drawable/rect_round_corner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-
-
 
 
     <RelativeLayout
@@ -21,6 +20,9 @@
 
     <TextView
         android:id="@+id/tv_wwf_outer_title"
+        android:background="@color/colorTransparentBlack"
+        android:paddingStart="@dimen/view_margin_x_min"
+        android:paddingEnd="@dimen/view_margin_x_min"
         android:text="@string/sample_text"
         android:textColor="@color/colorWhite"
         android:textStyle="italic"
@@ -31,12 +33,17 @@
 
     <TextView
         android:id="@+id/tv_wwf_outer_description"
+        android:background="@color/colorTransparentBlack"
+        android:paddingStart="@dimen/view_margin_x_min"
+        android:paddingEnd="@dimen/view_margin_x_min"
         android:layout_below="@id/tv_wwf_outer_title"
         android:textColor="@color/colorWhite"
         android:text="@string/sample_text_medium"
         android:layout_margin="@dimen/view_margin_min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+        <!--set animation -->
 
     </RelativeLayout>
 

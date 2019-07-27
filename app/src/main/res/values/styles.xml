@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/nasaBlue</item>
         <item name="colorPrimaryDark">@color/nasaBlack</item>
         <item name="colorAccent">@color/nasaAccent</item>
+
+        <item name="android:fontFamily">@font/source_serif_pro</item>
     </style>
 
 

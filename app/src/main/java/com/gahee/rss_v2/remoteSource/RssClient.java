@@ -1,16 +1,22 @@
 package com.gahee.rss_v2.remoteSource;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.gahee.rss_v2.URLReader;
-import com.gahee.rss_v2.data.nasa.NasaAPI;
-import com.gahee.rss_v2.data.nasa.model.ArticleObj;
-import com.gahee.rss_v2.data.nasa.model.ChannelObj;
-import com.gahee.rss_v2.data.nasa.tags.Channel;
-import com.gahee.rss_v2.data.nasa.tags.Item;
-import com.gahee.rss_v2.data.nasa.tags.Rss;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.utils.ObjectUtils;
+import com.gahee.rss_v2.ParsingUtils;
+import com.gahee.rss_v2.data.reuters.ReutersAPI;
+import com.gahee.rss_v2.data.reuters.model.ArticleObj;
+import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.tags.Channel;
+import com.gahee.rss_v2.data.reuters.tags.Item;
+import com.gahee.rss_v2.data.reuters.tags.Rss;
 import com.gahee.rss_v2.data.time.TimeAPI;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
@@ -24,16 +30,15 @@ import com.gahee.rss_v2.data.youtube.tags.Feed;
 import com.gahee.rss_v2.data.youtube.YoutubeAPI;
 import com.gahee.rss_v2.data.youtube.tags.Media;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.gahee.rss_v2.utils.Constants.NETWORK_TIMEOUT;
 
 public class RssClient {
 
@@ -82,9 +87,9 @@ public class RssClient {
     private ArrayList<ChannelObj> mChannelObjArrayList = new ArrayList<>();
     private ArrayList<ArticleObj> mArticleObjArrayList = new ArrayList<>();
 
-    private void fetchDataFromNasa(){
-        NasaAPI nasaAPI = RetrofitInstanceBuilder.getNasaApi();
-        Call<Rss> call = nasaAPI.getNasaEdge();
+    private void fetchDataFromReuters(){
+        ReutersAPI reutersAPI = RetrofitInstanceBuilder.getReutersAPI();
+        Call<Rss> call = reutersAPI.getUSVideoTopNews();
 
         call.enqueue(new Callback<Rss>() {
             @Override
@@ -95,11 +100,11 @@ public class RssClient {
                     String description = channel.getChannelDescription();
                     String link = channel.getChannelLink();
                     List<Item> listOfItems = channel.getItem();
-                    String imageUrl = channel.getImage() != null ? channel.getImage().getUrl() : null;
 
-                    Log.d(TAG, "channel : " + channel + "\n" + "title : " + title + "\n" + "description : " + description + "\n" + "Image : " + imageUrl + "\n");
 
-                    ChannelObj channelObj = new ChannelObj(title, description, link, listOfItems, imageUrl);
+                    Log.d(TAG, "channel : " + channel + "\n" + "title : " + title + "\n" + "description : " + description);
+
+                    ChannelObj channelObj = new ChannelObj(title, description, link, listOfItems);
                     mChannelObjArrayList.add(channelObj);
 
                     //loop through the list of items and store all the articles in one array
@@ -194,7 +199,7 @@ public class RssClient {
         call.enqueue(new Callback<com.gahee.rss_v2.data.wwf.tags.Rss>() {
             @Override
             public void onResponse(Call<com.gahee.rss_v2.data.wwf.tags.Rss> call, Response<com.gahee.rss_v2.data.wwf.tags.Rss> response) {
-                Log.d(TAG, "response body : " + response.body().getChannel().getItems().get(3).getContentEncoded());
+//                Log.d(TAG, "response body : " + response.body().getChannel().getItems().get(3).getContentEncoded());
                 String title = response.body().getChannel().getTitle();
                 String link = response.body().getChannel().getGuid();
                 String description = response.body().getChannel().getDescription();
@@ -219,14 +224,26 @@ public class RssClient {
             String articleTitle = item.getTitle();
             String articleLink = item.getLink();
             String articleDescription = item.getDescription();
-            String articleMedia = item.getEnclosure().getUrl();
             String articlePubDate = item.getPubDate();
-            String articleSource = item.getSource();
+            String videoLink;
+            if(item.getGroup() != null && item.getGroup().getContent() != null){
+                videoLink = item.getGroup().getContent().getUrlVideo();
+            }else{
+                videoLink = "";
+            }
+            String thumbnailLink;
+            if(item.getGroup() != null && item.getGroup().getContent().getThumbnail() != null){
+                thumbnailLink = item.getGroup().getContent().getThumbnail().getUrlThumbnail();
+            }else{
+                thumbnailLink = "";
+            }
 
             Log.d(TAG, "article Link : " + articleLink + " \n" +
-                    "article Media : " + articleMedia + "\n" +
+                    "article video : " + videoLink+ "\n" +
+                    "thumbnail : " + thumbnailLink + "\n" +
                     "article PubDate : " + articlePubDate + "\n");
-            mArticleObjArrayList.add(new ArticleObj(articleTitle, articleLink, articleDescription, articleMedia, articlePubDate, articleSource));
+
+            mArticleObjArrayList.add(new ArticleObj(articleTitle, articleLink, articleDescription, articlePubDate, videoLink, thumbnailLink));
         }
     }
 
@@ -248,18 +265,25 @@ public class RssClient {
     }
 
     private void storeEachTimeArticle(List<com.gahee.rss_v2.data.time.tags.Item> items){
+        TimeArticle timeArticle = null;
+
         if(items != null){
             for(com.gahee.rss_v2.data.time.tags.Item item : items){
                 String articleTitle = item.getArticleTitle();
                 String articlePubDate = item.getPubDate();
+
                 String articleDescription = item.getArticleDesc();
                 com.gahee.rss_v2.data.time.tags.Item.Thumbnail thumbnail = item.getThumbnail();
                 String contentEncoded = item.getContentEncoded();
                 String articleLink = item.getArticleLink();
 
-                TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, contentEncoded,articleLink);
+                Log.d(TAG,  articleTitle + "\n" + articlePubDate +"\n" + articleDescription + "\n" + thumbnail
+                + "\n" + contentEncoded + articleLink);
+
+                timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, contentEncoded,articleLink);
                 timeArticleArrayList.add(timeArticle);
             }
+            ParsingUtils.timeGetYoutubeLinksFromArticle(items, timeArticle);
             mTimeArticleLiveData.setValue(timeArticleArrayList);
         }
     }
@@ -270,12 +294,16 @@ public class RssClient {
                 String title = item.getTitle();
                 String link = item.getGuid();
                 String pubdate = item.getPubDate();
+
                 String description = item.getDescription();
+                String cleanDescription = ParsingUtils.removeHtmlTagsFromString(description);
+
                 String contentEncoded = item.getContentEncoded();
-                WWFArticle wwfArticle = new WWFArticle(title, link, pubdate, description, contentEncoded);
+                WWFArticle wwfArticle = new WWFArticle(title, link, pubdate, cleanDescription, contentEncoded);
+
 
                 //extract image assets from the article and set the string list value using a setter
-                URLReader.setWWFArticleImage(wwfArticle, item);
+                ParsingUtils.wwfExtractImageTags(wwfArticle, item);
 
                 //add article object to the arrayList
                 wwfArticleArrayList.add(wwfArticle);
@@ -283,6 +311,41 @@ public class RssClient {
             mWwfArticleLiveData.setValue(wwfArticleArrayList);
         }
     }
+
+//    private void uploadVideosToCloudinary(Context context, String mp4Link, String videoTitle){
+//        Map config = new HashMap();
+//        config.put("cloud_name", "drsh35cxq");
+//        config.put("api_key", "572891948791234");
+//        config.put("api_secret", "07xSHzIVSi40iWYjIPWn2xhiVAU");
+//
+//        MediaManager.init(context, config);
+//
+////        String sample2 = "https://vm.reuters.tv/39a3c/qoudodaik11-1404k.mp4";
+//
+//        Cloudinary cloudinary = new Cloudinary(config);
+//        try {
+//            cloudinary.uploader().uploadLarge(mp4Link, ObjectUtils.asMap("resource_type", "video"));
+//            MediaManager.get().url()
+//                    .transformation(new Transformation().width(250).flags("animated").fetchFormat("auto").crop("scale"))
+//                    .resourceType("video").generate("dog.gif");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Log.d(TAG, "cloudinary : " + cloudinary);
+//    }
+//
+//    private class CloudAsync extends AsyncTask<Void, Void, Void> {
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+////            uploadVideosToCloudinary();
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            Log.d(TAG, "upload finished to cloudinary");
+//        }
+//    }
 
 
 
@@ -318,8 +381,8 @@ public class RssClient {
         return mWwfChannelLiveData;
     }
 
-    public void fetchRemoteNasaData(){
-        fetchDataFromNasa();
+    public void fetchRemoteReutersData(){
+        fetchDataFromReuters();
     }
 
     public void fetchRemoteYoutubeData(){

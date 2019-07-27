@@ -1,9 +1,9 @@
-package com.gahee.rss_v2.data.nasa.model;
+package com.gahee.rss_v2.data.reuters.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.gahee.rss_v2.data.nasa.tags.Item;
+import com.gahee.rss_v2.data.reuters.tags.Item;
 
 import java.util.List;
 
@@ -13,14 +13,12 @@ public class ChannelObj implements Parcelable {
     private final String mChannelDescription;
     private final String mChannelLink;
     private final List<Item> mItemList;
-    private final String mChannelImageUrl;
 
-    public ChannelObj(String mChannelTitle, String mChannelDescription, String mChannelLink, List<Item> mItemList, String mChannelImageUrl) {
+    public ChannelObj(String mChannelTitle, String mChannelDescription, String mChannelLink, List<Item> mItemList) {
         this.mChannelTitle = mChannelTitle;
         this.mChannelDescription = mChannelDescription;
         this.mChannelLink = mChannelLink;
         this.mItemList = mItemList;
-        this.mChannelImageUrl = mChannelImageUrl;
     }
 
     public String getmChannelTitle() {
@@ -39,16 +37,12 @@ public class ChannelObj implements Parcelable {
         return mItemList;
     }
 
-    public String getmChannelImageUrl() {
-        return mChannelImageUrl;
-    }
 
     private ChannelObj(Parcel in) {
         mChannelTitle = in.readString();
         mChannelDescription = in.readString();
         mChannelLink = in.readString();
         mItemList = in.createTypedArrayList(Item.CREATOR);
-        mChannelImageUrl = in.readString();
     }
 
     @Override
@@ -57,7 +51,6 @@ public class ChannelObj implements Parcelable {
         dest.writeString(mChannelDescription);
         dest.writeString(mChannelLink);
         dest.writeTypedList(mItemList);
-        dest.writeString(mChannelImageUrl);
     }
 
     @Override

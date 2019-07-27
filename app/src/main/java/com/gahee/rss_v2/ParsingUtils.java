@@ -2,6 +2,7 @@ package com.gahee.rss_v2;
 
 import android.util.Log;
 
+import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.tags.Item;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 
@@ -18,10 +19,12 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class URLReader {
+public class ParsingUtils {
 
     public static void main(String[] args) {
 
@@ -116,13 +119,16 @@ public class URLReader {
 
 
     //extracting youtube links from Time article
-    public static void getYoutubeLinks(List<Item> items){
+    public static void timeGetYoutubeLinksFromArticle(List<Item> items, TimeArticle timeArticle){
+        List<String> youtubeLinks = new ArrayList<>();
         for(Item item: items){
             Document document = Jsoup.parse(item.getContentEncoded());
             Elements links = document.select("iframe");
-            for(Element element : links){
-                Log.d("youtube links : ", " ||| " + element.attr("src"));
+            for(Element link : links){
+                Log.d("youtube links : ", " ||| " + link.attr("src"));
+                youtubeLinks.add(link.attr("src"));
             }
+            timeArticle.setmYoutubeLink(youtubeLinks);
         }
     }
 
@@ -141,7 +147,8 @@ public class URLReader {
 //        }
 //    }
 
-    public static void setWWFArticleImage(WWFArticle wwfArticle, com.gahee.rss_v2.data.wwf.tags.Item item){
+    public static void wwfExtractImageTags
+            (WWFArticle wwfArticle, com.gahee.rss_v2.data.wwf.tags.Item item){
         List<String> mediaLinks = new ArrayList<>();
         Document document = Jsoup.parse(item.getContentEncoded());
         Elements links = document.select("img");
@@ -153,5 +160,30 @@ public class URLReader {
             }
         }
         wwfArticle.setExtractedMediaLinks(mediaLinks);
+    }
+
+    public static String removeHtmlTagsFromString
+            (String stringWithTags){
+        Document document = Jsoup.parse(stringWithTags);
+        String cleanString = document.text();
+        return cleanString;
+    }
+
+    public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl) {
+        return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
+    }
+
+    public static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
+        youtubeUrl = youtubeUrl.replace("&feature=youtu.be", "");
+        if (youtubeUrl.toLowerCase().contains("youtu.be")) {
+            return youtubeUrl.substring(youtubeUrl.lastIndexOf("/") + 1);
+        }
+        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(youtubeUrl);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
     }
 }

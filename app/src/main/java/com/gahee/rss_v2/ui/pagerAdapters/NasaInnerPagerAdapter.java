@@ -13,14 +13,14 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.gahee.rss_v2.R;
-import com.gahee.rss_v2.data.nasa.model.ChannelObj;
-import com.gahee.rss_v2.data.nasa.tags.Item;
+import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.ui.NasaVideoViewModel;
 import com.gahee.rss_v2.ui.fragments.NasaFragment;
 
 public class NasaInnerPagerAdapter extends PagerAdapter {
 
-        private static final String TAG = "NasaPagerAdapter";
+        private static final String TAG = "ReutersPagerAdapter";
         private final Context mContext;
         private ChannelObj mChannelObj;
         private NasaVideoViewModel nasaVideoViewModel;
@@ -52,7 +52,7 @@ public class NasaInnerPagerAdapter extends PagerAdapter {
             Log.d(TAG, "item check : " + item.getDescription());
 
             String videoTitle = item.getTitle();
-            String videoUrl = item.getEnclosure().getUrl();
+            String videoUrl = item.getGroup().getContent().getUrlVideo();
 
             nasaVideoViewModel = ViewModelProviders.of(nasaFragment).get(NasaVideoViewModel.class);
 

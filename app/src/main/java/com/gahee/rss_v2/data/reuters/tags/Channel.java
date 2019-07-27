@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.data.nasa.tags;
+package com.gahee.rss_v2.data.reuters.tags;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -26,9 +26,6 @@ public class Channel implements Parcelable {
     @ElementList(entry = "item", inline = true, required = false)
     private List<Item> item;
 
-    @Path("channel/image")
-    @Element(name = "image", required = false)
-    private Image image;
 
     public Channel(){
 
@@ -39,7 +36,6 @@ public class Channel implements Parcelable {
         channelDescription = in.readString();
         channelLink = in.readString();
         item = in.createTypedArrayList(Item.CREATOR);
-        image = in.readParcelable(Image.class.getClassLoader());
     }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -47,7 +43,6 @@ public class Channel implements Parcelable {
         dest.writeString(channelDescription);
         dest.writeString(channelLink);
         dest.writeTypedList(item);
-        dest.writeParcelable(image, flags);
     }
 
     @Override
@@ -83,7 +78,4 @@ public class Channel implements Parcelable {
         return item;
     }
 
-    public Image getImage() {
-        return image;
-    }
 }

@@ -3,8 +3,8 @@ package com.gahee.rss_v2.remoteSource;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gahee.rss_v2.data.nasa.model.ArticleObj;
-import com.gahee.rss_v2.data.nasa.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.model.ArticleObj;
+import com.gahee.rss_v2.data.reuters.model.ChannelObj;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
@@ -23,11 +23,11 @@ public class RemoteViewModel extends ViewModel {
     }
 
     public MutableLiveData<ArrayList<ChannelObj>> getChannelMutableLiveData(){
-        return mRemoteRepository.getChannelMutableLiveData();
+        return mRemoteRepository.getReutersChannelMutableLiveData();
     }
 
     public MutableLiveData<ArrayList<ArticleObj>> getArticleMutableLiveData(){
-        return mRemoteRepository.getArticleMutableLiveData();
+        return mRemoteRepository.getReutersArticleMutableLiveData();
     }
 
     public MutableLiveData<ArrayList<YoutubeChannel>> getYoutubeChannelLiveData(){
@@ -54,8 +54,8 @@ public class RemoteViewModel extends ViewModel {
         return mRemoteRepository.getWwfChannelLiveData();
     }
 
-    public void fetchNasaDataFromRepo(){
-        mRemoteRepository.fetchNasaData();
+    public void fetchReutersDataFromRepo(){
+        mRemoteRepository.fetchReutersData();
     }
 
     public void fetchYouTubeDataFromRepo(){mRemoteRepository.fetchYtData();}

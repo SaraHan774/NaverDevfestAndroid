@@ -1,6 +1,6 @@
 package com.gahee.rss_v2.remoteSource;
 
-import com.gahee.rss_v2.data.nasa.NasaAPI;
+import com.gahee.rss_v2.data.reuters.ReutersAPI;
 import com.gahee.rss_v2.data.time.TimeAPI;
 import com.gahee.rss_v2.data.wwf.WwfAPI;
 import com.gahee.rss_v2.data.youtube.YoutubeAPI;
@@ -8,22 +8,22 @@ import com.gahee.rss_v2.data.youtube.YoutubeAPI;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-import static com.gahee.rss_v2.utils.Constants.NASA_BASE_URL;
+import static com.gahee.rss_v2.utils.Constants.REUTERS_BASE_URL;
 import static com.gahee.rss_v2.utils.Constants.TIME_BASE_URL;
 import static com.gahee.rss_v2.utils.Constants.WWF_BASE_URL;
 import static com.gahee.rss_v2.utils.Constants.YOUTUBE_BASE_URL;
 
 public class RetrofitInstanceBuilder {
 
-    //from nasa xml
+    //from reuters xml
     private static final Retrofit.Builder retrofitBuilder =
             new Retrofit.Builder()
-            .baseUrl(NASA_BASE_URL)
+            .baseUrl(REUTERS_BASE_URL)
             .addConverterFactory(SimpleXmlConverterFactory.create());
     private static final Retrofit retrofit = retrofitBuilder.build();
-    private static final NasaAPI NASA_API = retrofit.create(NasaAPI.class);
-    public static NasaAPI getNasaApi(){
-        return NASA_API;
+    private static final ReutersAPI REUTERS_API = retrofit.create(ReutersAPI.class);
+    public static ReutersAPI getReutersAPI(){
+        return REUTERS_API;
     }
 
 

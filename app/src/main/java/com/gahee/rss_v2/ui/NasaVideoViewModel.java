@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gahee.rss_v2.data.nasa.tags.Item;
+import com.gahee.rss_v2.data.reuters.tags.Item;
 
 public class NasaVideoViewModel extends ViewModel{
     private static final String TAG = "NasaVideoViewModel";

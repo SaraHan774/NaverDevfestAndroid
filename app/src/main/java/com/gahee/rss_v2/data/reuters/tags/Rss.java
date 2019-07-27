@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.data.nasa.tags;
+package com.gahee.rss_v2.data.reuters.tags;
 
 import android.os.Parcel;
 import android.os.Parcelable;
