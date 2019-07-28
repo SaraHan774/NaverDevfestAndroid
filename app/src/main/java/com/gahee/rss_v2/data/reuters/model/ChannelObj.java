@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.gahee.rss_v2.data.reuters.tags.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChannelObj implements Parcelable {
@@ -12,33 +13,16 @@ public class ChannelObj implements Parcelable {
     private final String mChannelTitle;
     private final String mChannelDescription;
     private final String mChannelLink;
-    private final List<Item> mItemList;
+    private final ArrayList<Item> mItemList;
 
-    public ChannelObj(String mChannelTitle, String mChannelDescription, String mChannelLink, List<Item> mItemList) {
+    public ChannelObj(String mChannelTitle, String mChannelDescription, String mChannelLink, ArrayList<Item> mItemList) {
         this.mChannelTitle = mChannelTitle;
         this.mChannelDescription = mChannelDescription;
         this.mChannelLink = mChannelLink;
         this.mItemList = mItemList;
     }
 
-    public String getmChannelTitle() {
-        return mChannelTitle;
-    }
-
-    public String getmChannelDescription() {
-        return mChannelDescription;
-    }
-
-    public String getmChannelLink() {
-        return mChannelLink;
-    }
-
-    public List<Item> getmItemList() {
-        return mItemList;
-    }
-
-
-    private ChannelObj(Parcel in) {
+    protected ChannelObj(Parcel in) {
         mChannelTitle = in.readString();
         mChannelDescription = in.readString();
         mChannelLink = in.readString();
@@ -69,4 +53,23 @@ public class ChannelObj implements Parcelable {
             return new ChannelObj[size];
         }
     };
+
+    public String getmChannelTitle() {
+        return mChannelTitle;
+    }
+
+    public String getmChannelDescription() {
+        return mChannelDescription;
+    }
+
+    public String getmChannelLink() {
+        return mChannelLink;
+    }
+
+    public ArrayList<Item> getmItemList() {
+        return mItemList;
+    }
+
+
+
 }

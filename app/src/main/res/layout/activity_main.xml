@@ -14,7 +14,7 @@
     >
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/fragment_placeholder_reuters"
+        android:id="@+id/card_view_reuters"
         android:layout_marginStart="@dimen/view_margin_2x"
         android:layout_marginEnd="@dimen/view_margin_2x"
         android:layout_marginTop="@dimen/view_margin_1x"
@@ -37,14 +37,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <include layout="@layout/slider_bottom_progress_bars"/>
+            <include layout="@layout/slider_bottom_progress_bars_reuters"/>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/fragment_placeholder_wwf"
+        android:id="@+id/card_view_wwf"
         android:layout_marginStart="@dimen/view_margin_2x"
         android:layout_marginEnd="@dimen/view_margin_2x"
         android:layout_marginTop="@dimen/view_margin_1x"
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <include layout="@layout/slider_bottom_progress_bars"/>
+            <include layout="@layout/slider_bottom_progress_bars_wwf"/>
 
         </LinearLayout>
 
@@ -75,6 +75,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_time"
         android:layout_marginStart="@dimen/view_margin_2x"
         android:layout_marginEnd="@dimen/view_margin_2x"
         android:layout_marginTop="@dimen/view_margin_1x"
@@ -87,9 +88,9 @@
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager_time_outer"
-            android:background="@color/myColorYoungAqua"
+            android:background="@color/colorTransparentBlack"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_gravity="bottom"
@@ -98,7 +99,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <include layout="@layout/slider_bottom_progress_bars"/>
+            <include layout="@layout/slider_bottom_progress_bars_time"/>
 
         </LinearLayout>
 

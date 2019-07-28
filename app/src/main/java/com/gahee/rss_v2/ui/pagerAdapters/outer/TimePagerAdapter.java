@@ -8,31 +8,53 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.gahee.rss_v2.MainActivity;
+import com.gahee.rss_v2.ParsingUtils;
 import com.gahee.rss_v2.R;
+import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
+import com.gahee.rss_v2.ui.TimeVideoViewModel;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.gahee.rss_v2.utils.Constants.TAG_TIME_FRAME;
+import static com.gahee.rss_v2.utils.Constants.TAG_TIME_VIDEO;
 
 public class TimePagerAdapter extends PagerAdapter {
 
     private static final String TAG = "TimePagerAdapter";
+    public static final String YOUTUBE = "YoutubePlayerDebugging";
 
     private Context mContext;
-    private TimeChannel timeChannel;
+    private ArrayList<TimeArticle> timeArticles;
+    private YouTubePlayerView youTubePlayerView;
+    private AbstractYouTubePlayerListener listener;
+    private TimeVideoViewModel timeVideoViewModel;
 
-    public TimePagerAdapter(Context context, TimeChannel timeChannel){
+    public TimePagerAdapter(Context context, ArrayList<TimeArticle> timeArticles, AbstractYouTubePlayerListener listener){
         this.mContext = context;
-        this.timeChannel = timeChannel;
+        this.timeArticles = timeArticles;
+        this.listener = listener;
+        timeVideoViewModel = ViewModelProviders.of((AppCompatActivity) mContext).get(TimeVideoViewModel.class);
+
     }
 
     @Override
     public int getCount() {
-        return timeChannel.getmChannelItems() != null ? timeChannel.getmChannelItems().size() : 0;
+        return timeArticles != null ? timeArticles.size() : 0;
     }
 
     @Override
@@ -45,11 +67,21 @@ public class TimePagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.main_time_slider, container, false);
 
+        FrameLayout frameLayout = view.findViewById(R.id.frame_layout_time_outer_slider);
+        frameLayout.setTag(TAG_TIME_FRAME + position);
+
         TextView title = view.findViewById(R.id.tv_time_outer_title);
-        title.setText(timeChannel.getmChannelItems().get(position).getArticleTitle());
+        title.setText(timeArticles.get(position).getmArticletitle());
 
         TextView description = view.findViewById(R.id.tv_time_outer_description);
-        description.setText(Html.fromHtml(timeChannel.getmChannelItems().get(position).getArticleDesc()));
+        description.setText(Html.fromHtml(timeArticles.get(position).getmArticleDescription()));
+
+        youTubePlayerView = view.findViewById(R.id.youtube_player_view);
+        youTubePlayerView.setTag(TAG_TIME_FRAME + TAG_TIME_VIDEO + position);
+
+
+
+        timeVideoViewModel.setSelectedVideo(timeArticles.get(position));
 
         container.addView(view);
         return view;
@@ -58,6 +90,7 @@ public class TimePagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         View view = (View) object;
+        youTubePlayerView.release();
         container.removeView(view);
     }
 

@@ -1,6 +1,7 @@
 package com.gahee.rss_v2.ui.pagerAdapters.outer;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +17,13 @@ import android.widget.ViewSwitcher;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.gahee.rss_v2.MainActivity;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
+import com.gahee.rss_v2.utils.MyAnimationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +76,9 @@ public class WwfPagerAdapter extends PagerAdapter {
 
         Log.d(TAG, "instantiate Item " + position);
 
+
         ImageSwitcher imageSwitcher = view.findViewById(R.id.image_switcher_wwf_outer_slider);
+
         imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
@@ -87,25 +92,27 @@ public class WwfPagerAdapter extends PagerAdapter {
                 );
                 return imageView;
             }
+
         });
 
         if(article.getExtractedMediaLinks().size() > 0){
             Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new ImageSliderTimer(article.getExtractedMediaLinks(), imageSwitcher), 0, 2500);
+            timer.scheduleAtFixedRate(new ImageSliderTimer(article.getExtractedMediaLinks(), imageSwitcher), 0, 3600);
         }
+
+
         container.addView(view);
         return view;
     }
 
 
-
     private class ImageSliderTimer extends TimerTask{
-        List<String> medias;
+        List<String> imageLinks;
         ImageSwitcher imageSwitcher;
         int index = 0;
 
         public ImageSliderTimer(List<String> medias, ImageSwitcher imageSwitcher){
-            this.medias = medias;
+            this.imageLinks = medias;
             this.imageSwitcher = imageSwitcher;
         }
 
@@ -115,17 +122,18 @@ public class WwfPagerAdapter extends PagerAdapter {
                     new Runnable() {
                         @Override
                         public void run() {
-                            if(index < medias.size()){
-                                Glide.with(mContext).load(medias.get(index++))
-                                        .transition(DrawableTransitionOptions.withCrossFade(800))
+
+                            if(index < imageLinks.size()){
+                                Glide.with(mContext).load(imageLinks.get(index++))
+                                        .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
                                         .placeholder(R.drawable.scrim_gradient_to_above)
                                         .error(R.drawable.ic_launcher_background)
                                         .into((ImageView) imageSwitcher.getCurrentView());
 
                             }else{
                                 index = 0;
-                                Glide.with(mContext).load(medias.get(index++))
-                                        .transition(DrawableTransitionOptions.withCrossFade(800))
+                                Glide.with(mContext).load(imageLinks.get(index++))
+                                        .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
                                         .placeholder(R.drawable.scrim_gradient_to_above)
                                         .error(R.drawable.ic_launcher_background)
                                         .into((ImageView) imageSwitcher.getCurrentView());
@@ -136,7 +144,6 @@ public class WwfPagerAdapter extends PagerAdapter {
             );
         }
     }
-
 
 
 

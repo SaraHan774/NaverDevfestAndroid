@@ -120,18 +120,24 @@ public class ParsingUtils {
 
 
     //extracting youtube links from Time article
-    public static void timeGetYoutubeLinksFromArticle(List<Item> items, TimeArticle timeArticle){
+    public static void timeGetYoutubeLinksFromArticle(Item item, TimeArticle timeArticle){
         List<String> youtubeLinks = new ArrayList<>();
-        for(Item item: items){
-            Document document = Jsoup.parse(item.getContentEncoded());
-            Elements links = document.select("iframe");
+        if(youtubeLinks != null){
+            youtubeLinks.clear();
+        }
+        Document document = Jsoup.parse(item.getContentEncoded());
+        Elements links = document.select("iframe");
+        if(links != null){
             for(Element link : links){
-                Log.d("youtube links : ", " ||| " + link.attr("src"));
+                String s = link.attr("src");
+                Log.d("youtube links : ", " ||| " + ParsingUtils.getYoutubeVideoIDFromUrl(s));
                 youtubeLinks.add(link.attr("src"));
             }
             timeArticle.setmYoutubeLink(youtubeLinks);
+        }else{
+            timeArticle.setmYoutubeLink(null);
+            }
         }
-    }
 
 //    public static void getImagesFromWWFArticle(List<com.gahee.rss_v2.data.wwf.tags.Item> items){
 //        for(com.gahee.rss_v2.data.wwf.tags.Item item: items){
@@ -186,5 +192,16 @@ public class ParsingUtils {
             return matcher.group();
         }
         return null;
+    }
+
+    // extracts ID from this kind of url -> https://www.youtube.com/embed/XeUBwpx8FEg?feature=oembed
+    public static String getYoutubeVideoIDFromUrl(String youtubeUrl){
+        if(!youtubeUrl.equals("") || youtubeUrl != null){
+            String temp = youtubeUrl.replace("https://www.youtube.com/embed/", "");
+            String videoId = temp.replace("?feature=oembed", "");
+            return videoId;
+        }else{
+            return "";
+        }
     }
 }

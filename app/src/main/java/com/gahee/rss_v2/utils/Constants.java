@@ -20,9 +20,13 @@ public class Constants {
 //    public static final String PUB_DATE = "firstPubDate";
 //    public static final String DESCRIPTION = "firstDescription";
 
-    public static final String NASA_SLIDER_INDEX = "index_nasa";
+    public static final String REUTERS_SLIDER_INDEX = "index_reuters";
 
     public static final String TAG_WWF_FRAME = "wwfFrame";
     public static final String TAG_REUTERS_FRAME = "nasaFrame";
+    public static final String TAG_TIME_FRAME = "timeFrame";
+    public static final String TAG_TIME_VIDEO = "video";
+
+
 
 }

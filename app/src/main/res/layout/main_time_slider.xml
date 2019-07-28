@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/frame_layout_time_outer_slider"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <fragment
-        android:id="@+id/static_fragment_time_slider"
+
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/youtube_player_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="300dp"
+        app:enableAutomaticInitialization="false"
+        app:showFullScreenButton="false" />
 
 
         <RelativeLayout
+            android:id="@+id/time_outer_text_view_container"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/tv_time_outer_title"
             android:layout_margin="@dimen/view_margin_min"
             android:text="@string/sample_string"
             android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/colorWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -28,10 +34,11 @@
             android:layout_margin="@dimen/view_margin_min"
             android:layout_below="@id/tv_time_outer_title"
             android:textSize="@dimen/text_size_small"
+            android:textColor="@color/colorWhite"
             android:text="@string/sample_text_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        </RelativeLayout>
 
+        </RelativeLayout>
 
 </FrameLayout>

@@ -115,19 +115,13 @@ public class ReutersPagerAdapter extends PagerAdapter {
 
             slideToRight.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
+                public void onAnimationStart(Animation animation) { }
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     title.setVisibility(View.GONE);
                 }
-
                 @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
+                public void onAnimationRepeat(Animation animation) { }
             });
         }
         container.addView(view);

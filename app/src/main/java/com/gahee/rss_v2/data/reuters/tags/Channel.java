@@ -8,6 +8,7 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Root(name = "channel", strict = false)
@@ -24,7 +25,7 @@ public class Channel implements Parcelable {
     private String channelLink;
 //    http://www.nasa.gov/
     @ElementList(entry = "item", inline = true, required = false)
-    private List<Item> item;
+    private ArrayList<Item> item;
 
 
     public Channel(){
@@ -42,7 +43,7 @@ public class Channel implements Parcelable {
         dest.writeString(channelTitle);
         dest.writeString(channelDescription);
         dest.writeString(channelLink);
-        dest.writeTypedList(item);
+        dest.writeList(item);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class Channel implements Parcelable {
         return channelLink;
     }
 
-    public List<Item> getItem() {
+    public ArrayList<Item> getItem() {
         return item;
     }
 

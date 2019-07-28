@@ -99,7 +99,7 @@ public class RssClient {
                     String title = channel.getChannelTitle();
                     String description = channel.getChannelDescription();
                     String link = channel.getChannelLink();
-                    List<Item> listOfItems = channel.getItem();
+                    ArrayList<Item> listOfItems = channel.getItem();
 
 
                     Log.d(TAG, "channel : " + channel + "\n" + "title : " + title + "\n" + "description : " + description);
@@ -265,7 +265,6 @@ public class RssClient {
     }
 
     private void storeEachTimeArticle(List<com.gahee.rss_v2.data.time.tags.Item> items){
-        TimeArticle timeArticle = null;
 
         if(items != null){
             for(com.gahee.rss_v2.data.time.tags.Item item : items){
@@ -280,10 +279,10 @@ public class RssClient {
 //                Log.d(TAG,  articleTitle + "\n" + articlePubDate +"\n" + articleDescription + "\n" + thumbnail
 //                + "\n" + contentEncoded + articleLink);
 
-                timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, contentEncoded,articleLink);
+                TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, contentEncoded,articleLink);
+                ParsingUtils.timeGetYoutubeLinksFromArticle(item, timeArticle);
                 timeArticleArrayList.add(timeArticle);
             }
-            ParsingUtils.timeGetYoutubeLinksFromArticle(items, timeArticle);
             mTimeArticleLiveData.setValue(timeArticleArrayList);
         }
     }
