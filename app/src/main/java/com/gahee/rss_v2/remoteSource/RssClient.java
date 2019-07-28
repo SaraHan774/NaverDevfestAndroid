@@ -238,10 +238,10 @@ public class RssClient {
                 thumbnailLink = "";
             }
 
-            Log.d(TAG, "article Link : " + articleLink + " \n" +
-                    "article video : " + videoLink+ "\n" +
-                    "thumbnail : " + thumbnailLink + "\n" +
-                    "article PubDate : " + articlePubDate + "\n");
+//            Log.d(TAG, "article Link : " + articleLink + " \n" +
+//                    "article video : " + videoLink+ "\n" +
+//                    "thumbnail : " + thumbnailLink + "\n" +
+//                    "article PubDate : " + articlePubDate + "\n");
 
             mArticleObjArrayList.add(new ArticleObj(articleTitle, articleLink, articleDescription, articlePubDate, videoLink, thumbnailLink));
         }
@@ -277,8 +277,8 @@ public class RssClient {
                 String contentEncoded = item.getContentEncoded();
                 String articleLink = item.getArticleLink();
 
-                Log.d(TAG,  articleTitle + "\n" + articlePubDate +"\n" + articleDescription + "\n" + thumbnail
-                + "\n" + contentEncoded + articleLink);
+//                Log.d(TAG,  articleTitle + "\n" + articlePubDate +"\n" + articleDescription + "\n" + thumbnail
+//                + "\n" + contentEncoded + articleLink);
 
                 timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, contentEncoded,articleLink);
                 timeArticleArrayList.add(timeArticle);

@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 PlayerView playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
                 MainActivity.this.playerView = playerView;
                 setMediaURL(channelObjs.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
+                initializePlayer();
                 hideSystemUi();
             }
         });
@@ -271,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             releasePlayer();
             setMediaURL(reutersItemList.get(position).getGroup().getContent().getUrlVideo());
+            playbackPosition = 0;
 
             FrameLayout frameLayout = (FrameLayout) viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + position);
             PlayerView playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
@@ -281,10 +283,16 @@ public class MainActivity extends AppCompatActivity {
             if(simpleExoPlayer != null){
                 Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_out);
                 TextView description = frameLayout.findViewById(R.id.tv_reuters_outer_description);
-                description.startAnimation(fadeOut);
+
                 TextView title = frameLayout.findViewById(R.id.tv_reuters_outer_title);
                 Animation slideToRight = AnimationUtils.loadAnimation(MainActivity.this, R.anim.title_slide_to_left);
 
+                if(description.getVisibility() == View.GONE || title.getVisibility() == View.GONE){
+                    description.setVisibility(View.VISIBLE);
+                    title.setVisibility(View.VISIBLE);
+                }
+
+                description.startAnimation(fadeOut);
                 fadeOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {

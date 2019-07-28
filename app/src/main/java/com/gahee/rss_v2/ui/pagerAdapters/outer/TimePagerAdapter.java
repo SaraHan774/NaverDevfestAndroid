@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,9 +50,6 @@ public class TimePagerAdapter extends PagerAdapter {
 
         TextView description = view.findViewById(R.id.tv_time_outer_description);
         description.setText(Html.fromHtml(timeChannel.getmChannelItems().get(position).getArticleDesc()));
-
-        Log.d(TAG, "article content encoded : " +
-                timeChannel.getmChannelItems().get(position).getContentEncoded());
 
         container.addView(view);
         return view;
