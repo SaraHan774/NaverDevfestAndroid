@@ -11,16 +11,10 @@
         card_view:cardCornerRadius="20dp"
         card_view:cardUseCompatPadding="true"
         android:elevation="8dp"
+        android:background="@color/colorBlack"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="320dp">
-
-        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-            android:id="@+id/youtube_player_view"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:enableAutomaticInitialization="false"
-            app:showFullScreenButton="false" />
 
 
         <ImageView

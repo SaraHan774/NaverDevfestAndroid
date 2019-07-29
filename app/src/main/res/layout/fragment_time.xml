@@ -1,48 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@drawable/rect_round_corner_scrim"
     android:layout_margin="@dimen/view_margin_min"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/time_channel_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/sample_text"
+        android:textSize="@dimen/text_size_large"
+        android:textStyle="italic|bold"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager_time_inner"
-        android:background="@color/colorTransparent"
-        android:layout_marginBottom="@dimen/view_margin_1x"
-        android:layout_marginTop="@dimen/view_margin_1x"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="300dp"
+        android:layout_marginTop="300dp"
+        android:background="@color/colorTransparent"
+        app:layout_constraintEnd_toEndOf="@+id/card_view_time"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/card_view_time"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_time"
-        android:layout_marginStart="@dimen/view_margin_1x"
-        android:layout_marginEnd="@dimen/view_margin_1x"
-        android:layout_marginBottom="@dimen/view_margin_1x"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_alignParentBottom="true"
         android:elevation="4dp"
         app:cardCornerRadius="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp">
 
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager_time_outer"
-            android:background="@color/colorBlack"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/colorBlack" />
 
         <LinearLayout
-            android:layout_gravity="bottom"
-            android:padding="@dimen/view_margin_x_min"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:padding="@dimen/view_margin_x_min">
 
-            <include layout="@layout/slider_bottom_progress_bars_time"/>
+            <include layout="@layout/slider_bottom_progress_bars_time" />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

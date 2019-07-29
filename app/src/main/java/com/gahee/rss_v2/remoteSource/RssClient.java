@@ -276,11 +276,14 @@ public class RssClient {
 
                 for(int j = 0; j < content.size(); j++){
                     Log.d("TIMEARTICLE", "content : " + content.get(j).getTitle() + "\n"
-                     + "content link : " + content.get(j).getUrl());
+                     + "content link : " + content.get(j).getUrl() + "\n"
+                    + "content text : " + contentEncoded + "\n"
+                    + "==========================================");
                 }
 
                 TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, content,contentEncoded,articleLink);
                 StringUtils.timeGetYoutubeLinksFromArticle(item, timeArticle);
+
                 timeArticleArrayList.add(timeArticle);
             }
             mTimeArticleLiveData.setValue(timeArticleArrayList);

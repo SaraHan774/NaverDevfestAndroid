@@ -12,7 +12,12 @@ import java.util.TimerTask;
 public class MyTimers {
 
     private static final String TAG = "MyTimers";
-    private ArrayList arrayList = new ArrayList();
+    private int listSize;
+
+    public MyTimers(int listSize){
+        this.listSize = listSize;
+        Log.d(TAG, "MyTimers: " + listSize);
+    }
 
 
     public class SliderTimer extends TimerTask {
@@ -33,14 +38,21 @@ public class MyTimers {
                     new Runnable() {
                         @Override
                         public void run() {
-                                if(viewPager.getCurrentItem() < arrayList.size() - 1){
-                                    Log.d(TAG, "run: get current item " + viewPager.getCurrentItem());
-                                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-                                    progressBarUtil.resetProgressBarToUserSelection(viewPager.getCurrentItem() + 1);
+                                int currentPage = viewPager.getCurrentItem();
+                                Log.d(TAG, "run: current page !!! " + currentPage);
+                                if(currentPage < listSize - 1){
+                                    Log.d(TAG, "run: " + listSize);
+                                    viewPager.setCurrentItem(currentPage +1, true);
+                                    Log.d(TAG, "run: current page + 1 " + currentPage + 1);
+                                    if(progressBarUtil != null){
+                                        progressBarUtil.resetProgressBarToUserSelection(viewPager.getCurrentItem() + 1);
+                                    }
                                     Log.d(TAG, "run: set current item" + viewPager.getCurrentItem());
                                 }else{
                                     viewPager.setCurrentItem(0);
-                                    progressBarUtil.resetProgressBarToUserSelection(0);
+                                    if(progressBarUtil !=null){
+                                        progressBarUtil.resetProgressBarToUserSelection(0);
+                                    }
                                 }
                             }
 
@@ -54,9 +66,6 @@ public class MyTimers {
         return new SliderTimer(context, viewPager, progressBarUtil);
     }
 
-    public void setArticleData(ArrayList arrayList){
-        this.arrayList = arrayList;
-    }
 
 
 }

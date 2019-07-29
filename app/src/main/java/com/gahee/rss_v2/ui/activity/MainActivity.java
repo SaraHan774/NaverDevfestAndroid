@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 setMediaURL(channelObjs.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
                 initializePlayer();
                 hideSystemUi();
-                setUpReutersSliderTimer(channelObjs);
+//                setUpReutersSliderTimer(channelObjs);
             }
         });
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 wwfProgress.setProgressBars(wwfProgressBars);
                 wwfProgress.resetProgressBarToUserSelection(0);
 
-                setUpWWFSliderTimer(wwfArticles);
+//                setUpWWFSliderTimer(wwfArticles);
 
             }
         });
@@ -184,8 +184,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onChanged(TimeArticle timeArticle) {
                     if(timeArticle.getmYoutubeLink().size() != 0) {
                         String videoID = timeArticle.getmYoutubeLink().get(0);
-                        youTubePlayer.loadVideo(videoID, 0);
-                    }
+                    youTubePlayer.loadVideo(videoID, 0);
+                }
                 }
             });
 
@@ -360,9 +360,8 @@ public class MainActivity extends AppCompatActivity {
      * Timers for each ViewPager
      */
     private void setUpReutersSliderTimer(ArrayList<ChannelObj> channelObjs){
-        MyTimers myTimersReuters = new MyTimers();
+        MyTimers myTimersReuters = new MyTimers(channelObjs.get(0).getmItemList().size());
         Timer timerReuters = new Timer();
-        myTimersReuters.setArticleData(channelObjs.get(0).getmItemList());
 
         MyTimers.SliderTimer reutersSliderTimer
                 = myTimersReuters.getSliderTimer(MainActivity.this, viewPagerReuters, reutersProgress);
@@ -372,13 +371,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setUpWWFSliderTimer(ArrayList<WWFArticle> wwfArticles){
-        MyTimers myTimers = new MyTimers();
+        MyTimers myTimers = new MyTimers(wwfArticles.size());
         Timer wwfTimer = new Timer();
-        myTimers.setArticleData(wwfArticles);
         MyTimers.SliderTimer sliderTimer = myTimers.getSliderTimer(MainActivity.this, viewPagerWWF, wwfProgress);
         wwfTimer.scheduleAtFixedRate(sliderTimer, WWF_SLIDER_TIME_INTERVAL, WWF_SLIDER_TIME_INTERVAL);
-
-
     }
 
 

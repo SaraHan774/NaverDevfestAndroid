@@ -80,7 +80,7 @@
         android:id="@+id/static_fragment_time"
         android:name="com.gahee.rss_v2.ui.time.TimeFragment"
         android:layout_width="match_parent"
-        android:layout_height="700dp"/>
+        android:layout_height="800dp"/>
 
 
 

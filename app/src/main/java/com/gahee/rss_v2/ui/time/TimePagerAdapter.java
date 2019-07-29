@@ -1,10 +1,12 @@
 package com.gahee.rss_v2.ui.time;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.gahee.rss_v2.ui.TimeArticleViewModel;
 import com.gahee.rss_v2.utils.StringUtils;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class TimePagerAdapter extends PagerAdapter {
 
@@ -68,6 +71,9 @@ public class TimePagerAdapter extends PagerAdapter {
                 .error(R.drawable.ic_launcher_background)
                 .into(imageView);
 
+
+
+
         container.addView(view);
         return view;
     }
@@ -75,12 +81,14 @@ public class TimePagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         View view = (View) object;
-//        youTubePlayerView.release();
         container.removeView(view);
     }
+
+
 
     @Override
     public int getItemPosition(@NonNull Object object) {
         return super.getItemPosition(object);
     }
+
 }

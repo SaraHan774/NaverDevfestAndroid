@@ -19,10 +19,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class StringUtils {
+
+    private static final String TAG = "StringUtils";
 
 
     static String readFromUrl(String link){ //network connection이 null을 반환함.
@@ -106,8 +110,9 @@ public class StringUtils {
         if(links != null){
             for(Element link : links){
                 String s = link.attr("src");
+                String id = StringUtils.getYoutubeVideoIDFromUrl(s);
                 Log.d("youtube links : ", " ||| " + StringUtils.getYoutubeVideoIDFromUrl(s));
-                youtubeLinks.add(link.attr("src"));
+                youtubeLinks.add(id); //only set the ID
             }
             timeArticle.setmYoutubeLink(youtubeLinks);
         }else{
@@ -156,24 +161,26 @@ public class StringUtils {
         String cleanString = document.text();
         return cleanString;
     }
-//
-//    public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl) {
-//        return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
-//    }
-//
-//    public static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
-//        youtubeUrl = youtubeUrl.replace("&feature=youtu.be", "");
-//        if (youtubeUrl.toLowerCase().contains("youtu.be")) {
-//            return youtubeUrl.substring(youtubeUrl.lastIndexOf("/") + 1);
-//        }
-//        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
-//        Pattern compiledPattern = Pattern.compile(pattern);
-//        Matcher matcher = compiledPattern.matcher(youtubeUrl);
-//        if (matcher.find()) {
-//            return matcher.group();
-//        }
-//        return null;
-//    }
+
+    public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl) {
+        return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
+    }
+
+    public static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
+        youtubeUrl = youtubeUrl.replace("&feature=youtu.be", "");
+        if (youtubeUrl.toLowerCase().contains("youtu.be")) {
+            return youtubeUrl.substring(youtubeUrl.lastIndexOf("/") + 1);
+        }
+        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
+        Pattern compiledPattern = Pattern.compile(pattern);
+        Matcher matcher = compiledPattern.matcher(youtubeUrl);
+        if (matcher.find()) {
+            String result = matcher.group();
+            Log.d(TAG, "getYoutubeVideoIdFromUrl: ");
+            return result;
+        }
+        return null;
+    }
 
     // extracts ID from this kind of url -> https://www.youtube.com/embed/XeUBwpx8FEg?feature=oembed
     public static String getYoutubeVideoIDFromUrl(String youtubeUrl){
