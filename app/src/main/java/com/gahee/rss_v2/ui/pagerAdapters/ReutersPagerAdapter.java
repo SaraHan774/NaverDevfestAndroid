@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.ui.pagerAdapters.outer;
+package com.gahee.rss_v2.ui.pagerAdapters;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,20 +9,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.gahee.rss_v2.StringUtils;
+import com.gahee.rss_v2.utils.StringUtils;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.reuters.model.ChannelObj;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.utils.ProgressBarUtil;
-import com.gahee.rss_v2.utils.SliderIndexViewModel;
-import com.google.android.exoplayer2.ui.PlayerView;
 
 import static com.gahee.rss_v2.utils.Constants.TAG_REUTERS_FRAME;
 

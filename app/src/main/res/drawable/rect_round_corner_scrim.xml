@@ -3,12 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <stroke android:width="2dp" android:color="@color/colorLightGrey" />
             <corners android:radius="20dp"/>
-            <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+            <padding android:left="8dp" android:top="8dp" android:right="8dp" android:bottom="8dp" />
         </shape>
     </item>
 
-    <item android:drawable="@drawable/scrim_gradient_to_above"/>
+    <item android:drawable="@drawable/scrim_gradient_up_and_down"/>
 
 </layer-list>

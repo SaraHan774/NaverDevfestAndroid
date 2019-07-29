@@ -1,11 +1,15 @@
 package com.gahee.rss_v2.data.time.tags;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+
+import java.util.List;
 
 @Root(name = "item", strict = false)
 public class Item implements Parcelable{
@@ -25,6 +29,9 @@ public class Item implements Parcelable{
 
     @Element(name = "thumbnail")
     private Thumbnail thumbnail;
+
+    @ElementList(inline = true, entry = "content")
+    private List<Content> content;
 
     @Element(name = "encoded", required = false)
     private String contentEncoded;
@@ -74,44 +81,23 @@ public class Item implements Parcelable{
         }
     }
 
-    public Item(String articleTitle, String pubDate, String articleDesc, Thumbnail thumbnail, String contentEncoded, String articleLink) {
+    public Item(String articleTitle, String pubDate, String articleDesc, Thumbnail thumbnail, List<Content> content, String contentEncoded, String articleLink) {
         this.articleTitle = articleTitle;
         this.pubDate = pubDate;
         this.articleDesc = articleDesc;
         this.thumbnail = thumbnail;
+        this.content = content;
         this.contentEncoded = contentEncoded;
         this.articleLink = articleLink;
     }
 
-    public String getArticleTitle() {
-        return articleTitle;
-    }
-
-    public String getPubDate() {
-        return pubDate;
-    }
-
-    public String getArticleDesc() {
-        return articleDesc;
-    }
-
-    public Thumbnail getThumbnail() {
-        return thumbnail;
-    }
-
-    public String getContentEncoded() {
-        return contentEncoded;
-    }
-
-    public String getArticleLink() {
-        return articleLink;
-    }
 
     protected Item(Parcel in) {
         articleTitle = in.readString();
         pubDate = in.readString();
         articleDesc = in.readString();
         thumbnail = in.readParcelable(Thumbnail.class.getClassLoader());
+        content = in.createTypedArrayList(Content.CREATOR);
         contentEncoded = in.readString();
         articleLink = in.readString();
     }
@@ -122,6 +108,7 @@ public class Item implements Parcelable{
         dest.writeString(pubDate);
         dest.writeString(articleDesc);
         dest.writeParcelable(thumbnail, flags);
+        dest.writeTypedList(content);
         dest.writeString(contentEncoded);
         dest.writeString(articleLink);
     }
@@ -142,4 +129,32 @@ public class Item implements Parcelable{
             return new Item[size];
         }
     };
+
+    public String getArticleTitle() {
+        return articleTitle;
+    }
+
+    public String getPubDate() {
+        return pubDate;
+    }
+
+    public String getArticleDesc() {
+        return articleDesc;
+    }
+
+    public Thumbnail getThumbnail() {
+        return thumbnail;
+    }
+
+    public List<Content> getContent() {
+        return content;
+    }
+
+    public String getContentEncoded() {
+        return contentEncoded;
+    }
+
+    public String getArticleLink() {
+        return articleLink;
+    }
 }

@@ -1,7 +1,6 @@
-package com.gahee.rss_v2.ui.pagerAdapters.outer;
+package com.gahee.rss_v2.ui.pagerAdapters;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +18,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.gahee.rss_v2.MainActivity;
+import com.gahee.rss_v2.ui.activity.MainActivity;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.utils.MyAnimationUtils;

@@ -10,6 +10,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/view_margin_4x"
     android:background="@color/colorWhite"
     >
 
@@ -74,36 +75,12 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view_time"
-        android:layout_marginStart="@dimen/view_margin_2x"
-        android:layout_marginEnd="@dimen/view_margin_2x"
-        android:layout_marginTop="@dimen/view_margin_1x"
-        android:layout_marginBottom="@dimen/view_margin_1x"
-        android:elevation="4dp"
-        app:cardCornerRadius="16dp"
+
+    <fragment
+        android:id="@+id/static_fragment_time"
+        android:name="com.gahee.rss_v2.ui.time.TimeFragment"
         android:layout_width="match_parent"
-        android:layout_height="350dp">
-
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager_time_outer"
-            android:background="@color/colorTransparentBlack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
-            android:layout_gravity="bottom"
-            android:padding="@dimen/view_margin_x_min"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <include layout="@layout/slider_bottom_progress_bars_time"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+        android:layout_height="700dp"/>
 
 
 

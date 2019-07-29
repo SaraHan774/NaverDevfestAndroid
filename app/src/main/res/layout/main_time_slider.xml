@@ -1,38 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/frame_layout_time_outer_slider"
+    android:orientation="vertical"
+    android:id="@+id/time_outer_slider_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-        android:id="@+id/youtube_player_view"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        app:enableAutomaticInitialization="false"
-        app:showFullScreenButton="false" />
+        <ImageView
+            android:id="@+id/img_time_outer_article_thumbnail"
+            android:background="@color/myColorYoungAqua"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
         <RelativeLayout
             android:id="@+id/time_outer_text_view_container"
             android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_time_outer_title"
             android:layout_margin="@dimen/view_margin_min"
             android:text="@string/sample_string"
             android:textSize="@dimen/text_size_medium"
+            android:paddingStart="@dimen/view_margin_min"
+            android:paddingEnd="@dimen/view_margin_min"
+            android:layout_marginBottom="@dimen/view_margin_4x"
+            android:background="@color/colorTransparentBlack"
             android:textColor="@color/colorWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/tv_time_outer_description"
+            android:id="@+id/tv_time_outer_pub_date"
+            android:background="@color/colorTransparentBlack"
+            android:paddingStart="@dimen/view_margin_min"
+            android:paddingEnd="@dimen/view_margin_min"
             android:layout_margin="@dimen/view_margin_min"
             android:layout_below="@id/tv_time_outer_title"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@color/colorWhite"
+            android:text="@string/sample_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_time_outer_description"
+            android:layout_marginBottom="@dimen/view_margin_2x"
+            android:layout_marginTop="@dimen/view_margin_min"
+            android:layout_marginEnd="@dimen/view_margin_min"
+            android:layout_marginStart="@dimen/view_margin_min"
+            android:background="@color/colorTransparentBlack"
+            android:paddingStart="@dimen/view_margin_min"
+            android:paddingEnd="@dimen/view_margin_min"
+            android:layout_below="@id/tv_time_outer_pub_date"
             android:textSize="@dimen/text_size_small"
             android:textColor="@color/colorWhite"
             android:text="@string/sample_text_medium"

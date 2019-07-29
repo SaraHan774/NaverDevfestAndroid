@@ -1,4 +1,4 @@
-package com.gahee.rss_v2;
+package com.gahee.rss_v2.utils;
 
 import android.util.Log;
 
@@ -19,35 +19,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class StringUtils {
 
-    public static void main(String[] args) {
-
-        String link = "https://www.nasa.gov/press-release/nasa-administrator-to-talk-moon-landing-anniversary-moon-to-mars-plans";
-        String link2 = "http://www.nasa.gov/ames/nisv-podcast-live-the-science-of-heat-shields";
-        String link3 = "https://movieweb.com/a-beautiful-day-in-the-neighborhood-movie-photos-tom-hanks/";
-        String link4 = "https://movieweb.com/top-gun-2-trailer-maverick-comic-con/";
-        String time = "http://feedproxy.google.com/~r/time/entertainment/~3/5LL1KF0pCTg/";
-        String nasa = "https://www.nasa.gov/multimedia/podcasting/twan_index.html";
-
-        String nasa2 = "https://www.nasa.gov/nasa-edge/0111-m113";
-
-//        String reading = readFromUrl(link);
-//        System.out.println(reading);
-//        PrintWriter printWriter = null;
-//        try {
-//            printWriter = new PrintWriter("sample_nasa_html.txt");
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        printWriter.println(reading);
-        fetchingWithJsoup(nasa2);
-    }
 
     static String readFromUrl(String link){ //network connection이 null을 반환함.
         HttpsURLConnection urlConnection  = null;
@@ -137,6 +113,11 @@ public class StringUtils {
         }else{
             timeArticle.setmYoutubeLink(null);
             }
+        }
+
+        public static String formatPubDateString(String pubDate){
+            String formattedDate = pubDate.replace("+0000", "GMT");
+            return formattedDate;
         }
 
 //    public static void getImagesFromWWFArticle(List<com.gahee.rss_v2.data.wwf.tags.Item> items){

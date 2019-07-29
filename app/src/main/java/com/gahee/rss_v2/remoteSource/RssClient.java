@@ -4,7 +4,8 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.gahee.rss_v2.StringUtils;
+import com.gahee.rss_v2.data.time.tags.Content;
+import com.gahee.rss_v2.utils.StringUtils;
 import com.gahee.rss_v2.data.reuters.ReutersAPI;
 import com.gahee.rss_v2.data.reuters.model.ArticleObj;
 import com.gahee.rss_v2.data.reuters.model.ChannelObj;
@@ -258,7 +259,8 @@ public class RssClient {
     private void storeEachTimeArticle(List<com.gahee.rss_v2.data.time.tags.Item> items){
 
         if(items != null){
-            for(com.gahee.rss_v2.data.time.tags.Item item : items){
+            for(int i = 0; i < items.size(); i++){
+                com.gahee.rss_v2.data.time.tags.Item item = items.get(i);
                 String articleTitle = item.getArticleTitle();
                 String articlePubDate = item.getPubDate();
 
@@ -267,10 +269,17 @@ public class RssClient {
                 String contentEncoded = item.getContentEncoded();
                 String articleLink = item.getArticleLink();
 
-//                Log.d(TAG,  articleTitle + "\n" + articlePubDate +"\n" + articleDescription + "\n" + thumbnail
-//                + "\n" + contentEncoded + articleLink);
+                List<Content> content = item.getContent();
 
-                TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, contentEncoded,articleLink);
+//                Log.d(TAG,  articleTitle + "\n" + articlePubDate +"\n" + articleDescription + "\n" + thumbnail
+//                + "\n" + articleLink + "\n\n");
+
+                for(int j = 0; j < content.size(); j++){
+                    Log.d("TIMEARTICLE", "content : " + content.get(j).getTitle() + "\n"
+                     + "content link : " + content.get(j).getUrl());
+                }
+
+                TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, content,contentEncoded,articleLink);
                 StringUtils.timeGetYoutubeLinksFromArticle(item, timeArticle);
                 timeArticleArrayList.add(timeArticle);
             }

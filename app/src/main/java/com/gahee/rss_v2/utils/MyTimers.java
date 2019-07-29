@@ -2,13 +2,9 @@ package com.gahee.rss_v2.utils;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
 import androidx.viewpager.widget.ViewPager;
-
-import com.gahee.rss_v2.MainActivity;
 
 import java.util.ArrayList;
 import java.util.TimerTask;

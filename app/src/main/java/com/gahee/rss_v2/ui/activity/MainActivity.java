@@ -1,4 +1,4 @@
-package com.gahee.rss_v2;
+package com.gahee.rss_v2.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,15 +13,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.reuters.model.ChannelObj;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
-import com.gahee.rss_v2.ui.TimeVideoViewModel;
-import com.gahee.rss_v2.ui.pagerAdapters.outer.ReutersPagerAdapter;
-import com.gahee.rss_v2.ui.pagerAdapters.outer.TimePagerAdapter;
-import com.gahee.rss_v2.ui.pagerAdapters.outer.WwfPagerAdapter;
+import com.gahee.rss_v2.ui.TimeArticleViewModel;
+import com.gahee.rss_v2.ui.pagerAdapters.ReutersPagerAdapter;
+import com.gahee.rss_v2.ui.pagerAdapters.WwfPagerAdapter;
 import com.gahee.rss_v2.utils.MyTimers;
 import com.gahee.rss_v2.utils.ProgressBarUtil;
 import com.gahee.rss_v2.utils.SliderIndexViewModel;
@@ -59,7 +59,6 @@ import static com.gahee.rss_v2.utils.Constants.PLAYBACK_POSITION;
 import static com.gahee.rss_v2.utils.Constants.PLAY_WHEN_READY;
 import static com.gahee.rss_v2.utils.Constants.REUTERS_SLIDER_TIME_INTERVAL;
 import static com.gahee.rss_v2.utils.Constants.TAG_REUTERS_FRAME;
-import static com.gahee.rss_v2.utils.Constants.TAG_TIME_FRAME;
 import static com.gahee.rss_v2.utils.Constants.TAG_WWF_FRAME;
 import static com.gahee.rss_v2.utils.Constants.USER_AGENT;
 import static com.gahee.rss_v2.utils.Constants.WWF_SLIDER_TIME_INTERVAL;
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     private YouTubePlayerView youTubePlayerView;
     private FrameLayout timeSliderFrame;
     private int timeViewPagerPosition = 0;
-    private TimeVideoViewModel timeVideoViewModel;
+    private TimeArticleViewModel timeArticleViewModel;
     private SliderIndexViewModel sliderIndexViewModel;
 
     private ProgressBarUtil reutersProgress;
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
         RemoteViewModel remoteViewModel = ViewModelProviders.of(this).get(RemoteViewModel.class);
         if(savedInstanceState == null){
-            remoteViewModel.fetchReutersDataFromRepo();
+
         }else{
             index = savedInstanceState.getInt(REUTERS_SLIDER_INDEX);
             mediaURL = savedInstanceState.getString(MEDIA_URL);
@@ -122,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             playbackPosition = savedInstanceState.getLong(PLAYBACK_POSITION, 0);
             currentWindow = savedInstanceState.getInt(CURRENT_WINDOW, 0);
         }
+        remoteViewModel.fetchReutersDataFromRepo();
         remoteViewModel.fetchTimeDataFromRepo();
         remoteViewModel.fetchWWFDataFromRepo();
 
@@ -171,28 +171,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        remoteViewModel.getTimeArticleLiveData().observe(this, new Observer<ArrayList<TimeArticle>>() {
-            @Override
-            public void onChanged(ArrayList<TimeArticle> timeArticles) {
-
-                viewPagerTime = findViewById(R.id.view_pager_time_outer);
-                MainActivity.this.timeArticles = timeArticles;
-                TimePagerAdapter pagerAdapter = new TimePagerAdapter(MainActivity.this, timeArticles, listener);
-                viewPagerTime.setAdapter(pagerAdapter);
-                Log.d(TAG, " setting time pager adapter ... ");
-                viewPagerTime.addOnPageChangeListener(onPageChangeListenerTime);
-                timeSliderFrame = viewPagerTime.findViewById(R.id.frame_layout_time_outer_slider);
-                youTubePlayerView = timeSliderFrame.findViewById(R.id.youtube_player_view);
-
-
-//                youTubePlayerView.addYouTubePlayerListener(listener);
-                getLifecycle().addObserver(youTubePlayerView);
-
-            }
-        });
-
-        timeVideoViewModel = ViewModelProviders.of(this).get(TimeVideoViewModel.class);
         sliderIndexViewModel = ViewModelProviders.of(this).get(SliderIndexViewModel.class);
     }
 
@@ -201,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReady(YouTubePlayer youTubePlayer) {
 
-            timeVideoViewModel.getSelectedVideo().observe(MainActivity.this, new Observer<TimeArticle>() {
+            timeArticleViewModel.getSeletedArticle().observe(MainActivity.this, new Observer<TimeArticle>() {
                 @Override
                 public void onChanged(TimeArticle timeArticle) {
                     if(timeArticle.getmYoutubeLink().size() != 0) {
@@ -218,6 +196,193 @@ public class MainActivity extends AppCompatActivity {
         return listener;
     }
 
+
+
+
+
+
+    /*
+    *  ViewPager Listeners
+    */
+    private ViewPager.OnPageChangeListener reutersViewPagerListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            releasePlayer();
+            setMediaURL(reutersItemList.get(position).getGroup().getContent().getUrlVideo());
+            playbackPosition = 0;
+
+            FrameLayout frameLayout = (FrameLayout) viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + position);
+            PlayerView playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
+            //play videos
+            MainActivity.this.playerView = playerView;
+            initializePlayer();
+
+            reutersProgress.resetProgressBarToUserSelection(position);
+
+//            sliderIndexViewModel.setReutersSliderIndex(position);
+//            sliderIndexViewModel.getReutersSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
+//                @Override
+//                public void onChanged(Integer integer) {
+//                    Log.d("sliderIndex", "onchanged [reuters]: " + integer);
+//                    reutersProgress.resetProgressBarToUserSelection(integer);
+//                }
+//            });
+
+            if(simpleExoPlayer != null){
+                Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_out);
+                TextView description = frameLayout.findViewById(R.id.tv_reuters_outer_description);
+
+                TextView title = frameLayout.findViewById(R.id.tv_reuters_outer_title);
+                Animation slideToRight = AnimationUtils.loadAnimation(MainActivity.this, R.anim.title_slide_to_left);
+
+                if(description.getVisibility() == View.GONE || title.getVisibility() == View.GONE){
+                    description.setVisibility(View.VISIBLE);
+                    title.setVisibility(View.VISIBLE);
+                }
+
+                description.startAnimation(fadeOut);
+                fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                            description.setVisibility(View.GONE);
+                            title.startAnimation(slideToRight);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+                slideToRight.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        title.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+            }
+
+            Log.d(TAG, "player view init ... " + MainActivity.this.playerView);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    private ViewPager.OnPageChangeListener wwfViewPagerListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Animation fadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_in);
+            FrameLayout frameLayout = (FrameLayout) viewPagerWWF.findViewWithTag(TAG_WWF_FRAME + position);
+            TextView articleDescription = frameLayout.findViewById(R.id.tv_wwf_outer_description);
+            articleDescription.startAnimation(fadeIn);
+
+            sliderIndexViewModel.setWwfSliderIndex(position);
+            sliderIndexViewModel.getWwfSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer integer) {
+                    wwfProgress.resetProgressBarToUserSelection(integer);
+                }
+            });
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+
+
+
+    /*
+     *  ProgressBars reference
+     */
+    private void findProgressBarsById(){
+        reutersProgressBars = new ProgressBar[]{
+                findViewById(R.id.progress_bar_1),
+                findViewById(R.id.progress_bar_2),
+                findViewById(R.id.progress_bar_3),
+                findViewById(R.id.progress_bar_4),
+                findViewById(R.id.progress_bar_5),
+                findViewById(R.id.progress_bar_6),
+        };
+
+        wwfProgressBars = new ProgressBar [] {
+                findViewById(R.id.progress_bar_100),
+                findViewById(R.id.progress_bar_200),
+                findViewById(R.id.progress_bar_300),
+                findViewById(R.id.progress_bar_400),
+                findViewById(R.id.progress_bar_500),
+                findViewById(R.id.progress_bar_600)
+
+        };
+
+        timeProgressBars = new ProgressBar [] {
+
+                findViewById(R.id.progress_bar_10),
+                findViewById(R.id.progress_bar_20),
+                findViewById(R.id.progress_bar_30),
+                findViewById(R.id.progress_bar_40),
+                findViewById(R.id.progress_bar_50),
+                findViewById(R.id.progress_bar_60)
+        };
+    }
+
+
+    /*
+     * Timers for each ViewPager
+     */
+    private void setUpReutersSliderTimer(ArrayList<ChannelObj> channelObjs){
+        MyTimers myTimersReuters = new MyTimers();
+        Timer timerReuters = new Timer();
+        myTimersReuters.setArticleData(channelObjs.get(0).getmItemList());
+
+        MyTimers.SliderTimer reutersSliderTimer
+                = myTimersReuters.getSliderTimer(MainActivity.this, viewPagerReuters, reutersProgress);
+        timerReuters.scheduleAtFixedRate(reutersSliderTimer, REUTERS_SLIDER_TIME_INTERVAL, REUTERS_SLIDER_TIME_INTERVAL);
+
+    }
+
+
+    private void setUpWWFSliderTimer(ArrayList<WWFArticle> wwfArticles){
+        MyTimers myTimers = new MyTimers();
+        Timer wwfTimer = new Timer();
+        myTimers.setArticleData(wwfArticles);
+        MyTimers.SliderTimer sliderTimer = myTimers.getSliderTimer(MainActivity.this, viewPagerWWF, wwfProgress);
+        wwfTimer.scheduleAtFixedRate(sliderTimer, WWF_SLIDER_TIME_INTERVAL, WWF_SLIDER_TIME_INTERVAL);
+
+
+    }
+
+
+
     /*
      *  SimpleExoPlayer set up
      */
@@ -226,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d(TAG, "onStart()");
         if(Util.SDK_INT > 23){
-//            initializePlayer();
+            initializePlayer();
         }
     }
 
@@ -235,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume()");
         if(Util.SDK_INT <= 23 || simpleExoPlayer == null) {
-//            initializePlayer();
+            initializePlayer();
         }
     }
 
@@ -363,210 +528,6 @@ public class MainActivity extends AppCompatActivity {
         );
         return defaultDataSourceFactory;
     }
-
-
-
-
-    /*
-    *  ViewPager Listeners
-    */
-    private ViewPager.OnPageChangeListener reutersViewPagerListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            releasePlayer();
-            setMediaURL(reutersItemList.get(position).getGroup().getContent().getUrlVideo());
-            playbackPosition = 0;
-
-            FrameLayout frameLayout = (FrameLayout) viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + position);
-            PlayerView playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
-            //play videos
-            MainActivity.this.playerView = playerView;
-            initializePlayer();
-
-            reutersProgress.resetProgressBarToUserSelection(position);
-
-//            sliderIndexViewModel.setReutersSliderIndex(position);
-//            sliderIndexViewModel.getReutersSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
-//                @Override
-//                public void onChanged(Integer integer) {
-//                    Log.d("sliderIndex", "onchanged [reuters]: " + integer);
-//                    reutersProgress.resetProgressBarToUserSelection(integer);
-//                }
-//            });
-
-            if(simpleExoPlayer != null){
-                Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_out);
-                TextView description = frameLayout.findViewById(R.id.tv_reuters_outer_description);
-
-                TextView title = frameLayout.findViewById(R.id.tv_reuters_outer_title);
-                Animation slideToRight = AnimationUtils.loadAnimation(MainActivity.this, R.anim.title_slide_to_left);
-
-                if(description.getVisibility() == View.GONE || title.getVisibility() == View.GONE){
-                    description.setVisibility(View.VISIBLE);
-                    title.setVisibility(View.VISIBLE);
-                }
-
-                description.startAnimation(fadeOut);
-                fadeOut.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                            description.setVisibility(View.GONE);
-                            title.startAnimation(slideToRight);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-
-                slideToRight.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        title.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
-
-            Log.d(TAG, "player view init ... " + MainActivity.this.playerView);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
-
-    private ViewPager.OnPageChangeListener wwfViewPagerListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            Animation fadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_in);
-            FrameLayout frameLayout = (FrameLayout) viewPagerWWF.findViewWithTag(TAG_WWF_FRAME + position);
-            TextView articleDescription = frameLayout.findViewById(R.id.tv_wwf_outer_description);
-            articleDescription.startAnimation(fadeIn);
-
-            sliderIndexViewModel.setWwfSliderIndex(position);
-            sliderIndexViewModel.getWwfSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
-                @Override
-                public void onChanged(Integer integer) {
-                    wwfProgress.resetProgressBarToUserSelection(integer);
-                }
-            });
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
-
-    ViewPager.OnPageChangeListener onPageChangeListenerTime = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            timeSliderFrame = viewPagerTime.findViewWithTag(TAG_TIME_FRAME + position);
-            youTubePlayerView = timeSliderFrame.findViewById(R.id.youtube_player_view);
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    };
-
-
-    /*
-     *  ProgressBars reference
-     */
-    private void findProgressBarsById(){
-        reutersProgressBars = new ProgressBar[]{
-                findViewById(R.id.progress_bar_1),
-                findViewById(R.id.progress_bar_2),
-                findViewById(R.id.progress_bar_3),
-                findViewById(R.id.progress_bar_4),
-                findViewById(R.id.progress_bar_5),
-                findViewById(R.id.progress_bar_6),
-        };
-
-        wwfProgressBars = new ProgressBar [] {
-                findViewById(R.id.progress_bar_100),
-                findViewById(R.id.progress_bar_200),
-                findViewById(R.id.progress_bar_300),
-                findViewById(R.id.progress_bar_400),
-                findViewById(R.id.progress_bar_500),
-                findViewById(R.id.progress_bar_600)
-
-        };
-
-        timeProgressBars = new ProgressBar [] {
-
-                findViewById(R.id.progress_bar_10),
-                findViewById(R.id.progress_bar_20),
-                findViewById(R.id.progress_bar_30),
-                findViewById(R.id.progress_bar_40),
-                findViewById(R.id.progress_bar_50),
-                findViewById(R.id.progress_bar_60)
-        };
-    }
-
-
-    /*
-     * Timers for each ViewPager
-     */
-    private void setUpReutersSliderTimer(ArrayList<ChannelObj> channelObjs){
-        MyTimers myTimersReuters = new MyTimers();
-        Timer timerReuters = new Timer();
-        myTimersReuters.setArticleData(channelObjs.get(0).getmItemList());
-
-        MyTimers.SliderTimer reutersSliderTimer
-                = myTimersReuters.getSliderTimer(MainActivity.this, viewPagerReuters, reutersProgress);
-        timerReuters.scheduleAtFixedRate(reutersSliderTimer, REUTERS_SLIDER_TIME_INTERVAL, REUTERS_SLIDER_TIME_INTERVAL);
-
-    }
-
-
-    private void setUpWWFSliderTimer(ArrayList<WWFArticle> wwfArticles){
-        MyTimers myTimers = new MyTimers();
-        Timer wwfTimer = new Timer();
-        myTimers.setArticleData(wwfArticles);
-        MyTimers.SliderTimer sliderTimer = myTimers.getSliderTimer(MainActivity.this, viewPagerWWF, wwfProgress);
-        wwfTimer.scheduleAtFixedRate(sliderTimer, WWF_SLIDER_TIME_INTERVAL, WWF_SLIDER_TIME_INTERVAL);
-
-
-    }
-
-    private void setUpTimeSliderTimer(){
-
-    }
-
 
 
 

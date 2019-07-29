@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/frame_layout_time_outer_slider"
+    android:id="@+id/time_outer_slider_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-
-    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-        android:id="@+id/youtube_player_view"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        app:enableAutomaticInitialization="false"
-        app:showFullScreenButton="false" />
 
 
     <RelativeLayout
@@ -25,7 +17,7 @@
             android:layout_margin="@dimen/view_margin_min"
             android:text="@string/sample_string"
             android:textSize="@dimen/text_size_medium"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorTransparentBlack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -34,7 +26,7 @@
             android:layout_margin="@dimen/view_margin_min"
             android:layout_below="@id/tv_time_outer_title"
             android:textSize="@dimen/text_size_small"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorTransparentBlack"
             android:text="@string/sample_text_medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
