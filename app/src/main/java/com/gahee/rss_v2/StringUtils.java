@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ParsingUtils {
+public class StringUtils {
 
     public static void main(String[] args) {
 
@@ -130,7 +130,7 @@ public class ParsingUtils {
         if(links != null){
             for(Element link : links){
                 String s = link.attr("src");
-                Log.d("youtube links : ", " ||| " + ParsingUtils.getYoutubeVideoIDFromUrl(s));
+                Log.d("youtube links : ", " ||| " + StringUtils.getYoutubeVideoIDFromUrl(s));
                 youtubeLinks.add(link.attr("src"));
             }
             timeArticle.setmYoutubeLink(youtubeLinks);
@@ -175,24 +175,24 @@ public class ParsingUtils {
         String cleanString = document.text();
         return cleanString;
     }
-
-    public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl) {
-        return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
-    }
-
-    public static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
-        youtubeUrl = youtubeUrl.replace("&feature=youtu.be", "");
-        if (youtubeUrl.toLowerCase().contains("youtu.be")) {
-            return youtubeUrl.substring(youtubeUrl.lastIndexOf("/") + 1);
-        }
-        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
-        Pattern compiledPattern = Pattern.compile(pattern);
-        Matcher matcher = compiledPattern.matcher(youtubeUrl);
-        if (matcher.find()) {
-            return matcher.group();
-        }
-        return null;
-    }
+//
+//    public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl) {
+//        return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
+//    }
+//
+//    public static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
+//        youtubeUrl = youtubeUrl.replace("&feature=youtu.be", "");
+//        if (youtubeUrl.toLowerCase().contains("youtu.be")) {
+//            return youtubeUrl.substring(youtubeUrl.lastIndexOf("/") + 1);
+//        }
+//        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
+//        Pattern compiledPattern = Pattern.compile(pattern);
+//        Matcher matcher = compiledPattern.matcher(youtubeUrl);
+//        if (matcher.find()) {
+//            return matcher.group();
+//        }
+//        return null;
+//    }
 
     // extracts ID from this kind of url -> https://www.youtube.com/embed/XeUBwpx8FEg?feature=oembed
     public static String getYoutubeVideoIDFromUrl(String youtubeUrl){

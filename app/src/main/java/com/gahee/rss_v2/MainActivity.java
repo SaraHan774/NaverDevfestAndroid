@@ -23,6 +23,7 @@ import com.gahee.rss_v2.ui.pagerAdapters.outer.ReutersPagerAdapter;
 import com.gahee.rss_v2.ui.pagerAdapters.outer.TimePagerAdapter;
 import com.gahee.rss_v2.ui.pagerAdapters.outer.WwfPagerAdapter;
 import com.gahee.rss_v2.utils.MyTimers;
+import com.gahee.rss_v2.utils.ProgressBarUtil;
 import com.gahee.rss_v2.utils.SliderIndexViewModel;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -44,24 +45,24 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import static com.gahee.rss_v2.utils.Constants.CURRENT_WINDOW;
 import static com.gahee.rss_v2.utils.Constants.MEDIA_URL;
 import static com.gahee.rss_v2.utils.Constants.REUTERS_SLIDER_INDEX;
 import static com.gahee.rss_v2.utils.Constants.PLAYBACK_POSITION;
 import static com.gahee.rss_v2.utils.Constants.PLAY_WHEN_READY;
+import static com.gahee.rss_v2.utils.Constants.REUTERS_SLIDER_TIME_INTERVAL;
 import static com.gahee.rss_v2.utils.Constants.TAG_REUTERS_FRAME;
 import static com.gahee.rss_v2.utils.Constants.TAG_TIME_FRAME;
 import static com.gahee.rss_v2.utils.Constants.TAG_WWF_FRAME;
 import static com.gahee.rss_v2.utils.Constants.USER_AGENT;
+import static com.gahee.rss_v2.utils.Constants.WWF_SLIDER_TIME_INTERVAL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Item> reutersItemList;
     private ArrayList<WWFArticle> wwfItemList;
     private List<TimeArticle> timeArticles;
+
+    private ReutersPagerAdapter pagerAdapter;
 
 
     private ProgressBar [] reutersProgressBars;
@@ -97,11 +100,15 @@ public class MainActivity extends AppCompatActivity {
     private TimeVideoViewModel timeVideoViewModel;
     private SliderIndexViewModel sliderIndexViewModel;
 
+    private ProgressBarUtil reutersProgress;
+    private ProgressBarUtil wwfProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.d(TAG, "onCreate: ");
 
         findProgressBarsById();
 
@@ -122,21 +129,26 @@ public class MainActivity extends AppCompatActivity {
         remoteViewModel.getChannelMutableLiveData().observe(this, new Observer<ArrayList<ChannelObj>>() {
             @Override
             public void onChanged(ArrayList<ChannelObj> channelObjs) {
+                Log.d(TAG, "onChanged: " + "reuters");
                 reutersItemList = channelObjs.get(0).getmItemList();
                 viewPagerReuters = findViewById(R.id.view_pager_reuters_outer);
-                ReutersPagerAdapter pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  channelObjs.get(0));
+
+                pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  channelObjs.get(0));
                 viewPagerReuters.setAdapter(pagerAdapter);
                 viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
 
-                frameLayout = (FrameLayout) viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + 0);
+                //여기서는 괜찮은데, 돌리면 자꾸 frame 을 찾지 못함
+                frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + 0);
                 playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
 
-                setUpReutersSliderTimer(channelObjs);
-
+                reutersProgress = new ProgressBarUtil();
+                reutersProgress.setProgressBars(reutersProgressBars);
+                reutersProgress.resetProgressBarToUserSelection( 0);
 
                 setMediaURL(channelObjs.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
                 initializePlayer();
                 hideSystemUi();
+                setUpReutersSliderTimer(channelObjs);
             }
         });
 
@@ -150,7 +162,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "setting wwf pager adapter " );
                 viewPagerWWF.addOnPageChangeListener(wwfViewPagerListener);
 
+                wwfProgress = new ProgressBarUtil();
+                wwfProgress.setProgressBars(wwfProgressBars);
+                wwfProgress.resetProgressBarToUserSelection(0);
+
                 setUpWWFSliderTimer(wwfArticles);
+
             }
         });
 
@@ -209,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d(TAG, "onStart()");
         if(Util.SDK_INT > 23){
-            initializePlayer();
+//            initializePlayer();
         }
     }
 
@@ -218,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume()");
         if(Util.SDK_INT <= 23 || simpleExoPlayer == null) {
-            initializePlayer();
+//            initializePlayer();
         }
     }
 
@@ -371,7 +388,16 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.playerView = playerView;
             initializePlayer();
 
-            sliderIndexViewModel.setReutersSliderIndex(position);
+            reutersProgress.resetProgressBarToUserSelection(position);
+
+//            sliderIndexViewModel.setReutersSliderIndex(position);
+//            sliderIndexViewModel.getReutersSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
+//                @Override
+//                public void onChanged(Integer integer) {
+//                    Log.d("sliderIndex", "onchanged [reuters]: " + integer);
+//                    reutersProgress.resetProgressBarToUserSelection(integer);
+//                }
+//            });
 
             if(simpleExoPlayer != null){
                 Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_out);
@@ -444,7 +470,12 @@ public class MainActivity extends AppCompatActivity {
             articleDescription.startAnimation(fadeIn);
 
             sliderIndexViewModel.setWwfSliderIndex(position);
-
+            sliderIndexViewModel.getWwfSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer integer) {
+                    wwfProgress.resetProgressBarToUserSelection(integer);
+                }
+            });
         }
 
         @Override
@@ -514,33 +545,22 @@ public class MainActivity extends AppCompatActivity {
         MyTimers myTimersReuters = new MyTimers();
         Timer timerReuters = new Timer();
         myTimersReuters.setArticleData(channelObjs.get(0).getmItemList());
-        MyTimers.SliderTimer reutersSliderTimer
-                = myTimersReuters.getSliderTimer(MainActivity.this, viewPagerReuters, reutersProgressBars);
-        timerReuters.scheduleAtFixedRate(reutersSliderTimer, 0, 15000);
 
-        sliderIndexViewModel.getReutersSliderIndex().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                Log.d("sliderIndex", "onchanged [reuters]: " + integer);
-                myTimersReuters.resetProgressBarPosition(reutersSliderTimer, integer);
-            }
-        });
+        MyTimers.SliderTimer reutersSliderTimer
+                = myTimersReuters.getSliderTimer(MainActivity.this, viewPagerReuters, reutersProgress);
+        timerReuters.scheduleAtFixedRate(reutersSliderTimer, REUTERS_SLIDER_TIME_INTERVAL, REUTERS_SLIDER_TIME_INTERVAL);
+
     }
+
 
     private void setUpWWFSliderTimer(ArrayList<WWFArticle> wwfArticles){
         MyTimers myTimers = new MyTimers();
         Timer wwfTimer = new Timer();
         myTimers.setArticleData(wwfArticles);
-        MyTimers.SliderTimer sliderTimer = myTimers.getSliderTimer(MainActivity.this, viewPagerWWF, wwfProgressBars);
-        wwfTimer.scheduleAtFixedRate(sliderTimer, 0, 11800);
+        MyTimers.SliderTimer sliderTimer = myTimers.getSliderTimer(MainActivity.this, viewPagerWWF, wwfProgress);
+        wwfTimer.scheduleAtFixedRate(sliderTimer, WWF_SLIDER_TIME_INTERVAL, WWF_SLIDER_TIME_INTERVAL);
 
-        sliderIndexViewModel.getWwfSliderIndex().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                Log.d("sliderIndex", "onchanged [WWF] : " + integer);
-                myTimers.resetProgressBarPosition(sliderTimer, integer);
-            }
-        });
+
     }
 
     private void setUpTimeSliderTimer(){

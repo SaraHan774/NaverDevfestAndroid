@@ -17,22 +17,17 @@ public class MyTimers {
 
     private static final String TAG = "MyTimers";
     private ArrayList arrayList = new ArrayList();
-    private boolean isProgressBarReset = false;
 
 
     public class SliderTimer extends TimerTask {
         private Context context;
         private ViewPager viewPager;
-        private ProgressBar[] progressBars;
-        private int index = 0;
-        private MutableLiveData<Integer> sliderIndexMutableLiveData = new MutableLiveData<>();
-        private SliderIndexViewModel sliderIndexViewModel;
+        private ProgressBarUtil progressBarUtil;
 
-        public SliderTimer(Context context, ViewPager viewPager, ProgressBar [] progressBars){
+        public SliderTimer(Context context, ViewPager viewPager, ProgressBarUtil progressBarUtil){
             this.context = context;
             this.viewPager = viewPager;
-            this.progressBars = progressBars;
-            sliderIndexViewModel = new SliderIndexViewModel();
+            this.progressBarUtil = progressBarUtil;
         }
 
 
@@ -42,62 +37,30 @@ public class MyTimers {
                     new Runnable() {
                         @Override
                         public void run() {
-
-                            if(isProgressBarReset){
-                                for(int i = 0; i < index; i++){
-                                    progressBars[i].setProgress(60);
-                                }
-                                for(int i = index; i < progressBars.length; i++){
-                                    progressBars[i].setProgress(0);
-                                }
-                                isProgressBarReset = false;
-                            }else{
                                 if(viewPager.getCurrentItem() < arrayList.size() - 1){
-                                    if (index < progressBars.length) {
-                                        Log.d(TAG, "run: " + index);
-                                        progressBars[index++].setProgress(60);
-                                    } else {
-                                        index = 0;
-                                        for(int i =0; i < progressBars.length; i++){
-                                            progressBars[i].setProgress(0);
-                                        }
-                                        progressBars[index++].setProgress(60);
-                                    }
-                                    Log.d(TAG, "progress bar index : " + index);
+                                    Log.d(TAG, "run: get current item " + viewPager.getCurrentItem());
                                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+                                    progressBarUtil.resetProgressBarToUserSelection(viewPager.getCurrentItem() + 1);
+                                    Log.d(TAG, "run: set current item" + viewPager.getCurrentItem());
                                 }else{
                                     viewPager.setCurrentItem(0);
+                                    progressBarUtil.resetProgressBarToUserSelection(0);
                                 }
                             }
 
-
-                        }
                     }
             );
         }
 
-        public int getIndex() {
-            return index;
-        }
-
-        public void setIndex(int index) {
-            Log.d(TAG, "setIndex: " + index);
-            this.index = index;
-        }
     }
 
-    public SliderTimer getSliderTimer(Context context, ViewPager viewPager, ProgressBar [] progressBars){
-        return new SliderTimer(context, viewPager, progressBars);
+    public SliderTimer getSliderTimer(Context context, ViewPager viewPager, ProgressBarUtil progressBarUtil){
+        return new SliderTimer(context, viewPager, progressBarUtil);
     }
 
     public void setArticleData(ArrayList arrayList){
         this.arrayList = arrayList;
     }
 
-    public void resetProgressBarPosition(SliderTimer sliderTimer, int viewPagerPosition){
-        Log.d(TAG, "resetProgressBarPosition: " + (viewPagerPosition%6));
-        sliderTimer.setIndex(( viewPagerPosition % 6 ));
-        isProgressBarReset = true;
-    }
 
 }

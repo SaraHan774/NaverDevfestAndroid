@@ -1,16 +1,10 @@
 package com.gahee.rss_v2.remoteSource;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.Transformation;
-import com.cloudinary.android.MediaManager;
-import com.cloudinary.utils.ObjectUtils;
-import com.gahee.rss_v2.ParsingUtils;
+import com.gahee.rss_v2.StringUtils;
 import com.gahee.rss_v2.data.reuters.ReutersAPI;
 import com.gahee.rss_v2.data.reuters.model.ArticleObj;
 import com.gahee.rss_v2.data.reuters.model.ChannelObj;
@@ -30,11 +24,8 @@ import com.gahee.rss_v2.data.youtube.tags.Feed;
 import com.gahee.rss_v2.data.youtube.YoutubeAPI;
 import com.gahee.rss_v2.data.youtube.tags.Media;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -280,7 +271,7 @@ public class RssClient {
 //                + "\n" + contentEncoded + articleLink);
 
                 TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, contentEncoded,articleLink);
-                ParsingUtils.timeGetYoutubeLinksFromArticle(item, timeArticle);
+                StringUtils.timeGetYoutubeLinksFromArticle(item, timeArticle);
                 timeArticleArrayList.add(timeArticle);
             }
             mTimeArticleLiveData.setValue(timeArticleArrayList);
@@ -295,14 +286,14 @@ public class RssClient {
                 String pubdate = item.getPubDate();
 
                 String description = item.getDescription();
-                String cleanDescription = ParsingUtils.removeHtmlTagsFromString(description);
+                String cleanDescription = StringUtils.removeHtmlTagsFromString(description);
 
                 String contentEncoded = item.getContentEncoded();
                 WWFArticle wwfArticle = new WWFArticle(title, link, pubdate, cleanDescription, contentEncoded);
 
 
                 //extract image assets from the article and set the string list value using a setter
-                ParsingUtils.wwfExtractImageTags(wwfArticle, item);
+                StringUtils.wwfExtractImageTags(wwfArticle, item);
 
                 //add article object to the arrayList
                 wwfArticleArrayList.add(wwfArticle);

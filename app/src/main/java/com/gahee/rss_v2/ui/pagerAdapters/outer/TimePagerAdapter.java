@@ -2,12 +2,9 @@ package com.gahee.rss_v2.ui.pagerAdapters.outer;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -16,19 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.gahee.rss_v2.MainActivity;
-import com.gahee.rss_v2.ParsingUtils;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
-import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.ui.TimeVideoViewModel;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.gahee.rss_v2.utils.Constants.TAG_TIME_FRAME;
 import static com.gahee.rss_v2.utils.Constants.TAG_TIME_VIDEO;
