@@ -45,6 +45,7 @@ import com.google.android.exoplayer2.util.Util;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -101,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: ");
 
         findProgressBarsById();
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setElevation(10);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         remoteViewModel = ViewModelProviders.of(this).get(RemoteViewModel.class);
 
