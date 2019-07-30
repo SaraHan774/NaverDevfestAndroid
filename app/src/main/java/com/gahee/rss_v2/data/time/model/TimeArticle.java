@@ -10,13 +10,13 @@ import java.util.List;
 
 public class TimeArticle implements Parcelable {
 
-    private String mArticletitle;
-    private String mArticlePubDate;
-    private String mArticleDescription;
-    private Item.Thumbnail mArticleThumbnail;
-    private List<Content> content;
-    private String mContentEncoded;
-    private String mArticleLink;
+    private final String mArticletitle;
+    private final String mArticlePubDate;
+    private final String mArticleDescription;
+    private final Item.Thumbnail mArticleThumbnail;
+    private final List<Content> content;
+    private final String mContentEncoded;
+    private final String mArticleLink;
     private List<String> mYoutubeLink;
 
 
@@ -66,7 +66,7 @@ public class TimeArticle implements Parcelable {
         this.mYoutubeLink = mYoutubeLink;
     }
 
-    protected TimeArticle(Parcel in) {
+    private TimeArticle(Parcel in) {
         mArticletitle = in.readString();
         mArticlePubDate = in.readString();
         mArticleDescription = in.readString();

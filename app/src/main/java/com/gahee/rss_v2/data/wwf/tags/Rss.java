@@ -16,7 +16,7 @@ public class Rss implements Parcelable {
 
     }
 
-    protected Rss(Parcel in) {
+    private Rss(Parcel in) {
         channel = in.readParcelable(Channel.class.getClassLoader());
     }
 

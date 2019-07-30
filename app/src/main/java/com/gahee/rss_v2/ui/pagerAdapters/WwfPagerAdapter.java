@@ -33,8 +33,8 @@ import static com.gahee.rss_v2.utils.Constants.TAG_WWF_FRAME;
 public class WwfPagerAdapter extends PagerAdapter {
     private static final String TAG = "wwfPagerAdapter";
 
-    private Context mContext;
-    private ArrayList<WWFArticle> wwfArticle;
+    private final Context mContext;
+    private final ArrayList<WWFArticle> wwfArticle;
 
     public WwfPagerAdapter(Context context, ArrayList<WWFArticle> article){
         Log.d(TAG, "feed pager adapter instantiating ... ");
@@ -77,20 +77,16 @@ public class WwfPagerAdapter extends PagerAdapter {
 
         ImageSwitcher imageSwitcher = view.findViewById(R.id.image_switcher_wwf_outer_slider);
 
-        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                ImageView imageView = new ImageView(mContext);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setLayoutParams(
-                        new ImageSwitcher.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                );
-                return imageView;
-            }
-
+        imageSwitcher.setFactory(() -> {
+            ImageView imageView = new ImageView(mContext);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(
+                    new ImageSwitcher.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+            );
+            return imageView;
         });
 
         if(article.getExtractedMediaLinks().size() > 0){
@@ -105,11 +101,11 @@ public class WwfPagerAdapter extends PagerAdapter {
 
 
     private class ImageSliderTimer extends TimerTask{
-        List<String> imageLinks;
-        ImageSwitcher imageSwitcher;
+        final List<String> imageLinks;
+        final ImageSwitcher imageSwitcher;
         int index = 0;
 
-        public ImageSliderTimer(List<String> medias, ImageSwitcher imageSwitcher){
+        ImageSliderTimer(List<String> medias, ImageSwitcher imageSwitcher){
             this.imageLinks = medias;
             this.imageSwitcher = imageSwitcher;
         }
@@ -117,26 +113,23 @@ public class WwfPagerAdapter extends PagerAdapter {
         @Override
         public void run() {
             ((MainActivity) mContext).runOnUiThread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
+                    () -> {
 
-                            if(index < imageLinks.size()){
-                                Glide.with(mContext).load(imageLinks.get(index++))
-                                        .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
-                                        .placeholder(R.drawable.scrim_gradient_to_above)
-                                        .error(R.drawable.ic_launcher_background)
-                                        .into((ImageView) imageSwitcher.getCurrentView());
+                        if(index < imageLinks.size()){
+                            Glide.with(mContext).load(imageLinks.get(index++))
+                                    .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
+                                    .placeholder(R.drawable.scrim_gradient_to_above)
+                                    .error(R.drawable.ic_launcher_background)
+                                    .into((ImageView) imageSwitcher.getCurrentView());
 
-                            }else{
-                                index = 0;
-                                Glide.with(mContext).load(imageLinks.get(index++))
-                                        .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
-                                        .placeholder(R.drawable.scrim_gradient_to_above)
-                                        .error(R.drawable.ic_launcher_background)
-                                        .into((ImageView) imageSwitcher.getCurrentView());
+                        }else{
+                            index = 0;
+                            Glide.with(mContext).load(imageLinks.get(index++))
+                                    .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
+                                    .placeholder(R.drawable.scrim_gradient_to_above)
+                                    .error(R.drawable.ic_launcher_background)
+                                    .into((ImageView) imageSwitcher.getCurrentView());
 
-                            }
                         }
                     }
             );

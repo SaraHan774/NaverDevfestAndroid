@@ -26,10 +26,10 @@ public class ReutersPagerAdapter extends PagerAdapter {
 
     private static final String TAG = "ReutersPagerAdapter";
 
-    private Context mContext;
-    private ChannelObj mChannelObj;
+    private final Context mContext;
+    private final ChannelObj mChannelObj;
     private boolean isFirstInstantiation = false;
-    private Bundle bundle = new Bundle();
+    private final Bundle bundle = new Bundle();
     private ProgressBarUtil progressBarUtil;
 
 

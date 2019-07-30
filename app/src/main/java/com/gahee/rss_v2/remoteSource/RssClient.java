@@ -2,6 +2,7 @@ package com.gahee.rss_v2.remoteSource;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gahee.rss_v2.data.time.tags.Content;
@@ -18,14 +19,9 @@ import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.data.wwf.WwfAPI;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.data.wwf.model.WWFChannel;
-import com.gahee.rss_v2.data.youtube.model.YoutubeChannel;
-import com.gahee.rss_v2.data.youtube.model.YoutubeVideo;
-import com.gahee.rss_v2.data.youtube.tags.Entry;
-import com.gahee.rss_v2.data.youtube.tags.Feed;
-import com.gahee.rss_v2.data.youtube.YoutubeAPI;
-import com.gahee.rss_v2.data.youtube.tags.Media;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,17 +33,15 @@ public class RssClient {
     private static final String TAG = "RssClient";
 
 
-    private MutableLiveData<ArrayList<ChannelObj>> mChannelMutableLiveData;
-    private MutableLiveData<ArrayList<ArticleObj>> mArticleMutableLiveData;
+    private final MutableLiveData<ArrayList<ChannelObj>> mChannelMutableLiveData;
+    private final MutableLiveData<ArrayList<ArticleObj>> mArticleMutableLiveData;
 
-    private MutableLiveData<ArrayList<YoutubeChannel>> mYoutubeChannelLiveData;
-    private MutableLiveData<ArrayList<YoutubeVideo>> mYoutubeVideoLiveData;
 
-    private MutableLiveData<ArrayList<TimeChannel>> mTimeChannelLiveData;
-    private MutableLiveData<ArrayList<TimeArticle>> mTimeArticleLiveData;
+    private final MutableLiveData<ArrayList<TimeChannel>> mTimeChannelLiveData;
+    private final MutableLiveData<ArrayList<TimeArticle>> mTimeArticleLiveData;
 
-    private MutableLiveData<ArrayList<WWFChannel>> mWwfChannelLiveData;
-    private MutableLiveData<ArrayList<WWFArticle>> mWwfArticleLiveData;
+    private final MutableLiveData<ArrayList<WWFChannel>> mWwfChannelLiveData;
+    private final MutableLiveData<ArrayList<WWFArticle>> mWwfArticleLiveData;
 
 
     private static RssClient instance;
@@ -64,9 +58,6 @@ public class RssClient {
         mChannelMutableLiveData = new MutableLiveData<>();
         mArticleMutableLiveData = new MutableLiveData<>();
 
-        mYoutubeChannelLiveData = new MutableLiveData<>();
-        mYoutubeVideoLiveData = new MutableLiveData<>();
-
         mTimeChannelLiveData = new MutableLiveData<>();
         mTimeArticleLiveData = new MutableLiveData<>();
 
@@ -76,8 +67,8 @@ public class RssClient {
     }
 
 
-    private ArrayList<ChannelObj> mChannelObjArrayList = new ArrayList<>();
-    private ArrayList<ArticleObj> mArticleObjArrayList = new ArrayList<>();
+    private final ArrayList<ChannelObj> mChannelObjArrayList = new ArrayList<>();
+    private final ArrayList<ArticleObj> mArticleObjArrayList = new ArrayList<>();
 
     private void fetchDataFromReuters(){
         ReutersAPI reutersAPI = RetrofitInstanceBuilder.getReutersAPI();
@@ -85,7 +76,7 @@ public class RssClient {
 
         call.enqueue(new Callback<Rss>() {
             @Override
-            public void onResponse(Call<Rss> call, Response<Rss> response) {
+            public void onResponse(@NonNull Call<Rss> call,@NonNull Response<Rss> response) {
                 if(response.body() != null && response.body().getChannel() != null){
                     Channel channel = response.body().getChannel();
                     String title = channel.getChannelTitle();
@@ -107,7 +98,7 @@ public class RssClient {
             }
 
             @Override
-            public void onFailure(Call<Rss> call, Throwable t) {
+            public void onFailure(@NonNull Call<Rss> call, @NonNull Throwable t) {
 
                 Log.d(TAG, "failed to fetch data :  " + t.getMessage());
 
@@ -116,41 +107,10 @@ public class RssClient {
     }
 
 
-    private ArrayList<YoutubeChannel> youtubeChannelArrayList = new ArrayList<>();
-    private ArrayList<YoutubeVideo> youtubeVideoArrayList = new ArrayList<>();
-    private void fetchDataFromYoutube(){
-        YoutubeAPI youtubeAPI = RetrofitInstanceBuilder.getYoutubeApi();
-        Call<Feed> call = youtubeAPI.getYoutubeChannel();
-        call.enqueue(new Callback<Feed>() {
-            @Override
-            public void onResponse(Call<Feed> call, Response<Feed> response) {
-                if(response.body() != null && response.body().getEntries() != null){
-                    String channelId = response.body().getChannelId();
-                    String channelTitle = response.body().getTitle();
-                    List<Entry> entries = response.body().getEntries();
-                    YoutubeChannel youtubeChannel = new YoutubeChannel(channelId, channelTitle, entries);
-                    youtubeChannelArrayList.add(youtubeChannel);
-
-                    mYoutubeChannelLiveData.setValue(youtubeChannelArrayList);
-                    storeEachVideos(entries);
-//                        Log.d(TAG, "youtube feed title : " + response.body().getTitle() + "\n"
-//                                + "author : " + response.body().getEntries().get(i).getAuthor().getName() + "\n"
-//                                + "media : " + response.body().getEntries().get(i).getMedia() + "\n"
-//                                + "media thumbnail : " + response.body().getEntries().get(i).getMedia().getThumbnail() )
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Feed> call, Throwable t) {
-                    Log.d(TAG, "failed to fetch from youtube" + t.getMessage());
-            }
-        });
-    }
 
 
-    private ArrayList<TimeChannel> timeChannelArrayList = new ArrayList<>();
-    private ArrayList<TimeArticle> timeArticleArrayList = new ArrayList<>();
+    private final ArrayList<TimeChannel> timeChannelArrayList = new ArrayList<>();
+    private final ArrayList<TimeArticle> timeArticleArrayList = new ArrayList<>();
 
     private void fetchDataFromTime(){
 
@@ -159,7 +119,7 @@ public class RssClient {
         call.enqueue(new Callback<com.gahee.rss_v2.data.time.tags.Rss>() {
 
             @Override
-            public void onResponse(Call<com.gahee.rss_v2.data.time.tags.Rss> call, Response<com.gahee.rss_v2.data.time.tags.Rss> response) {
+            public void onResponse(@NonNull Call<com.gahee.rss_v2.data.time.tags.Rss> call, @NonNull Response<com.gahee.rss_v2.data.time.tags.Rss> response) {
                 if(response.body() != null){
                     String channelTitle = response.body().getChannel().getTitle();
                     String channelDescription = response.body().getChannel().getDescription();
@@ -173,27 +133,27 @@ public class RssClient {
             }
 
             @Override
-            public void onFailure(Call<com.gahee.rss_v2.data.time.tags.Rss> call, Throwable t) {
+            public void onFailure(@NonNull Call<com.gahee.rss_v2.data.time.tags.Rss> call, @NonNull Throwable t) {
                 Log.d(TAG, "failed to fetch from time : " + "\n\n" +
-                        t.getStackTrace() +
+                        Arrays.toString(t.getStackTrace()) +
                         " \n\n" + t.getMessage());
             }
         });
 
     }
 
-    private ArrayList<WWFChannel> wwfChannelArrayList = new ArrayList<>();
-    private ArrayList<WWFArticle> wwfArticleArrayList = new ArrayList<>();
+    private final ArrayList<WWFChannel> wwfChannelArrayList = new ArrayList<>();
+    private final ArrayList<WWFArticle> wwfArticleArrayList = new ArrayList<>();
     private void fetchDataFromWwf(){
 
         WwfAPI wwfAPI = RetrofitInstanceBuilder.getWwfAPI();
         Call<com.gahee.rss_v2.data.wwf.tags.Rss> call = wwfAPI.getWWFStories();
         call.enqueue(new Callback<com.gahee.rss_v2.data.wwf.tags.Rss>() {
             @Override
-            public void onResponse(Call<com.gahee.rss_v2.data.wwf.tags.Rss> call, Response<com.gahee.rss_v2.data.wwf.tags.Rss> response) {
+            public void onResponse(@NonNull Call<com.gahee.rss_v2.data.wwf.tags.Rss> call, @NonNull Response<com.gahee.rss_v2.data.wwf.tags.Rss> response) {
 //                Log.d(TAG, "response body : " + response.body().getChannel().getItems().get(3).getContentEncoded());
-                String title = response.body().getChannel().getTitle();
-                String link = response.body().getChannel().getGuid();
+                String title = response.body() != null ? response.body().getChannel().getTitle() : null;
+                String link = response.body() != null ? response.body().getChannel().getGuid() : null;
                 String description = response.body().getChannel().getDescription();
                 List<com.gahee.rss_v2.data.wwf.tags.Item> items = response.body().getChannel().getItems();
                 wwfChannelArrayList.add(new WWFChannel(title, link, description, items));
@@ -202,7 +162,7 @@ public class RssClient {
             }
 
             @Override
-            public void onFailure(Call<com.gahee.rss_v2.data.wwf.tags.Rss> call, Throwable t) {
+            public void onFailure(@NonNull Call<com.gahee.rss_v2.data.wwf.tags.Rss> call, @NonNull Throwable t) {
                 Log.d(TAG, "failed to fetch data from wwf : " + t.getMessage());
             }
         });
@@ -236,23 +196,6 @@ public class RssClient {
 //                    "article PubDate : " + articlePubDate + "\n");
 
             mArticleObjArrayList.add(new ArticleObj(articleTitle, articleLink, articleDescription, articlePubDate, videoLink, thumbnailLink));
-        }
-    }
-
-
-    private void storeEachVideos(List<Entry> entries){
-        if(entries != null){
-            for(Entry entry : entries){
-                String videoId = entry.getVideoid();
-                String videoChannelId = entry.getChannelId();
-                String videoTitle = entry.getTitle();
-                String videoAuthor = entry.getAuthor().getName();
-                String videoPubDate = entry.getPublished();
-                Media media = entry.getMedia();
-                YoutubeVideo youtubeVideo = new YoutubeVideo(videoId, videoChannelId, videoTitle, videoAuthor, videoPubDate, media);
-                youtubeVideoArrayList.add(youtubeVideo);
-            }
-            mYoutubeVideoLiveData.setValue(youtubeVideoArrayList);
         }
     }
 
@@ -314,40 +257,6 @@ public class RssClient {
         }
     }
 
-//    private void uploadVideosToCloudinary(Context context, String mp4Link, String videoTitle){
-//        Map config = new HashMap();
-//        config.put("cloud_name", "drsh35cxq");
-//        config.put("api_key", "572891948791234");
-//        config.put("api_secret", "07xSHzIVSi40iWYjIPWn2xhiVAU");
-//
-//        MediaManager.init(context, config);
-//
-////        String sample2 = "https://vm.reuters.tv/39a3c/qoudodaik11-1404k.mp4";
-//
-//        Cloudinary cloudinary = new Cloudinary(config);
-//        try {
-//            cloudinary.uploader().uploadLarge(mp4Link, ObjectUtils.asMap("resource_type", "video"));
-//            MediaManager.get().url()
-//                    .transformation(new Transformation().width(250).flags("animated").fetchFormat("auto").crop("scale"))
-//                    .resourceType("video").generate("dog.gif");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Log.d(TAG, "cloudinary : " + cloudinary);
-//    }
-//
-//    private class CloudAsync extends AsyncTask<Void, Void, Void> {
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-////            uploadVideosToCloudinary();
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            Log.d(TAG, "upload finished to cloudinary");
-//        }
-//    }
 
 
 
@@ -359,13 +268,6 @@ public class RssClient {
         return mChannelMutableLiveData;
     }
 
-    public MutableLiveData<ArrayList<YoutubeChannel>> getmYoutubeChannelLiveData() {
-        return mYoutubeChannelLiveData;
-    }
-
-    public MutableLiveData<ArrayList<YoutubeVideo>> getmYoutubeVideoLiveData() {
-        return mYoutubeVideoLiveData;
-    }
 
     public MutableLiveData<ArrayList<TimeChannel>> getmTimeChannelLiveData() {
         return mTimeChannelLiveData;
@@ -385,10 +287,6 @@ public class RssClient {
 
     public void fetchRemoteReutersData(){
         fetchDataFromReuters();
-    }
-
-    public void fetchRemoteYoutubeData(){
-        fetchDataFromYoutube();
     }
 
     public void fetchRemoteTimeData(){

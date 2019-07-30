@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel;
 public class SliderIndexViewModel extends ViewModel {
     private static final String TAG = "SliderIndexViewModel";
 
-    private MutableLiveData<Integer> reutersSliderIndex = new MutableLiveData<>();
-    private MutableLiveData<Integer> timeSliderIndex = new MutableLiveData<>();
-    private MutableLiveData<Integer> wwfSliderIndex = new MutableLiveData<>();
+    private final MutableLiveData<Integer> reutersSliderIndex = new MutableLiveData<>();
+    private final MutableLiveData<Integer> timeSliderIndex = new MutableLiveData<>();
+    private final MutableLiveData<Integer> wwfSliderIndex = new MutableLiveData<>();
 
 
     public void setReutersSliderIndex(int reutersSliderIndex) {

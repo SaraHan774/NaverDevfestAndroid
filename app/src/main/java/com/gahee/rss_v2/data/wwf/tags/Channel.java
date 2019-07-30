@@ -32,7 +32,7 @@ public class Channel implements Parcelable {
 
     }
 
-    protected Channel(Parcel in) {
+    Channel(Parcel in) {
         title = in.readString();
         guid = in.readString();
         description = in.readString();

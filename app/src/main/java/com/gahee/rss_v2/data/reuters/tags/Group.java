@@ -26,7 +26,7 @@ public class Group implements Parcelable {
     @Root(name = "content", strict = false)
     public static class Content implements Parcelable{
 
-        public Content(){
+        Content(){
 
         }
 
@@ -44,7 +44,7 @@ public class Group implements Parcelable {
             return urlVideo;
         }
 
-        protected Content(Parcel in) {
+        Content(Parcel in) {
             urlVideo = in.readString();
             thumbnail = in.readParcelable(Thumbnail.class.getClassLoader());
         }
@@ -76,7 +76,7 @@ public class Group implements Parcelable {
     @Root(name = "thumbnail", strict = false)
     public static class Thumbnail implements Parcelable{
 
-        public Thumbnail(){
+        Thumbnail(){
 
         }
 
@@ -87,7 +87,7 @@ public class Group implements Parcelable {
             return urlThumbnail;
         }
 
-        protected Thumbnail(Parcel in) {
+        Thumbnail(Parcel in) {
             urlThumbnail = in.readString();
         }
 
@@ -114,7 +114,7 @@ public class Group implements Parcelable {
         };
     }
 
-    protected Group(Parcel in) {
+    Group(Parcel in) {
         content = in.readParcelable(Content.class.getClassLoader());
     }
 

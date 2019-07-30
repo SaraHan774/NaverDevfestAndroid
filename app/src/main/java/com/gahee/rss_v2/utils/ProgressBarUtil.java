@@ -9,7 +9,7 @@ public class ProgressBarUtil{
     private static final String TAG = "ProgressBarUtil";
 
     private int progress = 0;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private ProgressBar [] progressBars;
     //프로그레스 바 6개가 있다 -> 6 개의 어레이를 넘겨준다.
     //어댑터에서 프로그레스바의 상태를 업데이트 한다
@@ -19,18 +19,10 @@ public class ProgressBarUtil{
 
     private void mSetProgressBarProgress(ProgressBar progressBar){
         progress = progressBar.getProgress();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                while(progress < 60){
-                    progress += 1;
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setProgress(progress);
-                        }
-                    });
-                }
+        Runnable runnable = () -> {
+            while(progress < 60){
+                progress += 1;
+                handler.post(() -> progressBar.setProgress(progress));
             }
         };
 

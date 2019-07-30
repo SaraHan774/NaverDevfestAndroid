@@ -43,6 +43,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -126,67 +127,58 @@ public class MainActivity extends AppCompatActivity {
         remoteViewModel.fetchWWFDataFromRepo();
 
 
-        remoteViewModel.getChannelMutableLiveData().observe(this, new Observer<ArrayList<ChannelObj>>() {
-            @Override
-            public void onChanged(ArrayList<ChannelObj> channelObjs) {
-                Log.d(TAG, "onChanged: " + "reuters");
-                reutersItemList = channelObjs.get(0).getmItemList();
-                viewPagerReuters = findViewById(R.id.view_pager_reuters_outer);
+        remoteViewModel.getChannelMutableLiveData().observe(this, channelObjs -> {
+            Log.d(TAG, "onChanged: " + "reuters");
+            reutersItemList = channelObjs.get(0).getmItemList();
+            viewPagerReuters = findViewById(R.id.view_pager_reuters_outer);
 
-                pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  channelObjs.get(0));
-                viewPagerReuters.setAdapter(pagerAdapter);
-                viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
+            pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  channelObjs.get(0));
+            viewPagerReuters.setAdapter(pagerAdapter);
+            viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
 
-                //여기서는 괜찮은데, 돌리면 자꾸 frame 을 찾지 못함
-                frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + 0);
-                playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
+            //여기서는 괜찮은데, 돌리면 자꾸 frame 을 찾지 못함
+            frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + 0);
+            playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
 
-                reutersProgress = new ProgressBarUtil();
-                reutersProgress.setProgressBars(reutersProgressBars);
-                reutersProgress.resetProgressBarToUserSelection( 0);
+            reutersProgress = new ProgressBarUtil();
+            reutersProgress.setProgressBars(reutersProgressBars);
+            reutersProgress.resetProgressBarToUserSelection( 0);
 
-                setMediaURL(channelObjs.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
-                initializePlayer();
-                hideSystemUi();
+            setMediaURL(channelObjs.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
+            initializePlayer();
+            hideSystemUi();
 //                setUpReutersSliderTimer(channelObjs);
-            }
         });
 
-        remoteViewModel.getWwfArticleLiveData().observe(this, new Observer<ArrayList<WWFArticle>>() {
-            @Override
-            public void onChanged(ArrayList<WWFArticle> wwfArticles) {
-                wwfItemList = wwfArticles;
-                viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
-                WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
-                viewPagerWWF.setAdapter(pagerAdapter);
-                Log.d(TAG, "setting wwf pager adapter " );
-                viewPagerWWF.addOnPageChangeListener(wwfViewPagerListener);
+        remoteViewModel.getWwfArticleLiveData().observe(this, wwfArticles -> {
+            wwfItemList = wwfArticles;
+            viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
+            WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
+            viewPagerWWF.setAdapter(pagerAdapter);
+            Log.d(TAG, "setting wwf pager adapter " );
+            viewPagerWWF.addOnPageChangeListener(wwfViewPagerListener);
 
-                wwfProgress = new ProgressBarUtil();
-                wwfProgress.setProgressBars(wwfProgressBars);
-                wwfProgress.resetProgressBarToUserSelection(0);
+            wwfProgress = new ProgressBarUtil();
+            wwfProgress.setProgressBars(wwfProgressBars);
+            wwfProgress.resetProgressBarToUserSelection(0);
 
 //                setUpWWFSliderTimer(wwfArticles);
 
-            }
         });
 
         sliderIndexViewModel = ViewModelProviders.of(this).get(SliderIndexViewModel.class);
     }
 
 
-    private AbstractYouTubePlayerListener listener = new AbstractYouTubePlayerListener() {
+    private final AbstractYouTubePlayerListener listener = new AbstractYouTubePlayerListener() {
         @Override
-        public void onReady(YouTubePlayer youTubePlayer) {
+        public void onReady(@NonNull YouTubePlayer youTubePlayer) {
 
-            timeArticleViewModel.getSeletedArticle().observe(MainActivity.this, new Observer<TimeArticle>() {
-                @Override
-                public void onChanged(TimeArticle timeArticle) {
-                    if(timeArticle.getmYoutubeLink().size() != 0) {
-                        String videoID = timeArticle.getmYoutubeLink().get(0);
-                    youTubePlayer.loadVideo(videoID, 0);
-                }
-                }
+            timeArticleViewModel.getSeletedArticle().observe(MainActivity.this, timeArticle -> {
+                if(timeArticle.getmYoutubeLink().size() != 0) {
+                    String videoID = timeArticle.getmYoutubeLink().get(0);
+                youTubePlayer.loadVideo(videoID, 0);
+            }
             });
 
         }
@@ -204,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     *  ViewPager Listeners
     */
-    private ViewPager.OnPageChangeListener reutersViewPagerListener = new ViewPager.OnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener reutersViewPagerListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -216,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             setMediaURL(reutersItemList.get(position).getGroup().getContent().getUrlVideo());
             playbackPosition = 0;
 
-            FrameLayout frameLayout = (FrameLayout) viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + position);
+            FrameLayout frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + position);
             PlayerView playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
             //play videos
             MainActivity.this.playerView = playerView;
@@ -290,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private ViewPager.OnPageChangeListener wwfViewPagerListener = new ViewPager.OnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener wwfViewPagerListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -299,17 +291,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             Animation fadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_in);
-            FrameLayout frameLayout = (FrameLayout) viewPagerWWF.findViewWithTag(TAG_WWF_FRAME + position);
+            FrameLayout frameLayout = viewPagerWWF.findViewWithTag(TAG_WWF_FRAME + position);
             TextView articleDescription = frameLayout.findViewById(R.id.tv_wwf_outer_description);
             articleDescription.startAnimation(fadeIn);
 
             sliderIndexViewModel.setWwfSliderIndex(position);
-            sliderIndexViewModel.getWwfSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
-                @Override
-                public void onChanged(Integer integer) {
-                    wwfProgress.resetProgressBarToUserSelection(integer);
-                }
-            });
+            sliderIndexViewModel.getWwfSliderIndex().observe(MainActivity.this, integer -> wwfProgress.resetProgressBarToUserSelection(integer));
         }
 
         @Override
@@ -498,17 +485,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void retrieveCurrentPlayerState(boolean savePlaybackPosition){
-        if(simpleExoPlayer != null && savePlaybackPosition == true){
+        if(simpleExoPlayer != null && savePlaybackPosition){
             playbackPosition = simpleExoPlayer.getCurrentPosition();
         }else{
             playbackPosition = 0;
         }
-        currentWindow = simpleExoPlayer.getCurrentWindowIndex();
-        playWhenReady = simpleExoPlayer.getPlayWhenReady();
+        currentWindow = simpleExoPlayer != null ? simpleExoPlayer.getCurrentWindowIndex() : 0;
+        playWhenReady = simpleExoPlayer != null ? simpleExoPlayer.getPlayWhenReady() : false;
     }
 
-    public static DefaultDataSourceFactory createDataSourceFactory(Context context, String userAgent,
-                                                                   TransferListener listener) {
+    private static DefaultDataSourceFactory createDataSourceFactory(Context context, String userAgent,
+                                                                    TransferListener listener) {
         DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(
                 USER_AGENT,
                 null,
@@ -517,12 +504,11 @@ public class MainActivity extends AppCompatActivity {
                 true
         );
 
-        DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(
+        return new DefaultDataSourceFactory(
                 context,
                 listener,
                 httpDataSourceFactory
         );
-        return defaultDataSourceFactory;
     }
 
 

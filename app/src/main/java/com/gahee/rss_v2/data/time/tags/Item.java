@@ -1,6 +1,5 @@
 package com.gahee.rss_v2.data.time.tags;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -92,7 +91,7 @@ public class Item implements Parcelable{
     }
 
 
-    protected Item(Parcel in) {
+    private Item(Parcel in) {
         articleTitle = in.readString();
         pubDate = in.readString();
         articleDesc = in.readString();

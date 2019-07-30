@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ChannelObj implements Parcelable {
 
@@ -22,7 +21,7 @@ public class ChannelObj implements Parcelable {
         this.mItemList = mItemList;
     }
 
-    protected ChannelObj(Parcel in) {
+    private ChannelObj(Parcel in) {
         mChannelTitle = in.readString();
         mChannelDescription = in.readString();
         mChannelLink = in.readString();

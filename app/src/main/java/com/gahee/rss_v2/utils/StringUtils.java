@@ -87,7 +87,7 @@ public class StringUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Elements content = document.getAllElements();
+        Elements content = document != null ? document.getAllElements() : null;
 
         for(Element e : content){
             Elements p = e.getElementsByTag("iframe");
@@ -102,9 +102,7 @@ public class StringUtils {
     //extracting youtube links from Time article
     public static void timeGetYoutubeLinksFromArticle(Item item, TimeArticle timeArticle){
         List<String> youtubeLinks = new ArrayList<>();
-        if(youtubeLinks != null){
-            youtubeLinks.clear();
-        }
+        youtubeLinks.clear();
         Document document = Jsoup.parse(item.getContentEncoded());
         Elements links = document.select("iframe");
         if(links != null){
@@ -121,8 +119,7 @@ public class StringUtils {
         }
 
         public static String formatPubDateString(String pubDate){
-            String formattedDate = pubDate.replace("+0000", "GMT");
-            return formattedDate;
+            return pubDate.replace("+0000", "GMT");
         }
 
 //    public static void getImagesFromWWFArticle(List<com.gahee.rss_v2.data.wwf.tags.Item> items){
@@ -158,20 +155,19 @@ public class StringUtils {
     public static String removeHtmlTagsFromString
             (String stringWithTags){
         Document document = Jsoup.parse(stringWithTags);
-        String cleanString = document.text();
-        return cleanString;
+        return document.text();
     }
 
     public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl) {
         return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
     }
 
-    public static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
+    private static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
         youtubeUrl = youtubeUrl.replace("&feature=youtu.be", "");
         if (youtubeUrl.toLowerCase().contains("youtu.be")) {
             return youtubeUrl.substring(youtubeUrl.lastIndexOf("/") + 1);
         }
-        String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
+        String pattern = "(?<=watch\\?v=|/videos/|embed/)[^#&?]*";
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(youtubeUrl);
         if (matcher.find()) {
@@ -183,13 +179,8 @@ public class StringUtils {
     }
 
     // extracts ID from this kind of url -> https://www.youtube.com/embed/XeUBwpx8FEg?feature=oembed
-    public static String getYoutubeVideoIDFromUrl(String youtubeUrl){
-        if(!youtubeUrl.equals("") || youtubeUrl != null){
-            String temp = youtubeUrl.replace("https://www.youtube.com/embed/", "");
-            String videoId = temp.replace("?feature=oembed", "");
-            return videoId;
-        }else{
-            return "";
-        }
+    private static String getYoutubeVideoIDFromUrl(String youtubeUrl){
+        String temp = youtubeUrl.replace("https://www.youtube.com/embed/", "");
+        return temp.replace("?feature=oembed", "");
     }
 }

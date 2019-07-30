@@ -1,12 +1,10 @@
 package com.gahee.rss_v2.ui.time;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,16 +19,15 @@ import com.gahee.rss_v2.ui.TimeArticleViewModel;
 import com.gahee.rss_v2.utils.StringUtils;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
-public class TimePagerAdapter extends PagerAdapter {
+class TimePagerAdapter extends PagerAdapter {
 
     private static final String TAG = "TimePagerAdapter";
     public static final String YOUTUBE = "YoutubePlayerDebugging";
 
-    private Context mContext;
-    private ArrayList<TimeArticle> timeArticles;
-    private TimeArticleViewModel timeArticleViewModel;
+    private final Context mContext;
+    private final ArrayList<TimeArticle> timeArticles;
+    private final TimeArticleViewModel timeArticleViewModel;
 
 
     public TimePagerAdapter(Context context, ArrayList<TimeArticle> timeArticles){

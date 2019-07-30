@@ -9,8 +9,6 @@ import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.data.wwf.model.WWFChannel;
-import com.gahee.rss_v2.data.youtube.model.YoutubeChannel;
-import com.gahee.rss_v2.data.youtube.model.YoutubeVideo;
 
 import java.util.ArrayList;
 
@@ -28,14 +26,6 @@ public class RemoteViewModel extends ViewModel {
 
     public MutableLiveData<ArrayList<ArticleObj>> getArticleMutableLiveData(){
         return mRemoteRepository.getReutersArticleMutableLiveData();
-    }
-
-    public MutableLiveData<ArrayList<YoutubeChannel>> getYoutubeChannelLiveData(){
-        return mRemoteRepository.getYoutubeChannelLiveData();
-    }
-
-    public MutableLiveData<ArrayList<YoutubeVideo>> getYoutubeVideoLiveData(){
-        return mRemoteRepository.getYoutubeVideoLiveData();
     }
 
     public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelLiveData(){
@@ -57,8 +47,6 @@ public class RemoteViewModel extends ViewModel {
     public void fetchReutersDataFromRepo(){
         mRemoteRepository.fetchReutersData();
     }
-
-    public void fetchYouTubeDataFromRepo(){mRemoteRepository.fetchYtData();}
 
     public void fetchTimeDataFromRepo(){mRemoteRepository.fetchTimeData();}
 

@@ -9,7 +9,6 @@ import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Root(name = "channel", strict = false)
 public class Channel implements Parcelable {

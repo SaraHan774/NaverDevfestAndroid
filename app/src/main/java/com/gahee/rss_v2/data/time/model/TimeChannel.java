@@ -8,9 +8,9 @@ import com.gahee.rss_v2.data.time.tags.Item;
 import java.util.List;
 
 public class TimeChannel implements Parcelable {
-    private String mChannelTitle;
-    private String mChannelDescription;
-    private List<Item> mChannelItems;
+    private final String mChannelTitle;
+    private final String mChannelDescription;
+    private final List<Item> mChannelItems;
 
     public TimeChannel(String mChannelTitle, String mChannelDescription, List<Item> mChannelItems) {
         this.mChannelTitle = mChannelTitle;
@@ -30,7 +30,7 @@ public class TimeChannel implements Parcelable {
         return mChannelItems;
     }
 
-    protected TimeChannel(Parcel in) {
+    private TimeChannel(Parcel in) {
         mChannelTitle = in.readString();
         mChannelDescription = in.readString();
         mChannelItems = in.createTypedArrayList(Item.CREATOR);

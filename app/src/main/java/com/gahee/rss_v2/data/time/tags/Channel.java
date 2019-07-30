@@ -26,7 +26,7 @@ public class Channel implements Parcelable {
     private List<Item> items;
 
 
-    protected Channel(Parcel in) {
+    Channel(Parcel in) {
         title = in.readString();
         description = in.readString();
         items = in.createTypedArrayList(Item.CREATOR);

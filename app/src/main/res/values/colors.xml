@@ -1,32 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
 
     <color name="colorWhite">#ffffff</color>
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="colorHalfTransparent">#2D000000</color>
     <color name="colorTransparentBlack">#86000000</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorLightGrey">#D5D0D0</color>
 
     <!--color theme for this app-->
-    <color name="myColorPaleBlack">#00010D</color>
-    <color name="myColorChicNavy">#023373</color>
-    <color name="myColorOldAqua">#9BC8D9</color>
-    <color name="myColorYoungAqua">#cdf1ff</color>
-    <color name="myColorOldBeige">#8c735D</color>
-    <color name="myColorLightBeige">#D9D3D0</color>
 
     <!--NASA color-->
     <color name="nasaBlue">#0E3C91</color>
     <color name="nasaAccent">#fc3d21</color>
     <color name="nasaBlack">#000000</color>
-    <color name="nasaWhite">#ffffff</color>
 
     <!--Youtube color-->
-    <color name="youtubeRed">#FF0000</color>
-    <color name="youtubeBlack">#282828</color>
-    <color name="youtubeWhite">#FFFFFF</color>
 </resources>

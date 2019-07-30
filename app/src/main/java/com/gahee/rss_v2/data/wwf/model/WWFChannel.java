@@ -9,10 +9,10 @@ import java.util.List;
 
 public class WWFChannel implements Parcelable {
 
-    private String title;
-    private String guid;
-    private String description;
-    private List<Item> items;
+    private final String title;
+    private final String guid;
+    private final String description;
+    private final List<Item> items;
 
     public WWFChannel(String title, String guid, String description, List<Item> items) {
         this.title = title;
@@ -21,7 +21,7 @@ public class WWFChannel implements Parcelable {
         this.items = items;
     }
 
-    protected WWFChannel(Parcel in) {
+    private WWFChannel(Parcel in) {
         title = in.readString();
         guid = in.readString();
         description = in.readString();

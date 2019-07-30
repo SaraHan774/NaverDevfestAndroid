@@ -29,7 +29,7 @@ public class Item implements Parcelable {
     }
 
 
-    protected Item(Parcel in) {
+    private Item(Parcel in) {
         title = in.readString();
         guid = in.readString();
         pubDate = in.readString();

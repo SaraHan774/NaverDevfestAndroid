@@ -26,7 +26,7 @@ public class ArticleObj implements Parcelable {
     }
 
 
-    protected ArticleObj(Parcel in) {
+    private ArticleObj(Parcel in) {
         mArticleTitle = in.readString();
         mArticleLink = in.readString();
         mArticleDescription = in.readString();

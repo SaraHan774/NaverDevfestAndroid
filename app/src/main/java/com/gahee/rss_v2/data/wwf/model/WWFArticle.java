@@ -7,11 +7,11 @@ import java.util.List;
 
 public class WWFArticle implements Parcelable {
 
-    private String title;
-    private String guid;
-    private String pubDate;
-    private String description;
-    private String contentEncoded;
+    private final String title;
+    private final String guid;
+    private final String pubDate;
+    private final String description;
+    private final String contentEncoded;
     private List<String> extractedMediaLinks;
 
     public WWFArticle(String title, String guid, String pubDate, String description, String contentEncoded) {
@@ -22,7 +22,7 @@ public class WWFArticle implements Parcelable {
         this.contentEncoded = contentEncoded;
     }
 
-    protected WWFArticle(Parcel in) {
+    private WWFArticle(Parcel in) {
         title = in.readString();
         guid = in.readString();
         pubDate = in.readString();

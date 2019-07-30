@@ -3,7 +3,6 @@ package com.gahee.rss_v2.remoteSource;
 import com.gahee.rss_v2.data.reuters.ReutersAPI;
 import com.gahee.rss_v2.data.time.TimeAPI;
 import com.gahee.rss_v2.data.wwf.WwfAPI;
-import com.gahee.rss_v2.data.youtube.YoutubeAPI;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
@@ -11,9 +10,8 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 import static com.gahee.rss_v2.utils.Constants.REUTERS_BASE_URL;
 import static com.gahee.rss_v2.utils.Constants.TIME_BASE_URL;
 import static com.gahee.rss_v2.utils.Constants.WWF_BASE_URL;
-import static com.gahee.rss_v2.utils.Constants.YOUTUBE_BASE_URL;
 
-public class RetrofitInstanceBuilder {
+class RetrofitInstanceBuilder {
 
     //from reuters xml
     private static final Retrofit.Builder retrofitBuilder =
@@ -26,17 +24,6 @@ public class RetrofitInstanceBuilder {
         return REUTERS_API;
     }
 
-
-    //from youtube xml
-    private static final Retrofit.Builder retrofitBuilder_yt =
-            new Retrofit.Builder()
-                    .baseUrl(YOUTUBE_BASE_URL)
-                    .addConverterFactory(SimpleXmlConverterFactory.create());
-    private static final Retrofit retrofit_yt = retrofitBuilder_yt.build();
-    private static final YoutubeAPI YOUTUBE_API = retrofit_yt.create(YoutubeAPI.class);
-    public static YoutubeAPI getYoutubeApi() {
-        return YOUTUBE_API;
-    }
 
 
     //from Time news xml

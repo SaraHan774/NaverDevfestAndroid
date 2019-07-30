@@ -3,11 +3,8 @@ package com.gahee.rss_v2.data.reuters.tags;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
-
-import java.io.Serializable;
 
 
 @Root(name = "item", strict = false)
@@ -37,7 +34,7 @@ public class Item implements Parcelable {
 
     }
 
-    protected Item(Parcel in) {
+    private Item(Parcel in) {
         title = in.readString();
         link = in.readString();
         description = in.readString();

@@ -10,15 +10,13 @@ import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.data.wwf.model.WWFChannel;
-import com.gahee.rss_v2.data.youtube.model.YoutubeChannel;
-import com.gahee.rss_v2.data.youtube.model.YoutubeVideo;
 
 import java.util.ArrayList;
 
 public class RemoteRepository {
 
     private final RssClient mRssClient;
-    public static RemoteRepository instance;
+    private static RemoteRepository instance;
 
     public static RemoteRepository getInstance() {
         if(instance == null){
@@ -27,7 +25,7 @@ public class RemoteRepository {
         return instance;
     }
 
-    public RemoteRepository(){
+    private RemoteRepository(){
         mRssClient = RssClient.getInstance();
     }
 
@@ -56,15 +54,6 @@ public class RemoteRepository {
         return mRssClient.getmArticleMutableLiveData();
     }
 
-    //youtube
-    public void fetchYtData(){new FetchYtDataAsync(mRssClient).execute();}
-    public MutableLiveData<ArrayList<YoutubeChannel>> getYoutubeChannelLiveData(){
-        return mRssClient.getmYoutubeChannelLiveData();
-    }
-    public MutableLiveData<ArrayList<YoutubeVideo>> getYoutubeVideoLiveData(){
-        return mRssClient.getmYoutubeVideoLiveData();
-    }
-
     //Time news
     public void fetchTimeData(){new FetchTimeDataAsync(mRssClient).execute();}
     public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelLiveData(){
@@ -89,9 +78,9 @@ public class RemoteRepository {
 
     //fetching data async task
     private static class FetchReutersDataAsync extends AsyncTask<Void, Void, Void>{
-        RssClient mRssClient;
+        final RssClient mRssClient;
 
-        public FetchReutersDataAsync(RssClient rssClient){
+        FetchReutersDataAsync(RssClient rssClient){
             this.mRssClient = rssClient;
         }
 
@@ -102,23 +91,11 @@ public class RemoteRepository {
         }
     }
 
-    private static class FetchYtDataAsync extends AsyncTask<Void, Void, Void>{
-        RssClient mRssClient;
-
-        public FetchYtDataAsync(RssClient rssClient){
-            this.mRssClient = rssClient;
-        }
-        @Override
-        protected Void doInBackground(Void... voids) {
-            mRssClient.fetchRemoteYoutubeData();
-            return null;
-        }
-    }
 
     private static class FetchTimeDataAsync extends AsyncTask<Void, Void, Void>{
-        RssClient mRssClient;
+        final RssClient mRssClient;
 
-        public FetchTimeDataAsync(RssClient rssClient){
+        FetchTimeDataAsync(RssClient rssClient){
             this.mRssClient = rssClient;
         }
 
@@ -130,9 +107,9 @@ public class RemoteRepository {
     }
 
     private static class FetchWWFDataAsync extends AsyncTask<Void, Void, Void>{
-        RssClient mRssClient;
+        final RssClient mRssClient;
 
-        public FetchWWFDataAsync(RssClient rssClient){
+        FetchWWFDataAsync(RssClient rssClient){
             this.mRssClient = rssClient;
         }
 

@@ -1,9 +1,5 @@
 package com.gahee.rss_v2.utils;
 
-import android.content.Context;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.gahee.rss_v2.R;
 

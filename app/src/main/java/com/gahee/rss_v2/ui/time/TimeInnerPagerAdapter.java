@@ -13,17 +13,16 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
-public class TimeInnerPagerAdapter extends PagerAdapter {
+class TimeInnerPagerAdapter extends PagerAdapter {
 
-    private Context context;
+    private final Context context;
     private int imageLength;
     private int videoLength;
-    private TimeArticle timeArticles;
+    private final TimeArticle timeArticles;
     private static boolean isVideo = false;
 
     public static boolean isIsVideo() {
@@ -66,7 +65,7 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
         }else{
             //???
         }
-        View view = layoutInflater.inflate(resourceId, container, false);
+        View view = layoutInflater != null ? layoutInflater.inflate(resourceId, container, false) : null;
 
         if(isVideo){
             view.setTag("VIEW" + position);
