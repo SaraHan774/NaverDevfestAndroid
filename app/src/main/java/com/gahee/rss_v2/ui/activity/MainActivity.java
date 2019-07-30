@@ -2,10 +2,12 @@ package com.gahee.rss_v2.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,7 +42,9 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -97,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: ");
 
         findProgressBarsById();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setElevation(10);
 
         remoteViewModel = ViewModelProviders.of(this).get(RemoteViewModel.class);
 
@@ -165,8 +171,42 @@ public class MainActivity extends AppCompatActivity {
         sliderIndexViewModel = ViewModelProviders.of(this).get(SliderIndexViewModel.class);
     }
 
+    //list to store search results
+    private final ArrayList searchResultList = new ArrayList();
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        final SearchView searchView = (SearchView) menu.findItem(R.id.news_search_icon).getActionView();
+
+        searchView.setFocusable(false);
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //make an array list to store search results
+                if(searchResultList != null){
+                    Log.d(TAG, "search list cleared ");
+                    searchResultList.clear();
+                }
+                if(searchResultList == null){
+
+                }else{
+
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
 
 
+        return true;
+    }
 
     /*
     *  ViewPager Listeners
