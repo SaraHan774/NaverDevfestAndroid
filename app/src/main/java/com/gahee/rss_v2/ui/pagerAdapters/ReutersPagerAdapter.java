@@ -1,6 +1,8 @@
 package com.gahee.rss_v2.ui.pagerAdapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,23 +66,40 @@ public class ReutersPagerAdapter extends PagerAdapter {
 
         final Item item = mChannelObj.getmItemList().get(position);
 
+
         TextView title = view.findViewById(R.id.tv_reuters_outer_title);
         TextView description = view.findViewById(R.id.tv_reuters_outer_description);
+        TextView pubDate = view.findViewById(R.id.tv_reuters_outer_pub_date);
 
-        title.setText(mChannelObj.getmItemList().get(position).getTitle());
-        String articleDescription = mChannelObj.getmItemList().get(position).getDescription();
+        if(item != null) {
 
-        String cleanDescription = StringUtils.removeHtmlTagsFromString(articleDescription);
-        description.setText(cleanDescription);
+            title.setText(item.getTitle());
+            String articleDescription = item.getDescription();
+
+            String cleanDescription = StringUtils.removeHtmlTagsFromString(articleDescription);
+            description.setText(cleanDescription);
+
+            pubDate.setText(item.getPubDate());
+        }
 
         FrameLayout frameLayout = view.findViewById(R.id.reuters_outer_slider_container);
         frameLayout.setTag(TAG_REUTERS_FRAME + position);
+
+//        frameLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(Intent.ACTION_VIEW);
+//                intent.setData(Uri.parse(mChannelObj.getmItemList().get(position).getLink()));
+//                mContext.startActivity(intent);
+//            }
+//        });
 
 
         if(bundle.getBoolean("key")) {
             Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.description_fade_out);
             description.startAnimation(fadeOut);
             Animation slideToRight = AnimationUtils.loadAnimation(mContext, R.anim.title_slide_to_left);
+            pubDate.startAnimation(fadeOut);
 
             fadeOut.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -91,6 +110,7 @@ public class ReutersPagerAdapter extends PagerAdapter {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     description.setVisibility(View.GONE);
+                    pubDate.setVisibility(View.GONE);
                     title.startAnimation(slideToRight);
                 }
 

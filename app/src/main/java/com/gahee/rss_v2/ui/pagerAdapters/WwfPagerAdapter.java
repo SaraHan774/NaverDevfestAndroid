@@ -1,6 +1,8 @@
 package com.gahee.rss_v2.ui.pagerAdapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +82,15 @@ public class WwfPagerAdapter extends PagerAdapter {
         description.startAnimation(fadeIn);
 
         Log.d(TAG, "instantiate Item " + position);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(wwfArticle.get(position).getGuid()));
+                mContext.startActivity(intent);
+            }
+        });
 
 
         ImageSwitcher imageSwitcher = view.findViewById(R.id.image_switcher_wwf_outer_slider);

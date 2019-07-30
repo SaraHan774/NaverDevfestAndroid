@@ -31,8 +31,18 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/tv_reuters_outer_description"
+                android:id="@+id/tv_reuters_outer_pub_date"
                 android:layout_below="@id/tv_reuters_outer_title"
+                android:textColor="@color/colorWhite"
+                android:text="@string/sample_text"
+                android:textSize="@dimen/text_size_small"
+                android:layout_margin="@dimen/view_margin_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_reuters_outer_description"
+                android:layout_below="@id/tv_reuters_outer_pub_date"
                 android:textColor="@color/colorWhite"
                 android:text="@string/sample_text_medium"
                 android:textSize="@dimen/text_size_small"

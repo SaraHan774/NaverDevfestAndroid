@@ -1,6 +1,8 @@
 package com.gahee.rss_v2.ui.time;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +70,11 @@ public class TimePagerAdapter extends PagerAdapter {
                 .error(R.drawable.ic_launcher_background)
                 .into(imageView);
 
-
+        view.setOnClickListener(view1 -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(timeArticles.get(position).getmArticleLink()));
+            mContext.startActivity(intent);
+        });
 
 
         container.addView(view);

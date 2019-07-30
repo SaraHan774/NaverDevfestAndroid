@@ -6,23 +6,15 @@ import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.tags.Item;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class StringUtils {
 
@@ -51,23 +43,38 @@ public class StringUtils {
 
 
     //extracting youtube links from Time article
-    public static void timeGetYoutubeLinksFromArticle(Item item, TimeArticle timeArticle){
-        List<String> youtubeLinks = new ArrayList<>();
-        youtubeLinks.clear();
+    public static void extractYoutubeIdFromArticle(Item item, TimeArticle timeArticle){
+        List<String> youtubeLinkIds = new ArrayList<>();
+        youtubeLinkIds.clear();
         Document document = Jsoup.parse(item.getContentEncoded());
         Elements links = document.select("iframe");
         if(links != null){
             for(Element link : links){
                 String s = link.attr("src");
                 String id = StringUtils.getYoutubeVideoIDFromUrl(s);
-                Log.d("youtube links : ", " ||| " + StringUtils.getYoutubeVideoIDFromUrl(s));
-                youtubeLinks.add(id); //only set the ID
+                youtubeLinkIds.add(id); //only set the ID
             }
-            timeArticle.setmYoutubeLink(youtubeLinks);
-        }else{
-            timeArticle.setmYoutubeLink(null);
-            }
+            timeArticle.setmYoutubeThumbnailLink(generateYoutubeVideoThumbnailFromIds(youtubeLinkIds));
+
+            timeArticle.setmYoutubeLinkIds(youtubeLinkIds);
         }
+    }
+
+    public static List<String> generateYoutubeVideoThumbnailFromIds(List<String> videoIds){
+//        http://i3.ytimg.com/vi/05_SZfB1qNg/hqdefault.jpg
+        List<String> thumbnailLinks = new ArrayList<>();
+        if(thumbnailLinks != null){
+            thumbnailLinks.clear();
+        }
+        for(String id : videoIds){
+            StringBuffer stringBuffer = new StringBuffer().append("http://i3.ytimg.com/vi/")
+                    .append(id).append("/hqdefault.jpg");
+            thumbnailLinks.add(stringBuffer.toString());
+
+            Log.d(TAG, "generateYoutubeVideoThumbnailFromIds: " + stringBuffer);
+        }
+        return thumbnailLinks;
+    }
 
 
     public static String formatTIMEPubDateString(String pubDate){
@@ -111,5 +118,13 @@ public class StringUtils {
     private static String getYoutubeVideoIDFromUrl(String youtubeUrl){
         String temp = youtubeUrl.replace("https://www.youtube.com/embed/", "");
         return temp.replace("?feature=oembed", "");
+    }
+
+    private static void getYoutubeWatchUrlFromIds(List<String> ids){
+        List<String> links = new ArrayList<>();
+        for(String id : ids){
+            String watchLink = "http://www.youtube.com/watch?v=" + id;
+            links.add(watchLink);
+        }
     }
 }

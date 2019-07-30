@@ -15,18 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gahee.rss_v2.R;
-import com.gahee.rss_v2.data.time.model.TimeArticle;
-import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.gahee.rss_v2.ui.TimeArticleViewModel;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -143,10 +138,10 @@ public class TimeFragment extends Fragment {
             if(timeArticle.getContent().size() > 1){
                 timer = new Timer();
                 timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
-            }else if(timeArticle.getContent().size() > 1 || timeArticle.getmYoutubeLink() != null){
+            }else if(timeArticle.getContent().size() > 1 || timeArticle.getmYoutubeThumbnailLinks() != null){
                 timer = new Timer();
                 timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size() +
-                        timeArticle.getmYoutubeLink().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
+                        timeArticle.getmYoutubeThumbnailLinks().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
             }
 
         });

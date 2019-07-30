@@ -227,7 +227,7 @@ public class RssClient {
                 }
 
                 TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, content,contentEncoded,articleLink);
-                StringUtils.timeGetYoutubeLinksFromArticle(item, timeArticle);
+                StringUtils.extractYoutubeIdFromArticle(item, timeArticle);
 
                 timeArticleArrayList.add(timeArticle);
             }

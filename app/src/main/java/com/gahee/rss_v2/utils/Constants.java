@@ -16,21 +16,17 @@ public class Constants {
     public static final String PLAYBACK_POSITION = "playbackPosition";
     public static final String CURRENT_WINDOW = "currentWindow";
 
-//    public static final String TITLE = "firstTitle";
-//    public static final String PUB_DATE = "firstPubDate";
-//    public static final String DESCRIPTION = "firstDescription";
-
     public static final String REUTERS_SLIDER_INDEX = "index_reuters";
 
     public static final String TAG_WWF_FRAME = "wwfFrame";
     public static final String TAG_REUTERS_FRAME = "nasaFrame";
-    public static final String TAG_TIME_FRAME = "timeFrame";
-    public static final String TAG_TIME_VIDEO = "video";
+
 
     public static final int REUTERS_SLIDER_TIME_INTERVAL = 15000; //15000
     public static final int WWF_SLIDER_TIME_INTERVAL = 16000;
-    public static final int TIME_INNER_SLIDER_TIME_INTERVAL = 16000;
+    public static final int TIME_INNER_SLIDER_TIME_INTERVAL = 4000;
 
+    public static final String YOUTUBE_WATCH_BASE_URL = "http://www.youtube.com/watch?v=";
 
 
 }

@@ -1,38 +1,37 @@
 package com.gahee.rss_v2.ui.time;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+
+import static com.gahee.rss_v2.utils.Constants.YOUTUBE_WATCH_BASE_URL;
 
 public class TimeInnerPagerAdapter extends PagerAdapter {
 
     private final Context context;
     private int imageLength;
-    private int videoLength;
+    private int videoThumbnailLength;
     private final TimeArticle timeArticles;
-    private static boolean isVideo = false;
-    private YouTubePlayerView youTubePlayerView;
 
-    public static boolean isIsVideo() {
-        return isVideo;
-    }
+
 
     public TimeInnerPagerAdapter(Context context, TimeArticle timeArticles){
         Log.d("TimeArticleViewModel", "inner pager adapter constructor running " + timeArticles);
@@ -45,9 +44,9 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         imageLength = timeArticles.getContent().size();
-        videoLength = timeArticles.getmYoutubeLink().size();
+        videoThumbnailLength = timeArticles.getmYoutubeThumbnailLinks().size();
 
-        return imageLength + videoLength;
+        return imageLength + videoThumbnailLength;
     }
 
 
@@ -58,56 +57,53 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
 
         LayoutInflater layoutInflater =
                 (LayoutInflater) container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        int resourceId = 0;
-        if(position < imageLength){
-            resourceId = R.layout.inner_time_slider;
-            isVideo = false;
+        View view = layoutInflater != null ? layoutInflater.inflate(R.layout.inner_time_slider, container, false) : null;
 
-        }else if(position >= imageLength && position < imageLength + videoLength){
-            resourceId = R.layout.inner_time_slider_video;
-            isVideo = true;
+        TextView currentPage = view.findViewById(R.id.tv_article_page_number_current);
+        TextView totalPage = view.findViewById(R.id.tv_article_page_number_total);
 
-        }else{
-            //???
-        }
-        View view = layoutInflater != null ? layoutInflater.inflate(resourceId, container, false) : null;
+        ImageView imageView = view.findViewById(R.id.image_view_time_inner);
+        TextView textView = view.findViewById(R.id.tv_time_inner_content_title);
 
-        if(isVideo){
-            view.setTag("VIEW" + position);
-             youTubePlayerView = view.findViewById(R.id.youtube_player_view);
-//            playerView.setTag("PAYER" + position);
-            youTubePlayerView.initialize(new AbstractYouTubePlayerListener() {
-                @Override
-                public void onReady(YouTubePlayer youTubePlayer) {
-                    youTubePlayer.loadVideo(timeArticles.getmYoutubeLink().get(position - imageLength), 0);
+            if(position < imageLength) {
+                if (timeArticles.getContent().get(position) != null) {
+                    if (timeArticles.getContent().get(position).getUrl() != null) {
+                        Glide.with(context).load(timeArticles.getContent().get(position).getUrl())
+                                .placeholder(R.drawable.scrim_gradient_to_above)
+                                .error(R.drawable.ic_launcher_background)
+                                .transition(GenericTransitionOptions.with(R.anim.grow_left)).into(imageView);
+
+
+                        String contentTitle = timeArticles.getContent().get(position).getTitle();
+                        if (contentTitle != null) {
+                            textView.setText(Html.fromHtml(contentTitle));
+                        } else {
+                            textView.setPadding(0, 0, 0, 0);
+                        }
+                    }
                 }
+            }else if(position >= imageLength && position < videoThumbnailLength + imageLength){
+                Log.d("GLIDE", imageLength + " / " + videoThumbnailLength);
+                Glide.with(context).load(timeArticles.getmYoutubeThumbnailLinks().get(position - imageLength))
+                        .placeholder(R.drawable.scrim_gradient_to_above)
+                        .error(R.drawable.ic_launcher_foreground)
+                        .transition(GenericTransitionOptions.with(R.anim.grow_left))
+                        .into(imageView);
 
-                @Override
-                public void onError(YouTubePlayer youTubePlayer, PlayerConstants.PlayerError error) {
-                    Log.d("YOUTUBE", "onError: "  + error);
-                }
-            });
+                ImageButton imageButton = view.findViewById(R.id.custom_fab_play_youtube);
+                imageButton.setVisibility(View.VISIBLE);
 
-        }else {
-            ImageView imageView = view.findViewById(R.id.image_view_time_inner);
-            imageView.setVisibility(View.VISIBLE);
+                imageButton.setOnClickListener(view1 -> {
+                    watchYoutubeVideo(context, timeArticles.getmYoutubeLinkIds().get(position - imageLength));
+                    Log.d("FAB", "instantiateItem: button clicked ");
+                });
 
-            if (timeArticles.getContent().get(position) != null) {
-                if (timeArticles.getContent().get(position).getUrl() != null) {
-                    Glide.with(context).load(timeArticles.getContent().get(position).getUrl())
-                            .placeholder(R.drawable.scrim_gradient_to_above)
-                            .error(R.drawable.ic_launcher_background)
-                            .transition(GenericTransitionOptions.with(R.anim.grow_left)).into(imageView);
-                }
-                TextView textView = view.findViewById(R.id.tv_time_inner_content_title);
-                String contentTitle = timeArticles.getContent().get(position).getTitle();
-                if (contentTitle != null) {
-                    textView.setText(Html.fromHtml(contentTitle));
-                } else {
-                    textView.setPadding(0, 0, 0, 0);
-                }
+                textView.setPadding(0, 0, 0, 0);
             }
-        }
+
+            currentPage.setText(String.valueOf(position + 1));
+            totalPage.setText(String.valueOf(videoThumbnailLength + imageLength));
+
         container.addView(view);
         return view;
     }
@@ -120,12 +116,20 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         View view = (View) object;
-        if(youTubePlayerView != null){
-            youTubePlayerView.release();
-        }
         container.removeView(view);
     }
 
+    public static void watchYoutubeVideo(Context context, String videoId){
+        Intent launchYoutubeApp = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoId));
+        Intent launchOnBrowser = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(YOUTUBE_WATCH_BASE_URL + videoId));
+        try {
+            context.startActivity(launchYoutubeApp);
+        } catch (
+                ActivityNotFoundException ex) {
+            context.startActivity(launchOnBrowser);
+        }
+    }
 
 
 }

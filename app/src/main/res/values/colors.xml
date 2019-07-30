@@ -2,9 +2,10 @@
 <resources>
 
     <color name="colorWhite">#ffffff</color>
+    <color name="colorTransparentWhite">#97FFFFFF</color>
     <color name="colorTransparent">#00FFFFFF</color>
-    <color name="colorHalfTransparent">#2D000000</color>
-    <color name="colorTransparentBlack">#86000000</color>
+    <color name="colorHalfTransparent">#20000000</color>
+    <color name="colorTransparentBlack">#6F000000</color>
     <color name="colorBlack">#000000</color>
 
     <!--color theme for this app-->
@@ -13,5 +14,7 @@
     <color name="nasaBlue">#0E3C91</color>
     <color name="nasaAccent">#fc3d21</color>
     <color name="nasaBlack">#000000</color>
+
+    <color name="greenIshGrey">#D1DDC8</color>
 
 </resources>

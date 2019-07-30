@@ -17,7 +17,9 @@ public class TimeArticle implements Parcelable {
     private final List<Content> content;
     private final String mContentEncoded;
     private final String mArticleLink;
-    private List<String> mYoutubeLink;
+
+    private List<String> mYoutubeLinkIds;
+    private List<String> mYoutubeThumbnailLink;
 
 
     public TimeArticle(String mArticletitle, String mArticlePubDate, String mArticleDescription, Item.Thumbnail mArticleThumbnail,List<Content> content,String mContentEncoded, String mArticleLink) {
@@ -58,12 +60,20 @@ public class TimeArticle implements Parcelable {
         return mArticleLink;
     }
 
-    public List<String> getmYoutubeLink() {
-        return mYoutubeLink;
+    public List<String> getmYoutubeThumbnailLinks() {
+        return mYoutubeThumbnailLink;
     }
 
-    public void setmYoutubeLink(List<String> mYoutubeLink) {
-        this.mYoutubeLink = mYoutubeLink;
+    public void setmYoutubeThumbnailLink(List<String> mYoutubeThumbnailLink) {
+        this.mYoutubeThumbnailLink = mYoutubeThumbnailLink;
+    }
+
+    public void setmYoutubeLinkIds(List<String> mYoutubeLinkIds) {
+        this.mYoutubeLinkIds = mYoutubeLinkIds;
+    }
+
+    public List<String> getmYoutubeLinkIds() {
+        return mYoutubeLinkIds;
     }
 
     private TimeArticle(Parcel in) {
@@ -74,7 +84,7 @@ public class TimeArticle implements Parcelable {
         content = in.readParcelable(Content.class.getClassLoader());
         mContentEncoded = in.readString();
         mArticleLink = in.readString();
-        mYoutubeLink = in.createStringArrayList();
+        mYoutubeLinkIds = in.createStringArrayList();
     }
 
     @Override
@@ -86,7 +96,7 @@ public class TimeArticle implements Parcelable {
         dest.writeTypedList(content);
         dest.writeString(mContentEncoded);
         dest.writeString(mArticleLink);
-        dest.writeStringList(mYoutubeLink);
+        dest.writeStringList(mYoutubeLinkIds);
     }
 
     @Override
