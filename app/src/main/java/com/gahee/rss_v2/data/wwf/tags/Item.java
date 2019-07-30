@@ -15,7 +15,7 @@ public class Item implements Parcelable {
     @Element(name = "guid", required = false)
     private String guid;
 
-    @Element(name = "pubdate", required = false)
+    @Element(name = "pubDate", required = false)
     private String pubDate;
 
     @Element(name = "description", required = false)

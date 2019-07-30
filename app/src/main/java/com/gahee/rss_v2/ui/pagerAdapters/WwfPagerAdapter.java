@@ -7,11 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -22,6 +22,8 @@ import com.gahee.rss_v2.ui.activity.MainActivity;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.utils.MyAnimationUtils;
+import com.gahee.rss_v2.utils.StringUtils;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +65,16 @@ public class WwfPagerAdapter extends PagerAdapter {
         frameLayout.setTag(TAG_WWF_FRAME + position);
 
         TextView title = view.findViewById(R.id.tv_wwf_outer_title);
-        TextView description = view.findViewById(R.id.tv_wwf_outer_description);
-
+        Animation titleSlideInAnimation = AnimationUtils.loadAnimation(mContext, R.anim.wwf_title_slide_in);
+        titleSlideInAnimation.setInterpolator(new BounceInterpolator());
         title.setText(article.getTitle());
+        title.startAnimation(titleSlideInAnimation);
 
+        TextView pubDate = view.findViewById(R.id.tv_wwf_outer_pubdate);
+        pubDate.setText(StringUtils.formatWWFPubDateString(wwfArticle.get(position).getPubDate()));
+
+
+        TextView description = view.findViewById(R.id.tv_wwf_outer_description);
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.description_fade_in);
         description.setText(article.getDescription());
         description.startAnimation(fadeIn);
@@ -90,7 +98,7 @@ public class WwfPagerAdapter extends PagerAdapter {
 
         if(article.getExtractedMediaLinks().size() > 0){
             Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new ImageSliderTimer(article.getExtractedMediaLinks(), imageSwitcher), 0, 3600);
+            timer.scheduleAtFixedRate(new ImageSliderTimer(article.getExtractedMediaLinks(), imageSwitcher), 0, 4000);
         }
 
 

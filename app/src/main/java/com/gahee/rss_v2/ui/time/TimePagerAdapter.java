@@ -59,7 +59,7 @@ public class TimePagerAdapter extends PagerAdapter {
 
         TextView pubDate = view.findViewById(R.id.tv_time_outer_pub_date);
         String tempPubDate = timeArticles.get(position).getmArticlePubDate();
-        pubDate.setText(StringUtils.formatPubDateString(tempPubDate));
+        pubDate.setText(StringUtils.formatTIMEPubDateString(tempPubDate));
 
         ImageView imageView = view.findViewById(R.id.img_time_outer_article_thumbnail);
         String thumbnailUrl = timeArticles.get(position).getmArticleThumbnail().getUrl();

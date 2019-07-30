@@ -21,6 +21,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
+import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.gahee.rss_v2.ui.TimeArticleViewModel;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -37,7 +38,7 @@ public class TimeFragment extends Fragment {
     private RemoteViewModel remoteViewModel;
     private ViewPager viewPagerTime;
     private TimeArticleViewModel timeArticleViewModel;
-    private YouTubePlayerView youTubePlayerView;
+//    private YouTubePlayerView youTubePlayerView;
     private TextView textView;
 
     //animation
@@ -76,9 +77,11 @@ public class TimeFragment extends Fragment {
         View fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_time, container, false);
         textView = fragmentView.findViewById(R.id.time_channel_title);
 
+        remoteViewModel.getTimeChannelLiveData().observe(this, timeChannels -> {
+            textView.setText(timeChannels.get(0).getmChannelTitle());
+        });
+
         remoteViewModel.getTimeArticleLiveData().observe(this, timeArticles -> {
-
-
 
             //fragmentView pager that displays text
             viewPagerTime = fragmentView.findViewById(R.id.view_pager_time_outer);
@@ -121,7 +124,6 @@ public class TimeFragment extends Fragment {
             viewPagerTimeMedias.startAnimation(timeCardUp);
 
 
-
             viewPagerTimeMedias.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -130,10 +132,6 @@ public class TimeFragment extends Fragment {
 
                 @Override
                 public void onPageSelected(int position) {
-                    if(TimeInnerPagerAdapter.isIsVideo()){
-
-                    }
-
                 }
 
                 @Override

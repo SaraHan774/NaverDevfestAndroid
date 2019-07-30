@@ -18,6 +18,7 @@ import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.reuters.model.ChannelObj;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
+import com.gahee.rss_v2.data.wwf.model.WWFChannel;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.gahee.rss_v2.ui.pagerAdapters.ReutersPagerAdapter;
 import com.gahee.rss_v2.ui.pagerAdapters.WwfPagerAdapter;
@@ -40,7 +41,6 @@ import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPagerWWF;
 
     private List<Item> reutersItemList;
-    private ArrayList<WWFArticle> wwfItemList;
+//    private ArrayList<WWFArticle> wwfItemList;
     private ReutersPagerAdapter pagerAdapter;
     private ProgressBar [] reutersProgressBars;
     private ProgressBar[] wwfProgressBars;
@@ -124,14 +124,15 @@ public class MainActivity extends AppCompatActivity {
             viewPagerReuters.setAdapter(pagerAdapter);
             viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
 
-            //여기서는 괜찮은데, 돌리면 자꾸 frame 을 찾지 못함
-
             frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + 0);
             playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
 
             reutersProgress = new ProgressBarUtil();
             reutersProgress.setProgressBars(reutersProgressBars);
             reutersProgress.resetProgressBarToUserSelection( 0);
+
+            TextView textView = findViewById(R.id.reuters_channel_title);
+            textView.setText(reutersChannel.get(0).getmChannelTitle());
 
             setMediaURL(reutersChannel.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
 
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         remoteViewModel.getWwfArticleLiveData().observe(this, wwfArticles -> {
-            this.wwfItemList = wwfArticles;
+//            this.wwfItemList = wwfArticles;
             viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
             WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
             viewPagerWWF.setAdapter(pagerAdapter);
@@ -154,6 +155,11 @@ public class MainActivity extends AppCompatActivity {
 
             setUpWWFSliderTimer(wwfArticles);
 
+        });
+
+        remoteViewModel.getWwfChannelLiveData().observe(this, wwfChannels -> {
+            TextView textView = findViewById(R.id.wwf_channel_title);
+            textView.setText(wwfChannels.get(0).getTitle());
         });
 
         sliderIndexViewModel = ViewModelProviders.of(this).get(SliderIndexViewModel.class);
@@ -291,15 +297,6 @@ public class MainActivity extends AppCompatActivity {
 
         };
 
-//        timeProgressBars = new ProgressBar [] {
-//
-//                findViewById(R.id.progress_bar_10),
-//                findViewById(R.id.progress_bar_20),
-//                findViewById(R.id.progress_bar_30),
-//                findViewById(R.id.progress_bar_40),
-//                findViewById(R.id.progress_bar_50),
-//                findViewById(R.id.progress_bar_60)
-//        };
     }
 
 
@@ -334,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d(TAG, "onStart()");
         if(Util.SDK_INT > 23){
-//            initializePlayer();
+            initializePlayer();
         }
     }
 
@@ -343,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume()");
         if(Util.SDK_INT <= 23 || simpleExoPlayer == null) {
-//            initializePlayer();
+            initializePlayer();
         }
     }
 

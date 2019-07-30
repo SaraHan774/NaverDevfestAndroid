@@ -159,6 +159,8 @@ public class RssClient {
                 wwfChannelArrayList.add(new WWFChannel(title, link, description, items));
                 storeEachWWFArticles(items);
                 mWwfChannelLiveData.setValue(wwfChannelArrayList);
+                Log.d(TAG, "onResponse: WWF " + response.body().getChannel().getTitle()
+                 + " " + response.body().getChannel().getDescription());
             }
 
             @Override

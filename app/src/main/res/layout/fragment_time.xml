@@ -3,19 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@drawable/rect_round_corner_scrim"
+    android:elevation="@dimen/card_elevation"
     android:layout_margin="@dimen/view_margin_min"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/time_channel_title"
+        android:paddingStart="@dimen/view_margin_min"
+        android:paddingEnd="@dimen/view_margin_min"
+        android:background="@color/colorTransparentBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/sample_text"
+        android:layout_marginStart="@dimen/view_margin_min"
+        android:layout_marginTop="@dimen/view_margin_1x"
+        android:layout_marginEnd="@dimen/view_margin_min"
         android:textSize="@dimen/text_size_large"
         android:textStyle="italic|bold"
         android:textColor="@color/colorWhite"
@@ -39,8 +41,9 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_alignParentBottom="true"
-        android:elevation="4dp"
-        app:cardCornerRadius="16dp"
+        android:layout_margin="@dimen/view_margin_min"
+        android:elevation="8dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="8dp">
 
@@ -56,11 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="horizontal"
-            android:padding="@dimen/view_margin_x_min">
-
-            <include layout="@layout/slider_bottom_progress_bars_time" />
-
-        </LinearLayout>
+            android:padding="@dimen/view_margin_x_min"/>
 
     </androidx.cardview.widget.CardView>
 

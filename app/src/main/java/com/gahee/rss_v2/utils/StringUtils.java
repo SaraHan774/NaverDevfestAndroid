@@ -29,74 +29,25 @@ public class StringUtils {
     private static final String TAG = "StringUtils";
 
 
-    static String readFromUrl(String link){ //network connection이 null을 반환함.
-        HttpsURLConnection urlConnection  = null;
-        BufferedReader reader = null;
-        String data = null;
-
-        try{
-
-            URL request = new URL(link);
-            urlConnection = (HttpsURLConnection)request.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            int resCode = urlConnection.getResponseCode();
-            System.out.println("res code: " + resCode);
-            if(resCode != HttpsURLConnection.HTTP_OK)
-                return null;
-
-            InputStream inputStream = urlConnection.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            StringBuilder builder = new StringBuilder();
-            //buffer 로 바꿔보기
-            String line;
-            while((line = reader.readLine()) != null){ //disconnection boilerplate 제거하기!!!
-                builder.append(line);
-                builder.append("\n");
-                if(builder.length() == 0){
-                    return null;
-                }
-            }
-            data = builder.toString();
-        }catch (IOException e){
-            e.printStackTrace();
-        }finally {
-            if(urlConnection != null){ //안하면 null pointer exception
-                urlConnection.disconnect();
-            }
-            if(reader != null){
-                try{
-                    reader.close();
-                }catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
-
-        }
-        return data;
-    }
-
-    private static String fetchingWithJsoup(String link){
-        Connection connection = Jsoup.connect(link);
-        connection.maxBodySize(0);
-        Document document = null;
-        try {
-            document = connection.get();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Elements content = document != null ? document.getAllElements() : null;
-
-        for(Element e : content){
-            Elements p = e.getElementsByTag("iframe");
-            for(Element tag : p){
-                System.out.println(p);
-            }
-        }
-        return "";
-    }
+//    private static String fetchingWithJsoup(String link){
+//        Connection connection = Jsoup.connect(link);
+//        connection.maxBodySize(0);
+//        Document document = null;
+//        try {
+//            document = connection.get();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Elements content = document != null ? document.getAllElements() : null;
+//
+//        for(Element e : content){
+//            Elements p = e.getElementsByTag("iframe");
+//            for(Element tag : p){
+//                System.out.println(p);
+//            }
+//        }
+//        return "";
+//    }
 
 
     //extracting youtube links from Time article
@@ -118,24 +69,21 @@ public class StringUtils {
             }
         }
 
-        public static String formatPubDateString(String pubDate){
-            return pubDate.replace("+0000", "GMT");
-        }
 
-//    public static void getImagesFromWWFArticle(List<com.gahee.rss_v2.data.wwf.tags.Item> items){
-//        for(com.gahee.rss_v2.data.wwf.tags.Item item: items){
-//            Document document = Jsoup.parse(item.getContentEncoded());
-//            Elements links = document.select("img");
-//            for(Element element : links){
-//                Log.d("image links : ", element.attr("src") + "\n");
-//                String link = element.attr("src");
-//                if(link.contains("jpg")){
-//                   extractedMediaLinks.add(link);
-//                }
-//            }
-//            //set the media link to article object
-//        }
-//    }
+    public static String formatTIMEPubDateString(String pubDate){
+        return pubDate.replace("+0000", "GMT");
+    }
+
+    public static String formatWWFPubDateString(String pubDate){
+        Pattern pattern = Pattern.compile("2019");
+        Matcher matcher = pattern.matcher(pubDate);
+        int endIndex = 1;
+        while (matcher.find()){
+            endIndex = matcher.end();
+        }
+        return pubDate.substring(0, endIndex);
+    }
+
 
     public static void wwfExtractImageTags
             (WWFArticle wwfArticle, com.gahee.rss_v2.data.wwf.tags.Item item){
@@ -158,25 +106,6 @@ public class StringUtils {
         return document.text();
     }
 
-    public static String getYoutubeThumbnailUrlFromVideoUrl(String videoUrl) {
-        return "http://img.youtube.com/vi/"+getYoutubeVideoIdFromUrl(videoUrl) + "/0.jpg";
-    }
-
-    private static String getYoutubeVideoIdFromUrl(String youtubeUrl) {
-        youtubeUrl = youtubeUrl.replace("&feature=youtu.be", "");
-        if (youtubeUrl.toLowerCase().contains("youtu.be")) {
-            return youtubeUrl.substring(youtubeUrl.lastIndexOf("/") + 1);
-        }
-        String pattern = "(?<=watch\\?v=|/videos/|embed/)[^#&?]*";
-        Pattern compiledPattern = Pattern.compile(pattern);
-        Matcher matcher = compiledPattern.matcher(youtubeUrl);
-        if (matcher.find()) {
-            String result = matcher.group();
-            Log.d(TAG, "getYoutubeVideoIdFromUrl: ");
-            return result;
-        }
-        return null;
-    }
 
     // extracts ID from this kind of url -> https://www.youtube.com/embed/XeUBwpx8FEg?feature=oembed
     private static String getYoutubeVideoIDFromUrl(String youtubeUrl){

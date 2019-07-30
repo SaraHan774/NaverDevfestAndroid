@@ -1,6 +1,7 @@
 package com.gahee.rss_v2.ui.time;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,9 @@ import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 public class TimeInnerPagerAdapter extends PagerAdapter {
@@ -24,6 +28,7 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
     private int videoLength;
     private final TimeArticle timeArticles;
     private static boolean isVideo = false;
+    private YouTubePlayerView youTubePlayerView;
 
     public static boolean isIsVideo() {
         return isVideo;
@@ -69,8 +74,19 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
 
         if(isVideo){
             view.setTag("VIEW" + position);
-            YouTubePlayerView playerView = view.findViewById(R.id.youtube_player_view);
-            playerView.setTag("PAYER" + position);
+             youTubePlayerView = view.findViewById(R.id.youtube_player_view);
+//            playerView.setTag("PAYER" + position);
+            youTubePlayerView.initialize(new AbstractYouTubePlayerListener() {
+                @Override
+                public void onReady(YouTubePlayer youTubePlayer) {
+                    youTubePlayer.loadVideo(timeArticles.getmYoutubeLink().get(position - imageLength), 0);
+                }
+
+                @Override
+                public void onError(YouTubePlayer youTubePlayer, PlayerConstants.PlayerError error) {
+                    Log.d("YOUTUBE", "onError: "  + error);
+                }
+            });
 
         }else {
             ImageView imageView = view.findViewById(R.id.image_view_time_inner);
@@ -86,7 +102,7 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
                 TextView textView = view.findViewById(R.id.tv_time_inner_content_title);
                 String contentTitle = timeArticles.getContent().get(position).getTitle();
                 if (contentTitle != null) {
-                    textView.setText(timeArticles.getContent().get(position).getTitle());
+                    textView.setText(Html.fromHtml(contentTitle));
                 } else {
                     textView.setPadding(0, 0, 0, 0);
                 }
@@ -104,6 +120,9 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         View view = (View) object;
+        if(youTubePlayerView != null){
+            youTubePlayerView.release();
+        }
         container.removeView(view);
     }
 

@@ -7,22 +7,23 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
 
 import java.util.List;
 
 @Root(name = "channel", strict = false)
 public class Channel implements Parcelable {
 
-    @Path("channel/title")
-    @Element(name = "title", required = false)
+    @Path("title")
+    @Text(required = false)
     private String title;
 
-    @Path("channel/guid")
-    @Element(name = "guid", required = false)
+    @Path("guid")
+    @Text(required = false)
     private String guid;
 
-    @Path("channel/description")
-    @Element(name = "description", required = false)
+    @Path("description")
+    @Text(required = false)
     private String description;
 
     @ElementList(entry =  "item", inline = true)

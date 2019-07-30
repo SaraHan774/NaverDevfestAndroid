@@ -28,8 +28,8 @@ public class Constants {
     public static final String TAG_TIME_VIDEO = "video";
 
     public static final int REUTERS_SLIDER_TIME_INTERVAL = 15000; //15000
-    public static final int WWF_SLIDER_TIME_INTERVAL = 11800;
-    public static final int TIME_INNER_SLIDER_TIME_INTERVAL = 4000;
+    public static final int WWF_SLIDER_TIME_INTERVAL = 16000;
+    public static final int TIME_INNER_SLIDER_TIME_INTERVAL = 16000;
 
 
 
