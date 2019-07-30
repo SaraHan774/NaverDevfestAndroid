@@ -20,7 +20,7 @@ import com.gahee.rss_v2.utils.StringUtils;
 
 import java.util.ArrayList;
 
-class TimePagerAdapter extends PagerAdapter {
+public class TimePagerAdapter extends PagerAdapter {
 
     private static final String TAG = "TimePagerAdapter";
     public static final String YOUTUBE = "YoutubePlayerDebugging";

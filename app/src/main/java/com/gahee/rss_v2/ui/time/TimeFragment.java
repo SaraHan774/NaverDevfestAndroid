@@ -30,7 +30,9 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-class TimeFragment extends Fragment {
+import static com.gahee.rss_v2.utils.Constants.TIME_INNER_SLIDER_TIME_INTERVAL;
+
+public class TimeFragment extends Fragment {
 
     private RemoteViewModel remoteViewModel;
     private ViewPager viewPagerTime;
@@ -142,28 +144,17 @@ class TimeFragment extends Fragment {
 
             if(timeArticle.getContent().size() > 1){
                 timer = new Timer();
-                timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size()), 300, 3500);
+                timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
             }else if(timeArticle.getContent().size() > 1 || timeArticle.getmYoutubeLink() != null){
                 timer = new Timer();
                 timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size() +
-                        timeArticle.getmYoutubeLink().size()), 300, 3500);
+                        timeArticle.getmYoutubeLink().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
             }
 
         });
         return fragmentView;
     }
 
-
-//    private void setUpTimeMediaTimer(int size, ViewPager viewPagerTimeMedias){
-//        Log.d("AAA", "setUpTimeMediaTimer: " + size);
-//
-//        Timer timer = new Timer();
-//        MyTimers myTimers = new MyTimers(size);
-//
-//    new Timer().schedule(myTimers.getSliderTimer(
-//                getContext(), viewPagerTimeMedias, null
-//        ), 4000, 4000);
-//    }
 
     private class TimeSliderTimer extends TimerTask{
         private final int listSize;
@@ -176,15 +167,8 @@ class TimeFragment extends Fragment {
             ((AppCompatActivity) Objects.requireNonNull(getContext())).runOnUiThread(
                     () -> {
 
-                        Log.d("timetime", "run: current page !!! " + viewPagerTimeMedias.getCurrentItem());
-
                         if(viewPagerTimeMedias.getCurrentItem() < listSize - 1){
-                            Log.d("timetime", "run: " + listSize);
-
                             viewPagerTimeMedias.setCurrentItem(viewPagerTimeMedias.getCurrentItem() +1, true);
-
-                            Log.d("timetime", "run: current page" + viewPagerTimeMedias.getCurrentItem());
-
                         }else{
                             viewPagerTimeMedias.setCurrentItem(0);
                         }

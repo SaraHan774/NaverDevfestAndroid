@@ -17,7 +17,7 @@ import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
-class TimeInnerPagerAdapter extends PagerAdapter {
+public class TimeInnerPagerAdapter extends PagerAdapter {
 
     private final Context context;
     private int imageLength;

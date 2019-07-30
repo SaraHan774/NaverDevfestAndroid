@@ -58,7 +58,6 @@ public class WwfPagerAdapter extends PagerAdapter {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.main_wwf_slider, container, false);
         final WWFArticle article = wwfArticle.get(position);
-//        Log.d(TAG, "item check : " + article.getDescription());
 
         FrameLayout frameLayout = view.findViewById(R.id.wwf_outer_slider_container);
         frameLayout.setTag(TAG_WWF_FRAME + position);

@@ -76,24 +76,6 @@ public class ReutersPagerAdapter extends PagerAdapter {
         FrameLayout frameLayout = view.findViewById(R.id.reuters_outer_slider_container);
         frameLayout.setTag(TAG_REUTERS_FRAME + position);
 
-//        Log.d(TAG, "instantiateItem: position  "+ position);
-//        progressBarUtil.resetProgressBarToUserSelection(position);
-        //이렇게 넘겨주면 뷰 페이저가 한번에 한개씩만 초기화 하는 게 아니기 때문에 이상해짐 ...
-        //현재 포지션을 넘겨받아서 main 에서 업데이트 시키기 ... ?
-
-
-//        RelativeLayout relativeLayout = view.findViewById(R.id.reuters_outer_text_view_container);
-//        relativeLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(relativeLayout.getBackground().equals(mContext.getDrawable(R.drawable.transparent_background))){
-//                    relativeLayout.setBackground(mContext.getDrawable(R.drawable.scrim_gradient_to_below));
-//                }else{
-//                    relativeLayout.setBackground(mContext.getDrawable(R.drawable.transparent_background));
-//                }
-//                Log.d(TAG, "on click listener ");
-//            }
-//        });
 
         if(bundle.getBoolean("key")) {
             Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.description_fade_out);

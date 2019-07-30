@@ -2,6 +2,7 @@ package com.gahee.rss_v2.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,10 +17,8 @@ import android.widget.Toast;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.reuters.model.ChannelObj;
 import com.gahee.rss_v2.data.reuters.tags.Item;
-import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
-import com.gahee.rss_v2.ui.TimeArticleViewModel;
 import com.gahee.rss_v2.ui.pagerAdapters.ReutersPagerAdapter;
 import com.gahee.rss_v2.ui.pagerAdapters.WwfPagerAdapter;
 import com.gahee.rss_v2.utils.MyTimers;
@@ -39,13 +38,9 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -70,19 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPagerReuters;
     private ViewPager viewPagerWWF;
-    private ViewPager viewPagerTime;
+
     private List<Item> reutersItemList;
     private ArrayList<WWFArticle> wwfItemList;
-    private List<TimeArticle> timeArticles;
-
     private ReutersPagerAdapter pagerAdapter;
-
-
     private ProgressBar [] reutersProgressBars;
     private ProgressBar[] wwfProgressBars;
-    private ProgressBar[] timeProgressBars;
 
-    private int index = 0;
+    private int reutersSliderIndex = 0;
 
     //simpleExoPlayer
     private SimpleExoPlayer simpleExoPlayer;
@@ -93,50 +83,49 @@ public class MainActivity extends AppCompatActivity {
     private long playbackPosition = 0;
     private FrameLayout frameLayout;
 
-    //youtube
-    private YouTubePlayerView youTubePlayerView;
-    private FrameLayout timeSliderFrame;
-    private int timeViewPagerPosition = 0;
-    private TimeArticleViewModel timeArticleViewModel;
     private SliderIndexViewModel sliderIndexViewModel;
 
     private ProgressBarUtil reutersProgress;
     private ProgressBarUtil wwfProgress;
+    private RemoteViewModel remoteViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Log.d(TAG, "onCreate: ");
 
         findProgressBarsById();
 
-        RemoteViewModel remoteViewModel = ViewModelProviders.of(this).get(RemoteViewModel.class);
-        if(savedInstanceState == null){
+        remoteViewModel = ViewModelProviders.of(this).get(RemoteViewModel.class);
 
-        }else{
-            index = savedInstanceState.getInt(REUTERS_SLIDER_INDEX);
+        if(savedInstanceState != null){
+            reutersSliderIndex = savedInstanceState.getInt(REUTERS_SLIDER_INDEX);
             mediaURL = savedInstanceState.getString(MEDIA_URL);
             playWhenReady = savedInstanceState.getBoolean(PLAY_WHEN_READY, false);
             playbackPosition = savedInstanceState.getLong(PLAYBACK_POSITION, 0);
             currentWindow = savedInstanceState.getInt(CURRENT_WINDOW, 0);
         }
+
         remoteViewModel.fetchReutersDataFromRepo();
         remoteViewModel.fetchTimeDataFromRepo();
         remoteViewModel.fetchWWFDataFromRepo();
 
+        Log.d(TAG, "onCreate: fetching data");
 
-        remoteViewModel.getChannelMutableLiveData().observe(this, channelObjs -> {
+
+        remoteViewModel.getChannelMutableLiveData().observe(this, reutersChannel -> {
             Log.d(TAG, "onChanged: " + "reuters");
-            reutersItemList = channelObjs.get(0).getmItemList();
+            reutersItemList = reutersChannel.get(0).getmItemList();
             viewPagerReuters = findViewById(R.id.view_pager_reuters_outer);
 
-            pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  channelObjs.get(0));
+            pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  reutersChannel.get(0));
             viewPagerReuters.setAdapter(pagerAdapter);
             viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
 
             //여기서는 괜찮은데, 돌리면 자꾸 frame 을 찾지 못함
+
             frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + 0);
             playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
 
@@ -144,14 +133,15 @@ public class MainActivity extends AppCompatActivity {
             reutersProgress.setProgressBars(reutersProgressBars);
             reutersProgress.resetProgressBarToUserSelection( 0);
 
-            setMediaURL(channelObjs.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
+            setMediaURL(reutersChannel.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
+
             initializePlayer();
             hideSystemUi();
-//                setUpReutersSliderTimer(channelObjs);
+            setUpReutersSliderTimer(reutersChannel);
         });
 
         remoteViewModel.getWwfArticleLiveData().observe(this, wwfArticles -> {
-            wwfItemList = wwfArticles;
+            this.wwfItemList = wwfArticles;
             viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
             WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
             viewPagerWWF.setAdapter(pagerAdapter);
@@ -162,33 +152,12 @@ public class MainActivity extends AppCompatActivity {
             wwfProgress.setProgressBars(wwfProgressBars);
             wwfProgress.resetProgressBarToUserSelection(0);
 
-//                setUpWWFSliderTimer(wwfArticles);
+            setUpWWFSliderTimer(wwfArticles);
 
         });
 
         sliderIndexViewModel = ViewModelProviders.of(this).get(SliderIndexViewModel.class);
     }
-
-
-    private final AbstractYouTubePlayerListener listener = new AbstractYouTubePlayerListener() {
-        @Override
-        public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-
-            timeArticleViewModel.getSeletedArticle().observe(MainActivity.this, timeArticle -> {
-                if(timeArticle.getmYoutubeLink().size() != 0) {
-                    String videoID = timeArticle.getmYoutubeLink().get(0);
-                youTubePlayer.loadVideo(videoID, 0);
-            }
-            });
-
-        }
-    };
-
-    public AbstractYouTubePlayerListener getListener() {
-        return listener;
-    }
-
-
 
 
 
@@ -215,15 +184,6 @@ public class MainActivity extends AppCompatActivity {
             initializePlayer();
 
             reutersProgress.resetProgressBarToUserSelection(position);
-
-//            sliderIndexViewModel.setReutersSliderIndex(position);
-//            sliderIndexViewModel.getReutersSliderIndex().observe(MainActivity.this, new Observer<Integer>() {
-//                @Override
-//                public void onChanged(Integer integer) {
-//                    Log.d("sliderIndex", "onchanged [reuters]: " + integer);
-//                    reutersProgress.resetProgressBarToUserSelection(integer);
-//                }
-//            });
 
             if(simpleExoPlayer != null){
                 Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.description_fade_out);
@@ -331,15 +291,15 @@ public class MainActivity extends AppCompatActivity {
 
         };
 
-        timeProgressBars = new ProgressBar [] {
-
-                findViewById(R.id.progress_bar_10),
-                findViewById(R.id.progress_bar_20),
-                findViewById(R.id.progress_bar_30),
-                findViewById(R.id.progress_bar_40),
-                findViewById(R.id.progress_bar_50),
-                findViewById(R.id.progress_bar_60)
-        };
+//        timeProgressBars = new ProgressBar [] {
+//
+//                findViewById(R.id.progress_bar_10),
+//                findViewById(R.id.progress_bar_20),
+//                findViewById(R.id.progress_bar_30),
+//                findViewById(R.id.progress_bar_40),
+//                findViewById(R.id.progress_bar_50),
+//                findViewById(R.id.progress_bar_60)
+//        };
     }
 
 
@@ -374,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.d(TAG, "onStart()");
         if(Util.SDK_INT > 23){
-            initializePlayer();
+//            initializePlayer();
         }
     }
 
@@ -383,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume()");
         if(Util.SDK_INT <= 23 || simpleExoPlayer == null) {
-            initializePlayer();
+//            initializePlayer();
         }
     }
 
@@ -413,7 +373,6 @@ public class MainActivity extends AppCompatActivity {
                     new DefaultLoadControl()
             );
             playerView.setPlayer(simpleExoPlayer);
-            //playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
             simpleExoPlayer.setPlayWhenReady(playWhenReady);
             simpleExoPlayer.seekTo(currentWindow, playbackPosition);
 
@@ -429,8 +388,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(REUTERS_SLIDER_INDEX, index);
-
+        outState.putInt(REUTERS_SLIDER_INDEX, reutersSliderIndex);
         outState.putString(MEDIA_URL, mediaURL);
         outState.putBoolean(PLAY_WHEN_READY, playWhenReady);
         outState.putLong(PLAYBACK_POSITION, playbackPosition);
