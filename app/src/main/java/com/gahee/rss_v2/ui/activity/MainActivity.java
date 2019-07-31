@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             viewPagerReuters = findViewById(R.id.view_pager_reuters_outer);
 
             pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  articleReuters);
+            pagerAdapter.notifyDataSetChanged();
             viewPagerReuters.setAdapter(pagerAdapter);
             viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
 
@@ -145,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
             reutersProgress.setProgressBars(reutersProgressBars);
             reutersProgress.resetProgressBarToUserSelection( 0);
 
+            if(timerReuters != null){
+                timerReuters.cancel();
+            }
             setUpReutersSliderTimer(articleReuters);
             setMediaURL(articleReuters.get(0).getmVideoLink());
             initializePlayer();
@@ -154,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         remoteViewModel.getWwfArticleMutableLiveData().observe(this, wwfArticles -> {
             viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
             WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
+            pagerAdapter.notifyDataSetChanged();
             viewPagerWWF.setAdapter(pagerAdapter);
             Log.d(TAG, "setting wwf pager adapter " );
             viewPagerWWF.addOnPageChangeListener(wwfViewPagerListener);
@@ -162,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
             wwfProgress.setProgressBars(wwfProgressBars);
             wwfProgress.resetProgressBarToUserSelection(0);
 
+            if(wwfTimer != null){
+                wwfTimer.cancel();
+            }
             setUpWWFSliderTimer(wwfArticles);
 
         });
@@ -212,16 +220,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                     stringBuffer.append("REUTERS : found " + searchResultListReuters.size() + " results\n");
 
-                    if(searchResultListTIME != null && searchResultListTIME.size() != 0) {
-                        remoteViewModel.getTimeArticleMutableLiveData().setValue(searchResultListTIME);
-                    }
-                    stringBuffer.append("TIME : found " + searchResultListTIME.size() + " results\n");
 
                     if(searchResultListWWF != null || searchResultListWWF.size() != 0){
                         remoteViewModel.getWwfArticleMutableLiveData().setValue(searchResultListWWF);
                     }
                     stringBuffer.append("WWF : found " + searchResultListWWF.size() + " results");
 
+                    if(searchResultListTIME != null && searchResultListTIME.size() != 0) {
+                        remoteViewModel.getTimeArticleMutableLiveData().setValue(searchResultListTIME);
+                    }
+                    stringBuffer.append("TIME : found " + searchResultListTIME.size() + " results\n");
                     Toast.makeText(MainActivity.this, stringBuffer.toString(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -250,7 +258,8 @@ public class MainActivity extends AppCompatActivity {
                     remoteViewModel.getWwfArticleMutableLiveData().setValue(MainActivity.this.wwfArticleArrayList);
                 }
                 Toast.makeText(MainActivity.this, "Search Finished", Toast.LENGTH_SHORT).show();
-                searchView.clearFocus();
+                searchView.setFocusable(true);
+                searchView.setIconified(true);
             }
         });
     }
@@ -270,7 +279,8 @@ public class MainActivity extends AppCompatActivity {
             String articleTitle = articleReutersArrayList.get(i).getmArticleTitle();
             String articleDescription = articleReutersArrayList.get(i).getmArticleDescription();
 
-            if(articleTitle.contains(query) || articleDescription.contains(query)){
+            if(articleTitle.toLowerCase().contains(query.toLowerCase()) ||
+                    articleDescription.toLowerCase().contains(query.toLowerCase())){
                 searchResultListReuters.add(articleReutersArrayList.get(i));
             }
         }
@@ -465,9 +475,10 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Timers for each ViewPager
      */
+    private Timer timerReuters;
     private void setUpReutersSliderTimer(ArrayList<ArticleReuters> articleReuters){
         MyTimers myTimersReuters = new MyTimers(articleReuters.size());
-        Timer timerReuters = new Timer();
+        timerReuters = new Timer();
 
         MyTimers.SliderTimer reutersSliderTimer
                 = myTimersReuters.getSliderTimer(MainActivity.this, viewPagerReuters, reutersProgress);
@@ -475,10 +486,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    private Timer wwfTimer;
     private void setUpWWFSliderTimer(ArrayList<WWFArticle> wwfArticles){
         MyTimers myTimers = new MyTimers(wwfArticles.size());
-        Timer wwfTimer = new Timer();
+        wwfTimer = new Timer();
         MyTimers.SliderTimer sliderTimer = myTimers.getSliderTimer(MainActivity.this, viewPagerWWF, wwfProgress);
         wwfTimer.scheduleAtFixedRate(sliderTimer, WWF_SLIDER_TIME_INTERVAL, WWF_SLIDER_TIME_INTERVAL);
     }

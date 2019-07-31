@@ -81,6 +81,7 @@ public class TimeFragment extends Fragment {
                 //fragmentView pager that displays text
                 viewPagerTime = fragmentView.findViewById(R.id.view_pager_time_outer);
                 TimePagerAdapter pagerAdapter = new TimePagerAdapter(getContext(), timeArticles);
+                pagerAdapter.notifyDataSetChanged();
                 viewPagerTime.setAdapter(pagerAdapter);
 
                 timeArticleViewModel.setSelectedArticle(timeArticles.get(0));
@@ -115,6 +116,7 @@ public class TimeFragment extends Fragment {
                 Log.d("TimeArticleViewModel", "get selected article - fragmentView model " + timeArticle);
                 viewPagerTimeMedias = fragmentView.findViewById(R.id.view_pager_time_inner);
                 TimeInnerPagerAdapter innerPagerAdapter = new TimeInnerPagerAdapter(getContext(), timeArticle);
+                innerPagerAdapter.notifyDataSetChanged();
                 viewPagerTimeMedias.setAdapter(innerPagerAdapter);
 //                viewPagerTimeMedias.setPageMargin(80);
                 viewPagerTimeMedias.startAnimation(timeCardUp);
