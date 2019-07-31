@@ -76,8 +76,8 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
                 if (timeArticles.getContent().get(position) != null) {
                     if (timeArticles.getContent().get(position).getUrl() != null) {
                         Glide.with(context).load(timeArticles.getContent().get(position).getUrl())
-                                .placeholder(R.drawable.time_magazine_logo)
-                                .error(R.drawable.time_magazine_logo)
+                                .placeholder(R.drawable.scrim_gradient_up_and_down)
+                                .error(R.drawable.scrim_gradient_up_and_down)
                                 .transition(GenericTransitionOptions.with(R.anim.grow_left)).into(imageView);
 
 
@@ -92,8 +92,8 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
             }else if(position >= imageLength && position < videoThumbnailLength + imageLength){
                 Log.d("GLIDE", imageLength + " / " + videoThumbnailLength);
                 Glide.with(context).load(timeArticles.getmYoutubeThumbnailLinks().get(position - imageLength))
-                        .placeholder(R.drawable.scrim_gradient_to_above)
-                        .error(R.drawable.ic_launcher_foreground)
+                        .placeholder(R.drawable.scrim_gradient_up_and_down)
+                        .error(R.drawable.scrim_gradient_up_and_down)
                         .addListener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

@@ -3,6 +3,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/pinkGrey"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true">
@@ -14,6 +15,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            android:elevation="10dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways"/>
@@ -31,7 +33,6 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/view_margin_4x"
     android:layout_marginBottom="@dimen/view_margin_2x"
-    android:background="@color/colorWhite"
     >
 
     <TextView
@@ -168,7 +169,7 @@
         android:layout_marginTop="@dimen/view_margin_1x"
         android:name="com.gahee.rss_v2.ui.time.TimeFragment"
         android:layout_width="match_parent"
-        android:layout_height="800dp"/>
+        android:layout_height="780dp"/>
 
 
 

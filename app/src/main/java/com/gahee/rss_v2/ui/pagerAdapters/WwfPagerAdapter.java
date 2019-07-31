@@ -132,8 +132,8 @@ public class WwfPagerAdapter extends PagerAdapter {
                         if(index < imageLinks.size()){
                             Glide.with(mContext).load(imageLinks.get(index++))
                                     .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
-                                    .placeholder(R.drawable.wwf_logo)
-                                    .error(R.drawable.wwf_logo)
+                                    .placeholder(R.drawable.scrim_gradient_up_and_down)
+                                    .error(R.drawable.scrim_gradient_up_and_down)
                                     .into((ImageView) imageSwitcher.getCurrentView());
 
                         }else{

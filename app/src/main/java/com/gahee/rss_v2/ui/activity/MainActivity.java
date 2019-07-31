@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                         remoteViewModel.getTimeArticleMutableLiveData().setValue(searchResultListTIME);
                     }
                     tv_time_search_result.setText(getString(R.string.search_results, searchResultListTIME.size()));
-                    stringBuilder.append(getString(R.string.found_time)).append(searchResultListTIME.size()).append(getString(R.string.results));
+                    stringBuilder.append(getString(R.string.found_time)).append(searchResultListTIME.size()).append(getString(R.string.last_results));
 
                     Toast.makeText(MainActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                     return true;
