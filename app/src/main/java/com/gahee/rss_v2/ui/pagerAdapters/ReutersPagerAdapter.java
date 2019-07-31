@@ -1,6 +1,8 @@
 package com.gahee.rss_v2.ui.pagerAdapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +35,6 @@ public class ReutersPagerAdapter extends PagerAdapter {
     private final ArrayList<ArticleReuters> mArticleReuters;
     private boolean isFirstInstantiation = false;
     private final Bundle bundle = new Bundle();
-    private ProgressBarUtil progressBarUtil;
 
 
     public ReutersPagerAdapter(Context context, ArrayList<ArticleReuters> articleReuters){
@@ -67,7 +68,6 @@ public class ReutersPagerAdapter extends PagerAdapter {
 
         final ArticleReuters articleReuters = mArticleReuters.get(position);
 
-
         TextView title = view.findViewById(R.id.tv_reuters_outer_title);
         TextView description = view.findViewById(R.id.tv_reuters_outer_description);
         TextView pubDate = view.findViewById(R.id.tv_reuters_outer_pub_date);
@@ -90,14 +90,11 @@ public class ReutersPagerAdapter extends PagerAdapter {
         FrameLayout frameLayout = view.findViewById(R.id.reuters_outer_slider_container);
         frameLayout.setTag(TAG_REUTERS_FRAME + position);
 
-//        frameLayout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setData(Uri.parse(mChannelReuters.getmItemList().get(position).getLink()));
-//                mContext.startActivity(intent);
-//            }
-//        });
+        view.setOnClickListener(parentView -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(articleReuters.getmArticleLink()));
+            mContext.startActivity(intent);
+        });
 
 
         if(bundle.getBoolean("key")) {

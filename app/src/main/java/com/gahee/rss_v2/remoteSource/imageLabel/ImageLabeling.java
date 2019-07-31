@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import static com.gahee.rss_v2.utils.Constants.DESCRIPTION;
@@ -26,7 +27,7 @@ public class ImageLabeling {
     private static final String TAG = "ImageLabeling";
     private static String dataFromServer;
 
-    public static String sendREST(String serverUrl, String jsonPostString) throws IllegalStateException{
+    private static String sendREST(String serverUrl, String jsonPostString) throws IllegalStateException{
         String inputLine;
         StringBuffer stringBuffer = new StringBuffer();
         if(dataFromServer != null){
@@ -45,11 +46,11 @@ public class ImageLabeling {
                 connection.setReadTimeout(NETWORK_TIMEOUT);
 
                 OutputStream outputStream = connection.getOutputStream();
-                outputStream.write(jsonPostString.getBytes("UTF-8"));
+                outputStream.write(jsonPostString.getBytes(StandardCharsets.UTF_8));
                 outputStream.flush();
 
                 BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream(), "UTF-8")
+                        new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)
                 );
                 while ((inputLine = reader.readLine()) != null) {
                     stringBuffer.append(inputLine);
@@ -67,9 +68,9 @@ public class ImageLabeling {
     }
 
     private static class ImageLabelAsync extends AsyncTask<Void, Void, String> {
-        private String serverUrl;
-        private String jsonPostString;
-        private WWFArticle wwfArticle;
+        private final String serverUrl;
+        private final String jsonPostString;
+        private final WWFArticle wwfArticle;
 
         public ImageLabelAsync(String serverUrl, String jsonPostString, WWFArticle wwfArticle) {
             this.serverUrl = serverUrl;
@@ -96,8 +97,8 @@ public class ImageLabeling {
 
 
     private static class HandleResultsAsync extends AsyncTask<String, Void, ArrayList<String>>{
-        private WWFArticle wwfArticle;
-        private ArrayList<String> listOfImageLabelResults = new ArrayList<>();
+        private final WWFArticle wwfArticle;
+        private final ArrayList<String> listOfImageLabelResults = new ArrayList<>();
 
         public HandleResultsAsync(WWFArticle wwfArticle){
             this.wwfArticle = wwfArticle;
@@ -114,28 +115,35 @@ public class ImageLabeling {
                     jsonObject = new JSONObject(strings[0]);
 
                     JSONObject labelResultJsonObj = jsonObject.getJSONObject(RESULTS);
+                    Log.d("FFFF", "doInBackground: " + labelResultJsonObj);
+
                     if (listOfImageLabelResults != null) {
                         listOfImageLabelResults.clear();
                     }
-                    while (labelResultJsonObj.keys().hasNext()) {
-                        Log.d(TAG, "doInBackground: " + labelResultJsonObj.keys().hasNext());
-                        String currentDynamicKey = labelResultJsonObj.keys().next();
+
+                    for(int i = 0; i < labelResultJsonObj.names().length(); i++){
+                        String currentDynamicKey = labelResultJsonObj.names().get(i).toString();
+                        Log.d(TAG, "doInBackground: current key " + currentDynamicKey);
                         JSONArray currentJsonArray = labelResultJsonObj.getJSONArray(currentDynamicKey);
-                        for (int i = 0; i < currentJsonArray.length(); i++) {
-                            JSONObject labelInfoJsonObj = (JSONObject) currentJsonArray.get(i);
+                        Log.d(TAG, "doInBackground: current array" + currentJsonArray);
+                        for (int j = 0; j < currentJsonArray.length(); j++) {
+                            JSONObject labelInfoJsonObj = (JSONObject) currentJsonArray.get(j);
                             Double score = labelInfoJsonObj.getDouble(SCORE);
+                            Log.d(TAG, "doInBackground: score :  " + score);
                             String description = labelInfoJsonObj.getString(DESCRIPTION);
+                            Log.d(TAG, "doInBackground: description : " + description);
                             if (score > 0.8) {
                                 listOfImageLabelResults.add(description);
                             }
                         }
-                        return listOfImageLabelResults;
                     }
+                    Log.d(TAG, "doInBackground: list size " + listOfImageLabelResults.size());
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            return null;
+            return listOfImageLabelResults;
         }
 
         @Override

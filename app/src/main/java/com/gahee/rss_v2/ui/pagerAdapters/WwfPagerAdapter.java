@@ -75,8 +75,6 @@ public class WwfPagerAdapter extends PagerAdapter {
         TextView pubDate = view.findViewById(R.id.tv_wwf_outer_pubdate);
         pubDate.setText(StringUtils.formatWWFPubDateString(wwfArticle.get(position).getPubDate()));
 
-//        Log.d("ARTICLE CHECK", "instantiateItem: " + wwfArticle.get(position).getImageLabelResponse()); OK
-
         TextView description = view.findViewById(R.id.tv_wwf_outer_description);
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.description_fade_in);
         description.setText(article.getDescription());
@@ -84,13 +82,10 @@ public class WwfPagerAdapter extends PagerAdapter {
 
         Log.d(TAG, "instantiate Item " + position);
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(wwfArticle.get(position).getGuid()));
-                mContext.startActivity(intent);
-            }
+        view.setOnClickListener(view1 -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(wwfArticle.get(position).getGuid()));
+            mContext.startActivity(intent);
         });
 
 

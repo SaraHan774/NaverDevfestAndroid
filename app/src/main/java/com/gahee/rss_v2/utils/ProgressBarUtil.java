@@ -53,10 +53,6 @@ public class ProgressBarUtil{
         mResetProgressBarToUserSelection(viewPagerIndex);
     }
 
-    public void setProgressBarsProgress(ProgressBar progressBar){
-        mSetProgressBarProgress(progressBar);
-    }
-
     public void setProgressBars(ProgressBar [] progressBars){
         Log.d(TAG, "setProgressBars: HOW MANY ? " + progressBars.length);
         this.progressBars = progressBars;

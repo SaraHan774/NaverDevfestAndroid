@@ -39,14 +39,12 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
@@ -71,10 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPagerWWF;
 
     private ArrayList<ArticleReuters> articleReutersArrayList;
-    private ArrayList<WWFArticle> wwfArticleArrayList;
-    private ArrayList<TimeArticle> timeArticleArrayList;
 
-    private ReutersPagerAdapter pagerAdapter;
     private ProgressBar [] reutersProgressBars;
     private ProgressBar[] wwfProgressBars;
 
@@ -218,35 +213,35 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuilder = new StringBuilder();
 
-                if((searchResultListReuters != null && searchResultListReuters.size() != 0 ||
-                        searchResultListWWF != null && searchResultListWWF.size() != 0||
-                        searchResultListTIME != null && searchResultListTIME.size() != 0)){
-                    if(stringBuffer.length() != 0){
-                        stringBuffer.setLength(0);
+                if((searchResultListReuters.size() != 0 ||
+                        searchResultListWWF.size() != 0||
+                        searchResultListTIME.size() != 0)){
+                    if(stringBuilder.length() != 0){
+                        stringBuilder.setLength(0);
                     }
                     setSearchResultStringVisibility(View.VISIBLE);
-                    if(searchResultListReuters != null && searchResultListReuters.size() != 0) {
+                    if(searchResultListReuters.size() != 0) {
                         remoteViewModel.getReutersArticleMutableLiveData().setValue(searchResultListReuters);
                     }
-                    stringBuffer.append("REUTERS : found " + searchResultListReuters.size() + " results\n");
-                    tv_reuters_search_result.setText(getString(R.string.search_results) + String.valueOf(searchResultListReuters.size()));
+                    stringBuilder.append(getString(R.string.found_reuters)).append(searchResultListReuters.size()).append(getString(R.string.results));
+                    tv_reuters_search_result.setText(getString(R.string.search_results, searchResultListReuters.size()));
 
 
-                    if(searchResultListWWF != null && searchResultListWWF.size() != 0){
+                    if(searchResultListWWF.size() != 0){
                         remoteViewModel.getWwfArticleMutableLiveData().setValue(searchResultListWWF);
                     }
-                    stringBuffer.append("WWF : found " + searchResultListWWF.size() + " results\n");
-                    tv_wwf_search_result.setText(getString(R.string.search_results) + String.valueOf(searchResultListWWF.size()));
+                    stringBuilder.append(getString(R.string.found_wwf)).append(searchResultListWWF.size()).append(getString(R.string.results));
+                    tv_wwf_search_result.setText(getString(R.string.search_results, searchResultListWWF.size()));
 
-                    if(searchResultListTIME != null && searchResultListTIME.size() != 0) {
+                    if(searchResultListTIME.size() != 0) {
                         remoteViewModel.getTimeArticleMutableLiveData().setValue(searchResultListTIME);
                     }
-                    tv_time_search_result.setText(getString(R.string.search_results) + String.valueOf(searchResultListTIME.size()));
-                    stringBuffer.append("TIME : found " + searchResultListTIME.size() + " results\n");
+                    tv_time_search_result.setText(getString(R.string.search_results, searchResultListTIME.size()));
+                    stringBuilder.append(getString(R.string.found_time)).append(searchResultListTIME.size()).append(getString(R.string.results));
 
-                    Toast.makeText(MainActivity.this, stringBuffer.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -268,12 +263,13 @@ public class MainActivity extends AppCompatActivity {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(!query.equals("") || query != null) {
                     remoteViewModel.fetchReutersDataFromRepo();
                     remoteViewModel.fetchTimeDataFromRepo();
                     remoteViewModel.fetchWWFDataFromRepo();
                 }
-                Toast.makeText(MainActivity.this, "Search Finished", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.search_finished), Toast.LENGTH_SHORT).show();
 
                 setSearchResultStringVisibility(View.INVISIBLE);
 
@@ -305,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
         if(searchResultListReuters != null){
             searchResultListReuters.clear();
         }
-        int listSize = articleReutersArrayList.size();
+        int listSize = articleReutersArrayList != null ? articleReutersArrayList.size() : 0;
 
         for(int i = 0; i < listSize; i++){
             String articleTitle = articleReutersArrayList.get(i).getmArticleTitle();
@@ -321,12 +317,11 @@ public class MainActivity extends AppCompatActivity {
     private void searchThroughWWFArticles(String query){
         ArrayList<WWFArticle> wwfArticleArrayList
                 = remoteViewModel.getWwfArticleMutableLiveData().getValue();
-        this.wwfArticleArrayList = wwfArticleArrayList;
 
         if(searchResultListWWF != null){
             searchResultListWWF.clear();
         }
-        int listSize = wwfArticleArrayList.size();
+        int listSize = wwfArticleArrayList != null ? wwfArticleArrayList.size() : 0;
         for(int i = 0; i < listSize; i++){
             String articleTitle = wwfArticleArrayList.get(i).getTitle();
             String articleDescription = wwfArticleArrayList.get(i).getDescription();
@@ -356,13 +351,13 @@ public class MainActivity extends AppCompatActivity {
     private void searchThroughTIMEArticles(String query){
         ArrayList<TimeArticle> timeArticleArrayList
                 = remoteViewModel.getTimeArticleMutableLiveData().getValue();
-        this.timeArticleArrayList = timeArticleArrayList;
 
         if(searchResultListTIME != null){
             searchResultListTIME.clear();
         }
 
-        int listSize = timeArticleArrayList.size();
+        int listSize = timeArticleArrayList != null ? timeArticleArrayList.size() : 0;
+
         for(int i = 0; i < listSize; i++){
             String articleTitle = timeArticleArrayList.get(i).getmArticletitle();
             String articleDescription = timeArticleArrayList.get(i).getmArticleDescription();
@@ -394,9 +389,8 @@ public class MainActivity extends AppCompatActivity {
             playbackPosition = 0;
 
             FrameLayout frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + position);
-            PlayerView playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
             //play videos
-            MainActivity.this.playerView = playerView;
+            MainActivity.this.playerView = frameLayout.findViewById(R.id.reuters_outer_video_player);
             initializePlayer();
 
             reutersProgress.resetProgressBarToUserSelection(position);
@@ -560,13 +554,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "media URL : " + this.mediaURL);
     }
 
-    private boolean initializePlayer(){
+    private void initializePlayer(){
         if(simpleExoPlayer != null){
             releasePlayer();
         }
         if(mediaURL.equals("")){
             Log.d(TAG, "no media url");
-            return false;
         }else {
             Log.d(TAG, "initializing exo player");
             playerView.setVisibility(View.VISIBLE);
@@ -584,7 +577,6 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = Uri.parse(mediaURL);
             MediaSource mediaSource = buildMediaSource(uri);
             simpleExoPlayer.prepare(mediaSource, false, false);
-            return true;
         }
     }
 
@@ -604,7 +596,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private MediaSource buildMediaSource(Uri uri){
-        DefaultDataSourceFactory defaultDataSourceFactory = createDataSourceFactory(this, USER_AGENT, null);
+        DefaultDataSourceFactory defaultDataSourceFactory = createDataSourceFactory(this);
         return new ProgressiveMediaSource.Factory(
                 defaultDataSourceFactory)
                 .createMediaSource(uri);
@@ -657,11 +649,10 @@ public class MainActivity extends AppCompatActivity {
             playbackPosition = 0;
         }
         currentWindow = simpleExoPlayer != null ? simpleExoPlayer.getCurrentWindowIndex() : 0;
-        playWhenReady = simpleExoPlayer != null ? simpleExoPlayer.getPlayWhenReady() : false;
+        playWhenReady = simpleExoPlayer != null && simpleExoPlayer.getPlayWhenReady();
     }
 
-    private static DefaultDataSourceFactory createDataSourceFactory(Context context, String userAgent,
-                                                                    TransferListener listener) {
+    private static DefaultDataSourceFactory createDataSourceFactory(Context context) {
         DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(
                 USER_AGENT,
                 null,
@@ -672,7 +663,7 @@ public class MainActivity extends AppCompatActivity {
 
         return new DefaultDataSourceFactory(
                 context,
-                listener,
+                null,
                 httpDataSourceFactory
         );
     }

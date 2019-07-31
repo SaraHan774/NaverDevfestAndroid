@@ -31,19 +31,16 @@ public class TimePagerAdapter extends PagerAdapter {
 
     private final Context mContext;
     private final ArrayList<TimeArticle> timeArticles;
-    private final TimeArticleViewModel timeArticleViewModel;
-
 
 
     public TimePagerAdapter(Context context, ArrayList<TimeArticle> timeArticles){
         this.mContext = context;
         this.timeArticles = timeArticles;
-        timeArticleViewModel = new TimeArticleViewModel();
+        TimeArticleViewModel timeArticleViewModel = new TimeArticleViewModel();
     }
 
     @Override
     public int getCount() {
-        Log.d("FFF", "getCount: " + timeArticles.size());
         return timeArticles != null ? timeArticles.size() : 0;
     }
 

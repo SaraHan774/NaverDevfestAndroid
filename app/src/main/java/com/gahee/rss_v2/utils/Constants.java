@@ -23,17 +23,13 @@ public class Constants {
     public static final String TAG_REUTERS_FRAME = "nasaFrame";
 
 
-    public static final int REUTERS_SLIDER_TIME_INTERVAL = 15000; //15000
+    public static final int REUTERS_SLIDER_TIME_INTERVAL = 15000;
     public static final int WWF_SLIDER_TIME_INTERVAL = 16000;
-    public static final int TIME_INNER_SLIDER_TIME_INTERVAL = 4000;
+    public static final int TIME_INNER_SLIDER_TIME_INTERVAL = 3500;
 
     public static final String YOUTUBE_WATCH_BASE_URL = "http://www.youtube.com/watch?v=";
 
     public static final String RESULTS = "results";
     public static final String SCORE = "score";
     public static final String DESCRIPTION = "description";
-
-    public static final String EXTRA_REUTERS = "reuters_search_result";
-    public static final String EXTRA_WWF = "wwf_search_result";
-    public static final String EXTRA_TIME = "time_search_result";
 }

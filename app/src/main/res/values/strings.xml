@@ -15,11 +15,18 @@
     <string name="search_title">Search</string>
     <string name="action_bar_search_desc">search button</string>
     <string name="action_settings">Settings</string>
-    <string name="search_hint">Search for a keyword ...</string>
+    <string name="search_hint">Search for a keyword &#8230;</string>
     <string name="search_reuters">REUTERS</string>
     <string name="search_time">TIME</string>
     <string name="search_wwf">WWF</string>
     <string name="search_contains">contains search results</string>
-    <string name="search_results">SEARCH RESULTS\t:\t\t</string>
+    <string name="search_results">SEARCH RESULTS\t:\t%1$d</string>
+    <string name="time_inner_slide">time_inner_slide</string>
+    <string name="time_outer_slide">time_outer_slide</string>
+    <string name="found_reuters">REUTERS : found</string>
+    <string name="results">results</string>
+    <string name="found_wwf">WWF : found</string>
+    <string name="found_time">TIME : found</string>
+    <string name="search_finished">Search Finished</string>
 
 </resources>

@@ -48,10 +48,6 @@ public class TimeFragment extends Fragment {
     private Timer timer;
 
 
-    public TimeFragment(){
-
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

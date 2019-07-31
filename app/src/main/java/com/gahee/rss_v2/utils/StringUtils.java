@@ -1,27 +1,17 @@
 package com.gahee.rss_v2.utils;
 
-import android.os.Bundle;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
-
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.tags.Item;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.remoteSource.imageLabel.ImageLabeling;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,25 +22,6 @@ import java.util.regex.Pattern;
 import static com.gahee.rss_v2.utils.Constants.IMAGE_LABELING_SERVER_URL;
 
 public class StringUtils{
-
-    private static final String TAG = "StringUtils";
-
-    public static void main(String[] args) throws JSONException {
-        ArrayList<String> links = new ArrayList<>();
-        String link = "https://www.bbcgoodfood.com/sites/default/files/guide/guide-image/2017/07/apples-700x350.png";
-        links.add(link);
-////        buildPOSTRequestJSONFromStrings(links);
-//
-        Map<String, ArrayList<String>> map = new HashMap<>();
-        map.put("urls", links);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(map);
-
-        System.out.println(json);
-
-
-    }
 
 
     //extracting youtube links from Time article
@@ -78,11 +49,10 @@ public class StringUtils{
             thumbnailLinks.clear();
         }
         for(String id : videoIds){
-            StringBuffer stringBuffer = new StringBuffer().append("http://i3.ytimg.com/vi/")
+            StringBuilder stringBuilder = new StringBuilder().append("http://i3.ytimg.com/vi/")
                     .append(id).append("/hqdefault.jpg");
-            thumbnailLinks.add(stringBuffer.toString());
+            thumbnailLinks.add(stringBuilder.toString());
 
-            Log.d(TAG, "generateYoutubeVideoThumbnailFromIds: " + stringBuffer);
         }
         return thumbnailLinks;
     }
@@ -134,8 +104,7 @@ public class StringUtils{
         String temp2 = temp.replace("?feature=oembed", "");
         //youtube IDs are always (at least for now) 11 digits
         //make sure no other tokens are mixed with the id string.
-        String elevenDigits = temp2.substring(0, 11);
-        return elevenDigits;
+        return temp2.substring(0, 11);
     }
 
     private static void getYoutubeWatchUrlFromIds(List<String> ids){
@@ -154,7 +123,6 @@ public class StringUtils{
         Map<String, ArrayList<String>> map = new HashMap<>();
         map.put("urls", stringArrayList);
         Gson gson = new Gson();
-//        Log.d("MMM", "buildPOSTRequestJSONFromArrayList: " + gson.toJson(map)); OK
         return gson.toJson(map);
     }
 

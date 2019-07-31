@@ -6,4 +6,6 @@ import com.bumptech.glide.module.AppGlideModule;
 @GlideModule
 public class CustomGlideModule extends AppGlideModule {
 
+//    empty class to prevent Glide build error.
+
 }

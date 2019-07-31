@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/time_inner_slide" />
 
         <View
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_gravity="top|right"
+            android:layout_gravity="top|end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -56,9 +56,7 @@
             android:layout_margin="16dp"
             android:textColor="@color/greenIshGrey"
             android:text="@string/sample_number"
-            android:textSize="@dimen/text_size_small"
-            android:layout_alignEnd="@id/tv_article_page_slash"
-            />
+            android:textSize="@dimen/text_size_small" />
 
         <TextView
             android:id="@+id/tv_article_page_slash"
@@ -90,7 +88,6 @@
 
         <ImageButton
             android:id="@+id/custom_fab_play_youtube"
-            android:clickable="true"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="center"
