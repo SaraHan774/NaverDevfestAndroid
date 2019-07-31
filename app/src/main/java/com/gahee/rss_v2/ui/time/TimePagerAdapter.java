@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +34,7 @@ public class TimePagerAdapter extends PagerAdapter {
     private final TimeArticleViewModel timeArticleViewModel;
 
 
+
     public TimePagerAdapter(Context context, ArrayList<TimeArticle> timeArticles){
         this.mContext = context;
         this.timeArticles = timeArticles;
@@ -39,6 +43,7 @@ public class TimePagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
+        Log.d("FFF", "getCount: " + timeArticles.size());
         return timeArticles != null ? timeArticles.size() : 0;
     }
 

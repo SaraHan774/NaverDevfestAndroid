@@ -24,41 +24,46 @@ import static com.gahee.rss_v2.utils.Constants.SCORE;
 public class ImageLabeling {
 
     private static final String TAG = "ImageLabeling";
+    private static String dataFromServer;
 
     public static String sendREST(String serverUrl, String jsonPostString) throws IllegalStateException{
         String inputLine;
         StringBuffer stringBuffer = new StringBuffer();
+        if(dataFromServer != null){
+            return dataFromServer;
+        }else {
+            try {
+                Log.d(TAG, "sendREST: START");
 
-        try{
-            Log.d(TAG, "sendREST: START");
+                URL url = new URL(serverUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Accept-Charset", "UTF-8");
+                connection.setConnectTimeout(NETWORK_TIMEOUT);
+                connection.setReadTimeout(NETWORK_TIMEOUT);
 
-            URL url = new URL(serverUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept-Charset", "UTF-8");
-            connection.setConnectTimeout(NETWORK_TIMEOUT);
-            connection.setReadTimeout(NETWORK_TIMEOUT);
+                OutputStream outputStream = connection.getOutputStream();
+                outputStream.write(jsonPostString.getBytes("UTF-8"));
+                outputStream.flush();
 
-            OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(jsonPostString.getBytes("UTF-8"));
-            outputStream.flush();
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream(), "UTF-8")
+                );
+                while ((inputLine = reader.readLine()) != null) {
+                    stringBuffer.append(inputLine);
+                }
+                connection.disconnect();
+                Log.d(TAG, "sendREST: END");
 
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream(), "UTF-8")
-            );
-            while((inputLine = reader.readLine()) != null){
-                stringBuffer.append(inputLine);
+            } catch (Exception e) {
+                Log.d(TAG, "sendREST: error " + e.getMessage());
+                e.printStackTrace();
             }
-            connection.disconnect();
-            Log.d(TAG, "sendREST: END");
-
-        }catch (Exception e){
-            Log.d(TAG, "sendREST: error " + e.getMessage());
-            e.printStackTrace();
+            dataFromServer = stringBuffer.toString();
         }
-        return stringBuffer.toString();
+        return dataFromServer;
     }
 
     private static class ImageLabelAsync extends AsyncTask<Void, Void, String> {
@@ -101,39 +106,43 @@ public class ImageLabeling {
         @Override
         protected ArrayList<String> doInBackground(String... strings) {
 
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(strings[0]);
+            if(wwfArticle.getImageLabelResponse() != null){
+                wwfArticle.setImageLabelResponse(wwfArticle.getImageLabelResponse());
+            }else {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(strings[0]);
 
-                JSONObject labelResultJsonObj = jsonObject.getJSONObject(RESULTS);
-                if(listOfImageLabelResults != null){
-                    listOfImageLabelResults.clear();
-                }
-                while(labelResultJsonObj.keys().hasNext()){
-                    Log.d(TAG, "doInBackground: " + labelResultJsonObj.keys().hasNext());
-                    String currentDynamicKey = labelResultJsonObj.keys().next();
-                    JSONArray currentJsonArray =  labelResultJsonObj.getJSONArray(currentDynamicKey);
-                    for(int i = 0; i < currentJsonArray.length(); i++){
-                        JSONObject labelInfoJsonObj = (JSONObject) currentJsonArray.get(i);
-                        Double score = labelInfoJsonObj.getDouble(SCORE);
-                        String description = labelInfoJsonObj.getString(DESCRIPTION);
-                        if(score > 0.8){
-                            listOfImageLabelResults.add(description);
-                        }
+                    JSONObject labelResultJsonObj = jsonObject.getJSONObject(RESULTS);
+                    if (listOfImageLabelResults != null) {
+                        listOfImageLabelResults.clear();
                     }
-                    return listOfImageLabelResults;
+                    while (labelResultJsonObj.keys().hasNext()) {
+                        Log.d(TAG, "doInBackground: " + labelResultJsonObj.keys().hasNext());
+                        String currentDynamicKey = labelResultJsonObj.keys().next();
+                        JSONArray currentJsonArray = labelResultJsonObj.getJSONArray(currentDynamicKey);
+                        for (int i = 0; i < currentJsonArray.length(); i++) {
+                            JSONObject labelInfoJsonObj = (JSONObject) currentJsonArray.get(i);
+                            Double score = labelInfoJsonObj.getDouble(SCORE);
+                            String description = labelInfoJsonObj.getString(DESCRIPTION);
+                            if (score > 0.8) {
+                                listOfImageLabelResults.add(description);
+                            }
+                        }
+                        return listOfImageLabelResults;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
-
-
             return null;
         }
 
         @Override
         protected void onPostExecute(ArrayList<String> stringArrayList) {
-            wwfArticle.setImageLabelResponse(stringArrayList);
+            if(wwfArticle.getImageLabelResponse() == null) {
+                wwfArticle.setImageLabelResponse(stringArrayList);
+            }
         }
      }
 

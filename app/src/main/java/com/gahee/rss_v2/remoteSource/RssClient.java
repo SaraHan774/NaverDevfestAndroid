@@ -173,6 +173,11 @@ public class RssClient{
 
     //this will be mainly used for search
     private void storeEachArticles(List<Item> listOfItems, Channel channel){
+
+        if(mArticleReutersArrayList != null){
+            mArticleReutersArrayList.clear();
+        }
+
         for(int i = 0; i < listOfItems.size(); i++){
             Item item = channel.getItem().get(i);
             String articleTitle = item.getTitle();
@@ -203,7 +208,9 @@ public class RssClient{
     }
 
     private void storeEachTimeArticle(List<com.gahee.rss_v2.data.time.tags.Item> items){
-
+        if(timeArticleArrayList != null){
+            timeArticleArrayList.clear();
+        }
         if(items != null){
             for(int i = 0; i < items.size(); i++){
                 com.gahee.rss_v2.data.time.tags.Item item = items.get(i);
@@ -226,6 +233,9 @@ public class RssClient{
     }
 
     private void storeEachWWFArticles(List<com.gahee.rss_v2.data.wwf.tags.Item> items){
+        if(wwfArticleArrayList != null){
+            wwfArticleArrayList.clear();
+        }
         if(items != null){
             for(com.gahee.rss_v2.data.wwf.tags.Item item : items){
                 String title = item.getTitle();

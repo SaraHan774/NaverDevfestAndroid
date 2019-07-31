@@ -46,6 +46,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
@@ -134,9 +135,8 @@ public class MainActivity extends AppCompatActivity {
             this.articleReutersArrayList = articleReuters;
             viewPagerReuters = findViewById(R.id.view_pager_reuters_outer);
 
-            pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  articleReuters);
-            pagerAdapter.notifyDataSetChanged();
-            viewPagerReuters.setAdapter(pagerAdapter);
+            ReutersPagerAdapter reutersPagerAdapter = new ReutersPagerAdapter(MainActivity.this,  articleReuters);
+            viewPagerReuters.setAdapter(reutersPagerAdapter);
             viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
 
             frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + 0);
@@ -157,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
 
         remoteViewModel.getWwfArticleMutableLiveData().observe(this, wwfArticles -> {
             viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
-            WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
-            pagerAdapter.notifyDataSetChanged();
-            viewPagerWWF.setAdapter(pagerAdapter);
+            WwfPagerAdapter wwfPagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
+            viewPagerWWF.setAdapter(wwfPagerAdapter);
+
             Log.d(TAG, "setting wwf pager adapter " );
             viewPagerWWF.addOnPageChangeListener(wwfViewPagerListener);
 
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+
                 onCancelSearchView(searchView, query);
 
                 searchThroughReutersArticles(query);
@@ -222,14 +223,16 @@ public class MainActivity extends AppCompatActivity {
 
 
                     if(searchResultListWWF != null || searchResultListWWF.size() != 0){
+                        Log.d("FFF", "onQueryTextSubmit: " + searchResultListWWF.size());
                         remoteViewModel.getWwfArticleMutableLiveData().setValue(searchResultListWWF);
                     }
-                    stringBuffer.append("WWF : found " + searchResultListWWF.size() + " results");
+                    stringBuffer.append("WWF : found " + searchResultListWWF.size() + " results\n");
 
                     if(searchResultListTIME != null && searchResultListTIME.size() != 0) {
                         remoteViewModel.getTimeArticleMutableLiveData().setValue(searchResultListTIME);
                     }
                     stringBuffer.append("TIME : found " + searchResultListTIME.size() + " results\n");
+
                     Toast.makeText(MainActivity.this, stringBuffer.toString(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -253,12 +256,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!query.equals("") || query != null) {
-                    remoteViewModel.getReutersArticleMutableLiveData().setValue(MainActivity.this.articleReutersArrayList);
-                    remoteViewModel.getTimeArticleMutableLiveData().setValue(MainActivity.this.timeArticleArrayList);
-                    remoteViewModel.getWwfArticleMutableLiveData().setValue(MainActivity.this.wwfArticleArrayList);
+                    remoteViewModel.fetchReutersDataFromRepo();
+                    remoteViewModel.fetchTimeDataFromRepo();
+                    remoteViewModel.fetchWWFDataFromRepo();
                 }
                 Toast.makeText(MainActivity.this, "Search Finished", Toast.LENGTH_SHORT).show();
-                searchView.setFocusable(true);
                 searchView.setIconified(true);
             }
         });
@@ -326,14 +328,20 @@ public class MainActivity extends AppCompatActivity {
                 = remoteViewModel.getTimeArticleMutableLiveData().getValue();
         this.timeArticleArrayList = timeArticleArrayList;
 
+        if(searchResultListTIME != null){
+            searchResultListTIME.clear();
+        }
+
         int listSize = timeArticleArrayList.size();
         for(int i = 0; i < listSize; i++){
             String articleTitle = timeArticleArrayList.get(i).getmArticletitle();
             String articleDescription = timeArticleArrayList.get(i).getmArticleDescription();
             String articleContent = Html.fromHtml(timeArticleArrayList.get(i).getmContentEncoded()).toString();
+
             if(articleTitle.toLowerCase().contains(query.toLowerCase()) ||
             articleDescription.toLowerCase().contains(query.toLowerCase()) ||
             articleContent.toLowerCase().contains(query.toLowerCase())){
+
                 searchResultListTIME.add(timeArticleArrayList.get(i));
             }
         }
@@ -442,8 +450,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
-
-
 
 
     /*

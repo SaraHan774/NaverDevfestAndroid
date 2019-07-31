@@ -9,18 +9,23 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gahee.rss_v2.R;
+import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,7 +37,7 @@ public class TimeFragment extends Fragment {
     private RemoteViewModel remoteViewModel;
     private ViewPager viewPagerTime;
     private TimeArticleViewModel timeArticleViewModel;
-//    private YouTubePlayerView youTubePlayerView;
+    private ArrayList<TimeArticle> timeArticleArrayList;
     private TextView textView;
 
     //animation
@@ -75,16 +80,17 @@ public class TimeFragment extends Fragment {
             textView.setText(timeChannels.get(0).getmChannelTitle());
         });
 
-        remoteViewModel.getTimeArticleMutableLiveData().observe(this, timeArticles -> {
-
+            remoteViewModel.getTimeArticleMutableLiveData().observe(this, timeArticles -> {
+            Log.d("FFF", "onCreateView: " + timeArticles.size() + " /n " + timeArticles);
             if(timeArticles != null || timeArticles.size() != 0) {
+                this.timeArticleArrayList = timeArticles;
                 //fragmentView pager that displays text
                 viewPagerTime = fragmentView.findViewById(R.id.view_pager_time_outer);
                 TimePagerAdapter pagerAdapter = new TimePagerAdapter(getContext(), timeArticles);
-                pagerAdapter.notifyDataSetChanged();
                 viewPagerTime.setAdapter(pagerAdapter);
+                pagerAdapter.notifyDataSetChanged();
 
-                timeArticleViewModel.setSelectedArticle(timeArticles.get(0));
+                timeArticleViewModel.setSelectedArticle(timeArticles.get(viewPagerTime.getCurrentItem()));
 
                 viewPagerTime.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
@@ -94,7 +100,7 @@ public class TimeFragment extends Fragment {
 
                     @Override
                     public void onPageSelected(int position) {
-                        timeArticleViewModel.setSelectedArticle(timeArticles.get(position));
+                        timeArticleViewModel.setSelectedArticle(timeArticleArrayList.get(viewPagerTime.getCurrentItem()));
                     }
 
                     @Override

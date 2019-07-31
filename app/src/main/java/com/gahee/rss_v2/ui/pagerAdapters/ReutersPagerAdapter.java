@@ -80,7 +80,11 @@ public class ReutersPagerAdapter extends PagerAdapter {
             String cleanDescription = StringUtils.removeHtmlTagsFromString(articleDescription);
             description.setText(cleanDescription);
 
-            pubDate.setText(articleReuters.getmArticlePubDate());
+            if(articleReuters.getmArticlePubDate() != null || !articleReuters.getmArticlePubDate().equals("")){
+                pubDate.setText("");
+            }else{
+                pubDate.setText(articleReuters.getmArticlePubDate());
+            }
         }
 
         FrameLayout frameLayout = view.findViewById(R.id.reuters_outer_slider_container);

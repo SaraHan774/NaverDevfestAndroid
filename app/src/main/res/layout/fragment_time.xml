@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/time_fragment_top_container"
     android:orientation="vertical"
     android:elevation="@dimen/card_elevation"
     android:layout_margin="@dimen/view_margin_min"
