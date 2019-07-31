@@ -77,29 +77,31 @@ public class TimeFragment extends Fragment {
 
         remoteViewModel.getTimeArticleMutableLiveData().observe(this, timeArticles -> {
 
-            //fragmentView pager that displays text
-            viewPagerTime = fragmentView.findViewById(R.id.view_pager_time_outer);
-            TimePagerAdapter pagerAdapter = new TimePagerAdapter(getContext(), timeArticles);
-            viewPagerTime.setAdapter(pagerAdapter);
-            timeArticleViewModel.setSelectedArticle(timeArticles.get(0));
+            if(timeArticles != null || timeArticles.size() != 0) {
+                //fragmentView pager that displays text
+                viewPagerTime = fragmentView.findViewById(R.id.view_pager_time_outer);
+                TimePagerAdapter pagerAdapter = new TimePagerAdapter(getContext(), timeArticles);
+                viewPagerTime.setAdapter(pagerAdapter);
 
+                timeArticleViewModel.setSelectedArticle(timeArticles.get(0));
 
-            viewPagerTime.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                viewPagerTime.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                }
+                    }
 
-                @Override
-                public void onPageSelected(int position) {
-                    timeArticleViewModel.setSelectedArticle(timeArticles.get(position));
-                }
+                    @Override
+                    public void onPageSelected(int position) {
+                        timeArticleViewModel.setSelectedArticle(timeArticles.get(position));
+                    }
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
 
-                }
-            });
+                    }
+                });
+            }
 
         });
 
@@ -108,39 +110,41 @@ public class TimeFragment extends Fragment {
             if(timer != null){
                 timer.cancel();
             }
-
-            //fragmentView pager that displays media
-            Log.d("TimeArticleViewModel", "get selected article - fragmentView model " + timeArticle);
-            viewPagerTimeMedias = fragmentView.findViewById(R.id.view_pager_time_inner);
-            TimeInnerPagerAdapter innerPagerAdapter = new TimeInnerPagerAdapter(getContext(), timeArticle);
-            viewPagerTimeMedias.setAdapter(innerPagerAdapter);
+            if(timeArticle != null) {
+                //fragmentView pager that displays media
+                Log.d("TimeArticleViewModel", "get selected article - fragmentView model " + timeArticle);
+                viewPagerTimeMedias = fragmentView.findViewById(R.id.view_pager_time_inner);
+                TimeInnerPagerAdapter innerPagerAdapter = new TimeInnerPagerAdapter(getContext(), timeArticle);
+                viewPagerTimeMedias.setAdapter(innerPagerAdapter);
 //                viewPagerTimeMedias.setPageMargin(80);
-            viewPagerTimeMedias.startAnimation(timeCardUp);
+                viewPagerTimeMedias.startAnimation(timeCardUp);
 
 
-            viewPagerTimeMedias.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                viewPagerTimeMedias.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+
+                    }
+                });
+
+                if (timeArticle.getContent().size() > 1) {
+                    timer = new Timer();
+                    timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
+                } else if (timeArticle.getContent().size() > 1 || timeArticle.getmYoutubeThumbnailLinks() != null) {
+                    timer = new Timer();
+                    timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size() +
+                            timeArticle.getmYoutubeThumbnailLinks().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
                 }
 
-                @Override
-                public void onPageSelected(int position) {
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-            if(timeArticle.getContent().size() > 1){
-                timer = new Timer();
-                timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
-            }else if(timeArticle.getContent().size() > 1 || timeArticle.getmYoutubeThumbnailLinks() != null){
-                timer = new Timer();
-                timer.scheduleAtFixedRate(new TimeSliderTimer(timeArticle.getContent().size() +
-                        timeArticle.getmYoutubeThumbnailLinks().size()), TIME_INNER_SLIDER_TIME_INTERVAL, TIME_INNER_SLIDER_TIME_INTERVAL);
             }
 
         });
@@ -158,11 +162,12 @@ public class TimeFragment extends Fragment {
         public void run() {
             ((AppCompatActivity) Objects.requireNonNull(getContext())).runOnUiThread(
                     () -> {
-
-                        if(viewPagerTimeMedias.getCurrentItem() < listSize - 1){
-                            viewPagerTimeMedias.setCurrentItem(viewPagerTimeMedias.getCurrentItem() +1, true);
-                        }else{
-                            viewPagerTimeMedias.setCurrentItem(0);
+                        if(listSize != 0) {
+                            if (viewPagerTimeMedias.getCurrentItem() < listSize - 1) {
+                                viewPagerTimeMedias.setCurrentItem(viewPagerTimeMedias.getCurrentItem() + 1, true);
+                            } else {
+                                viewPagerTimeMedias.setCurrentItem(0);
+                            }
                         }
                     }
             );

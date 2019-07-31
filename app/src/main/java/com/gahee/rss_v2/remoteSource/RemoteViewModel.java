@@ -24,7 +24,7 @@ public class RemoteViewModel extends ViewModel {
         return mRemoteRepository.getReutersChannelMutableLiveData();
     }
 
-    public MutableLiveData<ArrayList<ArticleReuters>> getArticleMutableLiveData(){
+    public MutableLiveData<ArrayList<ArticleReuters>> getReutersArticleMutableLiveData(){
         return mRemoteRepository.getReutersArticleMutableLiveData();
     }
 

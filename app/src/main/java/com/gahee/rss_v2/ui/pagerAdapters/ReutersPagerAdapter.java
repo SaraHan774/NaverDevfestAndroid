@@ -14,11 +14,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.gahee.rss_v2.data.reuters.model.ArticleReuters;
 import com.gahee.rss_v2.utils.StringUtils;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.utils.ProgressBarUtil;
+
+import java.util.ArrayList;
 
 import static com.gahee.rss_v2.utils.Constants.TAG_REUTERS_FRAME;
 
@@ -27,16 +30,16 @@ public class ReutersPagerAdapter extends PagerAdapter {
     private static final String TAG = "ReutersPagerAdapter";
 
     private final Context mContext;
-    private final ChannelReuters mChannelReuters;
+    private final ArrayList<ArticleReuters> mArticleReuters;
     private boolean isFirstInstantiation = false;
     private final Bundle bundle = new Bundle();
     private ProgressBarUtil progressBarUtil;
 
 
-    public ReutersPagerAdapter(Context context, ChannelReuters channelObjs){
+    public ReutersPagerAdapter(Context context, ArrayList<ArticleReuters> articleReuters){
         Log.d(TAG, "feed pager adapter instantiating ... ");
         mContext = context;
-        mChannelReuters = channelObjs;
+        mArticleReuters = articleReuters;
     }
 
     private void saveInstantiationStatus(boolean isFirstInstantiation){
@@ -46,7 +49,7 @@ public class ReutersPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return mChannelReuters.getmItemList() != null ? mChannelReuters.getmItemList().size() : 0;
+        return mArticleReuters != null ? mArticleReuters.size() : 0;
     }
 
     @Override
@@ -62,22 +65,22 @@ public class ReutersPagerAdapter extends PagerAdapter {
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.main_reuters_slider, container, false);
 
-        final Item item = mChannelReuters.getmItemList().get(position);
+        final ArticleReuters articleReuters = mArticleReuters.get(position);
 
 
         TextView title = view.findViewById(R.id.tv_reuters_outer_title);
         TextView description = view.findViewById(R.id.tv_reuters_outer_description);
         TextView pubDate = view.findViewById(R.id.tv_reuters_outer_pub_date);
 
-        if(item != null) {
+        if(articleReuters != null) {
 
-            title.setText(item.getTitle());
-            String articleDescription = item.getDescription();
+            title.setText(articleReuters.getmArticleTitle());
+            String articleDescription = articleReuters.getmArticleDescription();
 
             String cleanDescription = StringUtils.removeHtmlTagsFromString(articleDescription);
             description.setText(cleanDescription);
 
-            pubDate.setText(item.getPubDate());
+            pubDate.setText(articleReuters.getmArticlePubDate());
         }
 
         FrameLayout frameLayout = view.findViewById(R.id.reuters_outer_slider_container);
@@ -137,8 +140,6 @@ public class ReutersPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        Log.d(TAG, "destroyItem: reset pb before remove view call");
-
         Log.d(TAG, "destroyItem: " + position);
         View view = (View) object;
         container.removeView(view);

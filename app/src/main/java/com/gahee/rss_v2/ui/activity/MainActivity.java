@@ -12,14 +12,13 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.reuters.model.ArticleReuters;
-import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
-import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
@@ -50,7 +49,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 
 import static com.gahee.rss_v2.utils.Constants.CURRENT_WINDOW;
@@ -71,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPagerReuters;
     private ViewPager viewPagerWWF;
 
-    private List<Item> reutersItemList;
-//    private ArrayList<WWFArticle> wwfItemList;
+    private ArrayList<ArticleReuters> articleReutersArrayList;
+    private ArrayList<WWFArticle> wwfArticleArrayList;
+    private ArrayList<TimeArticle> timeArticleArrayList;
+
     private ReutersPagerAdapter pagerAdapter;
     private ProgressBar [] reutersProgressBars;
     private ProgressBar[] wwfProgressBars;
@@ -125,10 +125,16 @@ public class MainActivity extends AppCompatActivity {
 
         remoteViewModel.getChannelMutableLiveData().observe(this, reutersChannel -> {
             Log.d(TAG, "onChanged: " + "reuters");
-            reutersItemList = reutersChannel.get(0).getmItemList();
+            TextView textView = findViewById(R.id.reuters_channel_title);
+            textView.setText(reutersChannel.get(0).getmChannelTitle());
+
+        });
+
+        remoteViewModel.getReutersArticleMutableLiveData().observe(this, articleReuters -> {
+            this.articleReutersArrayList = articleReuters;
             viewPagerReuters = findViewById(R.id.view_pager_reuters_outer);
 
-            pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  reutersChannel.get(0));
+            pagerAdapter = new ReutersPagerAdapter(MainActivity.this,  articleReuters);
             viewPagerReuters.setAdapter(pagerAdapter);
             viewPagerReuters.addOnPageChangeListener(reutersViewPagerListener);
 
@@ -139,14 +145,10 @@ public class MainActivity extends AppCompatActivity {
             reutersProgress.setProgressBars(reutersProgressBars);
             reutersProgress.resetProgressBarToUserSelection( 0);
 
-            TextView textView = findViewById(R.id.reuters_channel_title);
-            textView.setText(reutersChannel.get(0).getmChannelTitle());
-
-            setMediaURL(reutersChannel.get(0).getmItemList().get(0).getGroup().getContent().getUrlVideo());
-
+            setUpReutersSliderTimer(articleReuters);
+            setMediaURL(articleReuters.get(0).getmVideoLink());
             initializePlayer();
             hideSystemUi();
-            setUpReutersSliderTimer(reutersChannel);
         });
 
         remoteViewModel.getWwfArticleMutableLiveData().observe(this, wwfArticles -> {
@@ -189,14 +191,38 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
+                onCancelSearchView(searchView, query);
 
                 searchThroughReutersArticles(query);
                 searchThroughWWFArticles(query);
-                searchThroughWWFArticles(query);
+                searchThroughTIMEArticles(query);
 
-                if((searchResultListReuters != null ||
-                        searchResultListWWF != null ||
-                        searchResultListTIME != null)){
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                if((searchResultListReuters != null && searchResultListReuters.size() != 0 ||
+                        searchResultListWWF != null && searchResultListWWF.size() != 0||
+                        searchResultListTIME != null && searchResultListTIME.size() != 0)){
+                    if(stringBuffer.length() != 0){
+                        stringBuffer.setLength(0);
+                    }
+
+                    if(searchResultListReuters != null && searchResultListReuters.size() != 0) {
+                        remoteViewModel.getReutersArticleMutableLiveData().setValue(searchResultListReuters);
+                    }
+                    stringBuffer.append("REUTERS : found " + searchResultListReuters.size() + " results\n");
+
+                    if(searchResultListTIME != null && searchResultListTIME.size() != 0) {
+                        remoteViewModel.getTimeArticleMutableLiveData().setValue(searchResultListTIME);
+                    }
+                    stringBuffer.append("TIME : found " + searchResultListTIME.size() + " results\n");
+
+                    if(searchResultListWWF != null || searchResultListWWF.size() != 0){
+                        remoteViewModel.getWwfArticleMutableLiveData().setValue(searchResultListWWF);
+                    }
+                    stringBuffer.append("WWF : found " + searchResultListWWF.size() + " results");
+
+                    Toast.makeText(MainActivity.this, stringBuffer.toString(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -212,10 +238,29 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private void onCancelSearchView(SearchView searchView, String query){
+        ImageView closeButton = (ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!query.equals("") || query != null) {
+                    remoteViewModel.getReutersArticleMutableLiveData().setValue(MainActivity.this.articleReutersArrayList);
+                    remoteViewModel.getTimeArticleMutableLiveData().setValue(MainActivity.this.timeArticleArrayList);
+                    remoteViewModel.getWwfArticleMutableLiveData().setValue(MainActivity.this.wwfArticleArrayList);
+                }
+                Toast.makeText(MainActivity.this, "Search Finished", Toast.LENGTH_SHORT).show();
+                searchView.clearFocus();
+            }
+        });
+    }
+
 
     private void searchThroughReutersArticles(String query){
         ArrayList<ArticleReuters> articleReutersArrayList
-                = remoteViewModel.getArticleMutableLiveData().getValue();
+                = remoteViewModel.getReutersArticleMutableLiveData().getValue();
+        this.articleReutersArrayList = articleReutersArrayList;
+
         if(searchResultListReuters != null){
             searchResultListReuters.clear();
         }
@@ -234,6 +279,8 @@ public class MainActivity extends AppCompatActivity {
     private void searchThroughWWFArticles(String query){
         ArrayList<WWFArticle> wwfArticleArrayList
                 = remoteViewModel.getWwfArticleMutableLiveData().getValue();
+        this.wwfArticleArrayList = wwfArticleArrayList;
+
         if(searchResultListWWF != null){
             searchResultListWWF.clear();
         }
@@ -254,9 +301,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean searchThroughImageLabels(String query, ArrayList<String> imageLabels){
-        for (String imageLabel : imageLabels){
-            if(imageLabel.toLowerCase().contains(query.toLowerCase())) {
-                return true;
+        if(imageLabels != null){
+            for (String imageLabel : imageLabels){
+                if(imageLabel.toLowerCase().contains(query.toLowerCase())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -265,6 +314,8 @@ public class MainActivity extends AppCompatActivity {
     private void searchThroughTIMEArticles(String query){
         ArrayList<TimeArticle> timeArticleArrayList
                 = remoteViewModel.getTimeArticleMutableLiveData().getValue();
+        this.timeArticleArrayList = timeArticleArrayList;
+
         int listSize = timeArticleArrayList.size();
         for(int i = 0; i < listSize; i++){
             String articleTitle = timeArticleArrayList.get(i).getmArticletitle();
@@ -291,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             releasePlayer();
-            setMediaURL(reutersItemList.get(position).getGroup().getContent().getUrlVideo());
+            setMediaURL(articleReutersArrayList.get(position).getmVideoLink());
             playbackPosition = 0;
 
             FrameLayout frameLayout = viewPagerReuters.findViewWithTag(TAG_REUTERS_FRAME + position);
@@ -414,8 +465,8 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Timers for each ViewPager
      */
-    private void setUpReutersSliderTimer(ArrayList<ChannelReuters> channelReuters){
-        MyTimers myTimersReuters = new MyTimers(channelReuters.get(0).getmItemList().size());
+    private void setUpReutersSliderTimer(ArrayList<ArticleReuters> articleReuters){
+        MyTimers myTimersReuters = new MyTimers(articleReuters.size());
         Timer timerReuters = new Timer();
 
         MyTimers.SliderTimer reutersSliderTimer
@@ -468,7 +519,6 @@ public class MainActivity extends AppCompatActivity {
         }
         if(mediaURL.equals("")){
             Log.d(TAG, "no media url");
-            Toast.makeText(this, getString(R.string.no_video_warning), Toast.LENGTH_SHORT).show();
             return false;
         }else {
             Log.d(TAG, "initializing exo player");

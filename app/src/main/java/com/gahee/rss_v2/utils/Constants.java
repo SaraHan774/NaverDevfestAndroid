@@ -32,4 +32,8 @@ public class Constants {
     public static final String RESULTS = "results";
     public static final String SCORE = "score";
     public static final String DESCRIPTION = "description";
+
+    public static final String EXTRA_REUTERS = "reuters_search_result";
+    public static final String EXTRA_WWF = "wwf_search_result";
+    public static final String EXTRA_TIME = "time_search_result";
 }

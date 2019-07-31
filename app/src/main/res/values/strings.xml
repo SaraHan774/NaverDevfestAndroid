@@ -16,5 +16,9 @@
     <string name="action_bar_search_desc">search button</string>
     <string name="action_settings">Settings</string>
     <string name="search_hint">Search for a keyword ...</string>
+    <string name="search_reuters">REUTERS</string>
+    <string name="search_time">TIME</string>
+    <string name="search_wwf">WWF</string>
+    <string name="search_contains">contains search results</string>
 
 </resources>

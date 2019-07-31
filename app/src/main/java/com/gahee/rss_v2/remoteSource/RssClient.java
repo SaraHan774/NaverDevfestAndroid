@@ -94,7 +94,7 @@ public class RssClient{
                     storeEachArticles(listOfItems, channel);
                 }
                 mChannelMutableLiveData.setValue(mChannelReutersArrayList);
-                mArticleMutableLiveData.setValue(mArticleReutersArrayList);
+//                mArticleMutableLiveData.setValue(mArticleReutersArrayList);
             }
 
             @Override
@@ -199,6 +199,7 @@ public class RssClient{
 
             mArticleReutersArrayList.add(new ArticleReuters(articleTitle, articleLink, articleDescription, articlePubDate, videoLink, thumbnailLink));
         }
+        mArticleMutableLiveData.setValue(mArticleReutersArrayList);
     }
 
     private void storeEachTimeArticle(List<com.gahee.rss_v2.data.time.tags.Item> items){
@@ -275,6 +276,8 @@ public class RssClient{
     public MutableLiveData<ArrayList<WWFChannel>> getmWwfChannelLiveData() {
         return mWwfChannelLiveData;
     }
+
+
 
     public void fetchRemoteReutersData(){
         fetchDataFromReuters();

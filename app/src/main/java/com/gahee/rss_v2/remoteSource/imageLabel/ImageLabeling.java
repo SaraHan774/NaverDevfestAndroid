@@ -110,6 +110,7 @@ public class ImageLabeling {
                     listOfImageLabelResults.clear();
                 }
                 while(labelResultJsonObj.keys().hasNext()){
+                    Log.d(TAG, "doInBackground: " + labelResultJsonObj.keys().hasNext());
                     String currentDynamicKey = labelResultJsonObj.keys().next();
                     JSONArray currentJsonArray =  labelResultJsonObj.getJSONArray(currentDynamicKey);
                     for(int i = 0; i < currentJsonArray.length(); i++){
@@ -120,6 +121,7 @@ public class ImageLabeling {
                             listOfImageLabelResults.add(description);
                         }
                     }
+                    return listOfImageLabelResults;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
