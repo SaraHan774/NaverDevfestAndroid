@@ -22,6 +22,7 @@ import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.utils.ProgressBarUtil;
+import com.google.android.exoplayer2.ui.PlayerView;
 
 import java.util.ArrayList;
 
@@ -90,7 +91,9 @@ public class ReutersPagerAdapter extends PagerAdapter {
         FrameLayout frameLayout = view.findViewById(R.id.reuters_outer_slider_container);
         frameLayout.setTag(TAG_REUTERS_FRAME + position);
 
-        view.setOnClickListener(parentView -> {
+        PlayerView playerView = view.findViewById(R.id.reuters_outer_video_player);
+
+        playerView.setOnClickListener(parentView -> {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(articleReuters.getmArticleLink()));
             mContext.startActivity(intent);

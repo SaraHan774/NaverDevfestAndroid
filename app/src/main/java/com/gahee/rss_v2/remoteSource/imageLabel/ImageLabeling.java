@@ -31,6 +31,7 @@ public class ImageLabeling {
         String inputLine;
         StringBuffer stringBuffer = new StringBuffer();
         if(dataFromServer != null){
+//            Log.d(TAG, "sendREST: DATA FROM SERVER REUSED" + dataFromServer);
             return dataFromServer;
         }else {
             try {
@@ -115,7 +116,7 @@ public class ImageLabeling {
                     jsonObject = new JSONObject(strings[0]);
 
                     JSONObject labelResultJsonObj = jsonObject.getJSONObject(RESULTS);
-                    Log.d("FFFF", "doInBackground: " + labelResultJsonObj);
+//                    Log.d(TAG, "doInBackground: " + labelResultJsonObj);
 
                     if (listOfImageLabelResults != null) {
                         listOfImageLabelResults.clear();
@@ -123,15 +124,15 @@ public class ImageLabeling {
 
                     for(int i = 0; i < labelResultJsonObj.names().length(); i++){
                         String currentDynamicKey = labelResultJsonObj.names().get(i).toString();
-                        Log.d(TAG, "doInBackground: current key " + currentDynamicKey);
+//                        Log.d(TAG, "doInBackground: current key " + currentDynamicKey);
                         JSONArray currentJsonArray = labelResultJsonObj.getJSONArray(currentDynamicKey);
-                        Log.d(TAG, "doInBackground: current array" + currentJsonArray);
+//                        Log.d(TAG, "doInBackground: current array" + currentJsonArray);
                         for (int j = 0; j < currentJsonArray.length(); j++) {
                             JSONObject labelInfoJsonObj = (JSONObject) currentJsonArray.get(j);
                             Double score = labelInfoJsonObj.getDouble(SCORE);
-                            Log.d(TAG, "doInBackground: score :  " + score);
+//                            Log.d(TAG, "doInBackground: score :  " + score);
                             String description = labelInfoJsonObj.getString(DESCRIPTION);
-                            Log.d(TAG, "doInBackground: description : " + description);
+//                            Log.d(TAG, "doInBackground: description : " + description);
                             if (score > 0.8) {
                                 listOfImageLabelResults.add(description);
                             }

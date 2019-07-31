@@ -132,16 +132,16 @@ public class WwfPagerAdapter extends PagerAdapter {
                         if(index < imageLinks.size()){
                             Glide.with(mContext).load(imageLinks.get(index++))
                                     .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
-                                    .placeholder(R.drawable.scrim_gradient_to_above)
-                                    .error(R.drawable.ic_launcher_background)
+                                    .placeholder(R.drawable.wwf_logo)
+                                    .error(R.drawable.wwf_logo)
                                     .into((ImageView) imageSwitcher.getCurrentView());
 
                         }else{
                             index = 0;
                             Glide.with(mContext).load(imageLinks.get(index++))
                                     .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
-                                    .placeholder(R.drawable.scrim_gradient_to_above)
-                                    .error(R.drawable.ic_launcher_background)
+                                    .placeholder(R.drawable.wwf_logo)
+                                    .error(R.drawable.wwf_logo)
                                     .into((ImageView) imageSwitcher.getCurrentView());
 
                         }

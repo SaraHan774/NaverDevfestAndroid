@@ -42,7 +42,6 @@ public class TimeFragment extends Fragment {
 
     //animation
     private Animation timeCardUp;
-    private Animation timeCardDown;
     private ViewPager viewPagerTimeMedias;
 
     private Timer timer;
@@ -58,9 +57,6 @@ public class TimeFragment extends Fragment {
         //getting animations
         timeCardUp = AnimationUtils.loadAnimation(getContext(), R.anim.time_card_up);
         timeCardUp.setInterpolator(new DecelerateInterpolator());
-        timeCardDown = AnimationUtils.loadAnimation(getContext(), R.anim.time_card_down);
-        timeCardDown.setInterpolator(new AccelerateInterpolator());
-
 
     }
 

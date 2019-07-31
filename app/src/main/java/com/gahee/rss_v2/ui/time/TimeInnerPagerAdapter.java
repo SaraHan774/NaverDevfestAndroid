@@ -76,8 +76,8 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
                 if (timeArticles.getContent().get(position) != null) {
                     if (timeArticles.getContent().get(position).getUrl() != null) {
                         Glide.with(context).load(timeArticles.getContent().get(position).getUrl())
-                                .placeholder(R.drawable.scrim_gradient_to_above)
-                                .error(R.drawable.ic_launcher_background)
+                                .placeholder(R.drawable.time_magazine_logo)
+                                .error(R.drawable.time_magazine_logo)
                                 .transition(GenericTransitionOptions.with(R.anim.grow_left)).into(imageView);
 
 
