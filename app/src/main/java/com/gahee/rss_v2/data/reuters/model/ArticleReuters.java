@@ -3,7 +3,7 @@ package com.gahee.rss_v2.data.reuters.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ArticleObj implements Parcelable {
+public class ArticleReuters implements Parcelable {
 
     private String mArticleTitle;
     private String mArticleLink;
@@ -12,7 +12,7 @@ public class ArticleObj implements Parcelable {
     private String mVideoLink;
     private String mThumbnailLink;
 
-    public ArticleObj(String mArticleTitle, String mArticleLink, String mArticleDescription, String mArticlePubDate, String mVideoLink, String mThumbnailLink) {
+    public ArticleReuters(String mArticleTitle, String mArticleLink, String mArticleDescription, String mArticlePubDate, String mVideoLink, String mThumbnailLink) {
         this.mArticleTitle = mArticleTitle;
         this.mArticleLink = mArticleLink;
         this.mArticleDescription = mArticleDescription;
@@ -21,12 +21,12 @@ public class ArticleObj implements Parcelable {
         this.mThumbnailLink = mThumbnailLink;
     }
 
-    public ArticleObj(){
+    public ArticleReuters(){
 
     }
 
 
-    private ArticleObj(Parcel in) {
+    private ArticleReuters(Parcel in) {
         mArticleTitle = in.readString();
         mArticleLink = in.readString();
         mArticleDescription = in.readString();
@@ -50,15 +50,15 @@ public class ArticleObj implements Parcelable {
         return 0;
     }
 
-    public static final Creator<ArticleObj> CREATOR = new Creator<ArticleObj>() {
+    public static final Creator<ArticleReuters> CREATOR = new Creator<ArticleReuters>() {
         @Override
-        public ArticleObj createFromParcel(Parcel in) {
-            return new ArticleObj(in);
+        public ArticleReuters createFromParcel(Parcel in) {
+            return new ArticleReuters(in);
         }
 
         @Override
-        public ArticleObj[] newArray(int size) {
-            return new ArticleObj[size];
+        public ArticleReuters[] newArray(int size) {
+            return new ArticleReuters[size];
         }
     };
 

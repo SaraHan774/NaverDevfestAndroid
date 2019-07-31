@@ -6,11 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gahee.rss_v2.data.time.tags.Content;
-import com.gahee.rss_v2.remoteSource.imageLabel.ImageLabeling;
 import com.gahee.rss_v2.utils.StringUtils;
 import com.gahee.rss_v2.data.reuters.ReutersAPI;
-import com.gahee.rss_v2.data.reuters.model.ArticleObj;
-import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.model.ArticleReuters;
+import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
 import com.gahee.rss_v2.data.reuters.tags.Channel;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.data.reuters.tags.Rss;
@@ -29,15 +28,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.gahee.rss_v2.utils.Constants.IMAGE_LABELING_SERVER_URL;
-
 public class RssClient{
 
     private static final String TAG = "RssClient";
 
 
-    private final MutableLiveData<ArrayList<ChannelObj>> mChannelMutableLiveData;
-    private final MutableLiveData<ArrayList<ArticleObj>> mArticleMutableLiveData;
+    private final MutableLiveData<ArrayList<ChannelReuters>> mChannelMutableLiveData;
+    private final MutableLiveData<ArrayList<ArticleReuters>> mArticleMutableLiveData;
 
 
     private final MutableLiveData<ArrayList<TimeChannel>> mTimeChannelLiveData;
@@ -70,8 +67,8 @@ public class RssClient{
     }
 
 
-    private final ArrayList<ChannelObj> mChannelObjArrayList = new ArrayList<>();
-    private final ArrayList<ArticleObj> mArticleObjArrayList = new ArrayList<>();
+    private final ArrayList<ChannelReuters> mChannelReutersArrayList = new ArrayList<>();
+    private final ArrayList<ArticleReuters> mArticleReutersArrayList = new ArrayList<>();
 
     private void fetchDataFromReuters(){
         ReutersAPI reutersAPI = RetrofitInstanceBuilder.getReutersAPI();
@@ -90,14 +87,14 @@ public class RssClient{
 
                     Log.d(TAG, "channel : " + channel + "\n" + "title : " + title + "\n" + "description : " + description);
 
-                    ChannelObj channelObj = new ChannelObj(title, description, link, listOfItems);
-                    mChannelObjArrayList.add(channelObj);
+                    ChannelReuters channelReuters = new ChannelReuters(title, description, link, listOfItems);
+                    mChannelReutersArrayList.add(channelReuters);
 
                     //loop through the list of items and store all the articles in one array
                     storeEachArticles(listOfItems, channel);
                 }
-                mChannelMutableLiveData.setValue(mChannelObjArrayList);
-                mArticleMutableLiveData.setValue(mArticleObjArrayList);
+                mChannelMutableLiveData.setValue(mChannelReutersArrayList);
+                mArticleMutableLiveData.setValue(mArticleReutersArrayList);
             }
 
             @Override
@@ -200,7 +197,7 @@ public class RssClient{
 //                    "thumbnail : " + thumbnailLink + "\n" +
 //                    "article PubDate : " + articlePubDate + "\n");
 
-            mArticleObjArrayList.add(new ArticleObj(articleTitle, articleLink, articleDescription, articlePubDate, videoLink, thumbnailLink));
+            mArticleReutersArrayList.add(new ArticleReuters(articleTitle, articleLink, articleDescription, articlePubDate, videoLink, thumbnailLink));
         }
     }
 
@@ -242,7 +239,7 @@ public class RssClient{
 
 
                 //extract image assets from the article and set the string list value using a setter
-                StringUtils.wwfExtractImageTags(wwfArticle, item);
+                StringUtils.wwfExtractImageData(wwfArticle, item);
 
                 //add article object to the arrayList
                 wwfArticleArrayList.add(wwfArticle);
@@ -254,11 +251,11 @@ public class RssClient{
 
 
 
-    public MutableLiveData<ArrayList<ArticleObj>> getmArticleMutableLiveData() {
+    public MutableLiveData<ArrayList<ArticleReuters>> getmArticleMutableLiveData() {
         return mArticleMutableLiveData;
     }
 
-    public MutableLiveData<ArrayList<ChannelObj>> getmChannelMutableLiveData() {
+    public MutableLiveData<ArrayList<ChannelReuters>> getmChannelMutableLiveData() {
         return mChannelMutableLiveData;
     }
 

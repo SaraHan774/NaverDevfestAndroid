@@ -14,17 +14,15 @@ import static com.gahee.rss_v2.utils.Constants.WWF_BASE_URL;
 class RetrofitInstanceBuilder {
 
     //from reuters xml
-    private static final Retrofit.Builder retrofitBuilder =
+    private static final Retrofit.Builder retrofitBuilder_reuters =
             new Retrofit.Builder()
             .baseUrl(REUTERS_BASE_URL)
             .addConverterFactory(SimpleXmlConverterFactory.create());
-    private static final Retrofit retrofit = retrofitBuilder.build();
+    private static final Retrofit retrofit = retrofitBuilder_reuters.build();
     private static final ReutersAPI REUTERS_API = retrofit.create(ReutersAPI.class);
     public static ReutersAPI getReutersAPI(){
         return REUTERS_API;
     }
-
-
 
     //from Time news xml
     private static final Retrofit.Builder retrofitBuilder_time = new Retrofit.Builder()
@@ -40,8 +38,8 @@ class RetrofitInstanceBuilder {
     private static final Retrofit.Builder retrofitBuilder_wwf = new Retrofit.Builder()
             .baseUrl(WWF_BASE_URL)
             .addConverterFactory(SimpleXmlConverterFactory.create());
-    private static final Retrofit retrofit_wwf = retrofitBuilder_time.build();
-    private static final WwfAPI wwfAPI = retrofit_time.create(WwfAPI.class);
+    private static final Retrofit retrofit_wwf = retrofitBuilder_wwf.build();
+    private static final WwfAPI wwfAPI = retrofit_wwf.create(WwfAPI.class);
     public static WwfAPI getWwfAPI() {
         return wwfAPI;
     }

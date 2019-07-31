@@ -16,12 +16,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.gahee.rss_v2.utils.Constants.DESCRIPTION;
+import static com.gahee.rss_v2.utils.Constants.NETWORK_TIMEOUT;
+import static com.gahee.rss_v2.utils.Constants.RESULTS;
+import static com.gahee.rss_v2.utils.Constants.SCORE;
+
 public class ImageLabeling {
 
     private static final String TAG = "ImageLabeling";
 
     public static String sendREST(String serverUrl, String jsonPostString) throws IllegalStateException{
-        String inputLine = null;
+        String inputLine;
         StringBuffer stringBuffer = new StringBuffer();
 
         try{
@@ -33,8 +38,8 @@ public class ImageLabeling {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept-Charset", "UTF-8");
-            connection.setConnectTimeout(15000);
-            connection.setReadTimeout(15000);
+            connection.setConnectTimeout(NETWORK_TIMEOUT);
+            connection.setReadTimeout(NETWORK_TIMEOUT);
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(jsonPostString.getBytes("UTF-8"));
@@ -85,7 +90,7 @@ public class ImageLabeling {
     }
 
 
-    public static class HandleResultsAsync extends AsyncTask<String, Void, ArrayList<String>>{
+    private static class HandleResultsAsync extends AsyncTask<String, Void, ArrayList<String>>{
         private WWFArticle wwfArticle;
         private ArrayList<String> listOfImageLabelResults = new ArrayList<>();
 
@@ -100,21 +105,22 @@ public class ImageLabeling {
             try {
                 jsonObject = new JSONObject(strings[0]);
 
-                JSONObject jsonObject1 = jsonObject.getJSONObject("results");
-
-                while(jsonObject1.keys().hasNext()){
-                    String currentDynamicKey = jsonObject1.keys().next();
-                    JSONArray currentJsonArray =  jsonObject1.getJSONArray(currentDynamicKey);
+                JSONObject labelResultJsonObj = jsonObject.getJSONObject(RESULTS);
+                if(listOfImageLabelResults != null){
+                    listOfImageLabelResults.clear();
+                }
+                while(labelResultJsonObj.keys().hasNext()){
+                    String currentDynamicKey = labelResultJsonObj.keys().next();
+                    JSONArray currentJsonArray =  labelResultJsonObj.getJSONArray(currentDynamicKey);
                     for(int i = 0; i < currentJsonArray.length(); i++){
-                        JSONObject jsonObject2 = (JSONObject) currentJsonArray.get(i);
-                        Double score = jsonObject2.getDouble("score");
-                        String description = jsonObject2.getString("description");
+                        JSONObject labelInfoJsonObj = (JSONObject) currentJsonArray.get(i);
+                        Double score = labelInfoJsonObj.getDouble(SCORE);
+                        String description = labelInfoJsonObj.getString(DESCRIPTION);
                         if(score > 0.8){
                             listOfImageLabelResults.add(description);
                         }
                     }
                 }
-                wwfArticle.setImageLabelResponse(listOfImageLabelResults);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -128,6 +134,7 @@ public class ImageLabeling {
             wwfArticle.setImageLabelResponse(stringArrayList);
         }
      }
+
     }
 
 

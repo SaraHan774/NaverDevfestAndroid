@@ -103,7 +103,7 @@ public class StringUtils{
     }
 
 
-    public static void wwfExtractImageTags
+    public static void wwfExtractImageData
             (WWFArticle wwfArticle, com.gahee.rss_v2.data.wwf.tags.Item item){
         List<String> mediaLinks = new ArrayList<>();
         Document document = Jsoup.parse(item.getContentEncoded());
@@ -118,6 +118,7 @@ public class StringUtils{
         //send image labeling request
         String jsonPostString = StringUtils.buildPOSTRequestJSONFromArrayList((ArrayList<String>) mediaLinks);
         ImageLabeling.generateImageLabelsFromServer(IMAGE_LABELING_SERVER_URL, jsonPostString, wwfArticle);
+
         wwfArticle.setExtractedMediaLinks(mediaLinks);
     }
 

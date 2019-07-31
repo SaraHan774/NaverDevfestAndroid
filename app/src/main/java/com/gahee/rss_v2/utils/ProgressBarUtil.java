@@ -11,11 +11,6 @@ public class ProgressBarUtil{
     private int progress = 0;
     private final Handler handler = new Handler();
     private ProgressBar [] progressBars;
-    //프로그레스 바 6개가 있다 -> 6 개의 어레이를 넘겨준다.
-    //어댑터에서 프로그레스바의 상태를 업데이트 한다
-    //어댑터의 포지션을 넘겨준다 -> 6으로 나눈 나머지를 프로그래스바의 인덱스로 정한다
-    //프로그래스 바의 인덱스가 들어가면 0 ~ 5 사이의 숫자를 넘겨 받았을 때
-    // x 이하의 프로그래스바는 set progress 를 하고 x 초과 인덱스에 대해서는 set 0 를 한다
 
     private void mSetProgressBarProgress(ProgressBar progressBar){
         progress = progressBar.getProgress();

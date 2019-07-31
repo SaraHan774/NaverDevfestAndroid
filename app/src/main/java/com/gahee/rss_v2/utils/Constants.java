@@ -4,9 +4,8 @@ public class Constants {
 
     public static final String REUTERS_BASE_URL = "http://feeds.reuters.com/reuters/";
     public static final String WWF_BASE_URL = "http://feeds.feedburner.com/";
-    public static final String YOUTUBE_BASE_URL = "http://www.youtube.com/feeds/";
     public static final String TIME_BASE_URL = "http://feeds2.feedburner.com/";
-    public static final int NETWORK_TIMEOUT = 10000;
+    public static final int NETWORK_TIMEOUT = 15000;
 
     public static final String IMAGE_LABELING_SERVER_URL = "http://ec2-54-146-136-82.compute-1.amazonaws.com:8000/imageLabel";
 
@@ -30,5 +29,7 @@ public class Constants {
 
     public static final String YOUTUBE_WATCH_BASE_URL = "http://www.youtube.com/watch?v=";
 
-
+    public static final String RESULTS = "results";
+    public static final String SCORE = "score";
+    public static final String DESCRIPTION = "description";
 }

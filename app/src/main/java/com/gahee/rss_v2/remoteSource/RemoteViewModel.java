@@ -3,8 +3,8 @@ package com.gahee.rss_v2.remoteSource;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gahee.rss_v2.data.reuters.model.ArticleObj;
-import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.model.ArticleReuters;
+import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
@@ -20,27 +20,27 @@ public class RemoteViewModel extends ViewModel {
         mRemoteRepository = RemoteRepository.getInstance();
     }
 
-    public MutableLiveData<ArrayList<ChannelObj>> getChannelMutableLiveData(){
+    public MutableLiveData<ArrayList<ChannelReuters>> getChannelMutableLiveData(){
         return mRemoteRepository.getReutersChannelMutableLiveData();
     }
 
-    public MutableLiveData<ArrayList<ArticleObj>> getArticleMutableLiveData(){
+    public MutableLiveData<ArrayList<ArticleReuters>> getArticleMutableLiveData(){
         return mRemoteRepository.getReutersArticleMutableLiveData();
     }
 
-    public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelLiveData(){
+    public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelMutableLiveData(){
         return mRemoteRepository.getTimeChannelLiveData();
     }
 
-    public MutableLiveData<ArrayList<TimeArticle>> getTimeArticleLiveData(){
+    public MutableLiveData<ArrayList<TimeArticle>> getTimeArticleMutableLiveData(){
         return mRemoteRepository.getTimeArticleLiveData();
     }
 
-    public MutableLiveData<ArrayList<WWFArticle>> getWwfArticleLiveData(){
+    public MutableLiveData<ArrayList<WWFArticle>> getWwfArticleMutableLiveData(){
         return mRemoteRepository.getWwfArticleLiveData();
     }
 
-    public MutableLiveData<ArrayList<WWFChannel>> getWwfChannelLiveData(){
+    public MutableLiveData<ArrayList<WWFChannel>> getWwfChannelMutableLiveData(){
         return mRemoteRepository.getWwfChannelLiveData();
     }
 
@@ -51,5 +51,11 @@ public class RemoteViewModel extends ViewModel {
     public void fetchTimeDataFromRepo(){mRemoteRepository.fetchTimeData();}
 
     public void fetchWWFDataFromRepo(){mRemoteRepository.fetchWWFData();}
+
+    public void cancelAsyncReuters(){mRemoteRepository.cancelReutersAsync();}
+
+    public void cancelAsyncWWF(){mRemoteRepository.cancelWWFAsync();}
+
+    public void cancelAsyncTIME(){mRemoteRepository.cancelTIMEAsync();}
 
 }

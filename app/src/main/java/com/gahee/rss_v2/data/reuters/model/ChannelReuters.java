@@ -7,21 +7,21 @@ import com.gahee.rss_v2.data.reuters.tags.Item;
 
 import java.util.ArrayList;
 
-public class ChannelObj implements Parcelable {
+public class ChannelReuters implements Parcelable {
 
     private final String mChannelTitle;
     private final String mChannelDescription;
     private final String mChannelLink;
     private final ArrayList<Item> mItemList;
 
-    public ChannelObj(String mChannelTitle, String mChannelDescription, String mChannelLink, ArrayList<Item> mItemList) {
+    public ChannelReuters(String mChannelTitle, String mChannelDescription, String mChannelLink, ArrayList<Item> mItemList) {
         this.mChannelTitle = mChannelTitle;
         this.mChannelDescription = mChannelDescription;
         this.mChannelLink = mChannelLink;
         this.mItemList = mItemList;
     }
 
-    private ChannelObj(Parcel in) {
+    private ChannelReuters(Parcel in) {
         mChannelTitle = in.readString();
         mChannelDescription = in.readString();
         mChannelLink = in.readString();
@@ -41,15 +41,15 @@ public class ChannelObj implements Parcelable {
         return 0;
     }
 
-    public static final Creator<ChannelObj> CREATOR = new Creator<ChannelObj>() {
+    public static final Creator<ChannelReuters> CREATOR = new Creator<ChannelReuters>() {
         @Override
-        public ChannelObj createFromParcel(Parcel in) {
-            return new ChannelObj(in);
+        public ChannelReuters createFromParcel(Parcel in) {
+            return new ChannelReuters(in);
         }
 
         @Override
-        public ChannelObj[] newArray(int size) {
-            return new ChannelObj[size];
+        public ChannelReuters[] newArray(int size) {
+            return new ChannelReuters[size];
         }
     };
 

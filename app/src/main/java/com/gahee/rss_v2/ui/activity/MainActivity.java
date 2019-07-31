@@ -2,10 +2,10 @@ package com.gahee.rss_v2.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -17,10 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gahee.rss_v2.R;
-import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.model.ArticleReuters;
+import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
 import com.gahee.rss_v2.data.reuters.tags.Item;
+import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
-import com.gahee.rss_v2.data.wwf.model.WWFChannel;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
 import com.gahee.rss_v2.ui.pagerAdapters.ReutersPagerAdapter;
 import com.gahee.rss_v2.ui.pagerAdapters.WwfPagerAdapter;
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             setUpReutersSliderTimer(reutersChannel);
         });
 
-        remoteViewModel.getWwfArticleLiveData().observe(this, wwfArticles -> {
+        remoteViewModel.getWwfArticleMutableLiveData().observe(this, wwfArticles -> {
             viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
             WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
             viewPagerWWF.setAdapter(pagerAdapter);
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        remoteViewModel.getWwfChannelLiveData().observe(this, wwfChannels -> {
+        remoteViewModel.getWwfChannelMutableLiveData().observe(this, wwfChannels -> {
             TextView textView = findViewById(R.id.wwf_channel_title);
             textView.setText(wwfChannels.get(0).getTitle());
         });
@@ -172,7 +173,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //list to store search results
-    private final ArrayList searchResultList = new ArrayList();
+    private final ArrayList<ArticleReuters> searchResultListReuters = new ArrayList();
+    private final ArrayList<WWFArticle> searchResultListWWF = new ArrayList();
+    private final ArrayList<TimeArticle> searchResultListTIME = new ArrayList();
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,20 +186,17 @@ public class MainActivity extends AppCompatActivity {
         searchView.setFocusable(false);
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //make an array list to store search results
-                if(searchResultList != null){
-                    Log.d(TAG, "search list cleared ");
-                    searchResultList.clear();
-                }
-                if(searchResultList == null){
-                    //check through all the articles
 
+                searchThroughReutersArticles(query);
+                searchThroughWWFArticles(query);
+                searchThroughWWFArticles(query);
 
-
-                }else{
-
+                if((searchResultListReuters != null ||
+                        searchResultListWWF != null ||
+                        searchResultListTIME != null)){
                     return true;
                 }
                 return false;
@@ -210,6 +211,73 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+
+    private void searchThroughReutersArticles(String query){
+        ArrayList<ArticleReuters> articleReutersArrayList
+                = remoteViewModel.getArticleMutableLiveData().getValue();
+        if(searchResultListReuters != null){
+            searchResultListReuters.clear();
+        }
+        int listSize = articleReutersArrayList.size();
+
+        for(int i = 0; i < listSize; i++){
+            String articleTitle = articleReutersArrayList.get(i).getmArticleTitle();
+            String articleDescription = articleReutersArrayList.get(i).getmArticleDescription();
+
+            if(articleTitle.contains(query) || articleDescription.contains(query)){
+                searchResultListReuters.add(articleReutersArrayList.get(i));
+            }
+        }
+    }
+
+    private void searchThroughWWFArticles(String query){
+        ArrayList<WWFArticle> wwfArticleArrayList
+                = remoteViewModel.getWwfArticleMutableLiveData().getValue();
+        if(searchResultListWWF != null){
+            searchResultListWWF.clear();
+        }
+        int listSize = wwfArticleArrayList.size();
+        for(int i = 0; i < listSize; i++){
+            String articleTitle = wwfArticleArrayList.get(i).getTitle();
+            String articleDescription = wwfArticleArrayList.get(i).getDescription();
+            ArrayList<String> imageLabels = wwfArticleArrayList.get(i).getImageLabelResponse();
+            boolean isImageFound = searchThroughImageLabels(query, imageLabels);
+
+            if(articleTitle.toLowerCase().contains(query.toLowerCase()) ||
+                    articleDescription.toLowerCase().contains(query.toLowerCase()) ||
+                        isImageFound){
+                searchResultListWWF.add(wwfArticleArrayList.get(i));
+            }
+        }
+
+    }
+
+    private boolean searchThroughImageLabels(String query, ArrayList<String> imageLabels){
+        for (String imageLabel : imageLabels){
+            if(imageLabel.toLowerCase().contains(query.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void searchThroughTIMEArticles(String query){
+        ArrayList<TimeArticle> timeArticleArrayList
+                = remoteViewModel.getTimeArticleMutableLiveData().getValue();
+        int listSize = timeArticleArrayList.size();
+        for(int i = 0; i < listSize; i++){
+            String articleTitle = timeArticleArrayList.get(i).getmArticletitle();
+            String articleDescription = timeArticleArrayList.get(i).getmArticleDescription();
+            String articleContent = Html.fromHtml(timeArticleArrayList.get(i).getmContentEncoded()).toString();
+            if(articleTitle.toLowerCase().contains(query.toLowerCase()) ||
+            articleDescription.toLowerCase().contains(query.toLowerCase()) ||
+            articleContent.toLowerCase().contains(query.toLowerCase())){
+                searchResultListTIME.add(timeArticleArrayList.get(i));
+            }
+        }
+    }
+
 
     /*
     *  ViewPager Listeners
@@ -346,8 +414,8 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Timers for each ViewPager
      */
-    private void setUpReutersSliderTimer(ArrayList<ChannelObj> channelObjs){
-        MyTimers myTimersReuters = new MyTimers(channelObjs.get(0).getmItemList().size());
+    private void setUpReutersSliderTimer(ArrayList<ChannelReuters> channelReuters){
+        MyTimers myTimersReuters = new MyTimers(channelReuters.get(0).getmItemList().size());
         Timer timerReuters = new Timer();
 
         MyTimers.SliderTimer reutersSliderTimer
@@ -472,6 +540,9 @@ public class MainActivity extends AppCompatActivity {
         if(Util.SDK_INT > 23 || simpleExoPlayer != null){
             releasePlayer();
         }
+        remoteViewModel.cancelAsyncReuters();
+        remoteViewModel.cancelAsyncWWF();
+        remoteViewModel.cancelAsyncTIME();
     }
 
     private void releasePlayer(){

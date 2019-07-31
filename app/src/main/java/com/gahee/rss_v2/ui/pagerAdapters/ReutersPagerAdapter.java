@@ -1,8 +1,6 @@
 package com.gahee.rss_v2.ui.pagerAdapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +16,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.gahee.rss_v2.utils.StringUtils;
 import com.gahee.rss_v2.R;
-import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
 import com.gahee.rss_v2.data.reuters.tags.Item;
 import com.gahee.rss_v2.utils.ProgressBarUtil;
 
@@ -29,16 +27,16 @@ public class ReutersPagerAdapter extends PagerAdapter {
     private static final String TAG = "ReutersPagerAdapter";
 
     private final Context mContext;
-    private final ChannelObj mChannelObj;
+    private final ChannelReuters mChannelReuters;
     private boolean isFirstInstantiation = false;
     private final Bundle bundle = new Bundle();
     private ProgressBarUtil progressBarUtil;
 
 
-    public ReutersPagerAdapter(Context context, ChannelObj channelObjs){
+    public ReutersPagerAdapter(Context context, ChannelReuters channelObjs){
         Log.d(TAG, "feed pager adapter instantiating ... ");
         mContext = context;
-        mChannelObj = channelObjs;
+        mChannelReuters = channelObjs;
     }
 
     private void saveInstantiationStatus(boolean isFirstInstantiation){
@@ -48,7 +46,7 @@ public class ReutersPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return mChannelObj.getmItemList() != null ? mChannelObj.getmItemList().size() : 0;
+        return mChannelReuters.getmItemList() != null ? mChannelReuters.getmItemList().size() : 0;
     }
 
     @Override
@@ -64,7 +62,7 @@ public class ReutersPagerAdapter extends PagerAdapter {
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.main_reuters_slider, container, false);
 
-        final Item item = mChannelObj.getmItemList().get(position);
+        final Item item = mChannelReuters.getmItemList().get(position);
 
 
         TextView title = view.findViewById(R.id.tv_reuters_outer_title);
@@ -89,7 +87,7 @@ public class ReutersPagerAdapter extends PagerAdapter {
 //            @Override
 //            public void onClick(View view) {
 //                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setData(Uri.parse(mChannelObj.getmItemList().get(position).getLink()));
+//                intent.setData(Uri.parse(mChannelReuters.getmItemList().get(position).getLink()));
 //                mContext.startActivity(intent);
 //            }
 //        });

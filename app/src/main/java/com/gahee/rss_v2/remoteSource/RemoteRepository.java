@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.gahee.rss_v2.data.reuters.model.ArticleObj;
-import com.gahee.rss_v2.data.reuters.model.ChannelObj;
+import com.gahee.rss_v2.data.reuters.model.ArticleReuters;
+import com.gahee.rss_v2.data.reuters.model.ChannelReuters;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
 import com.gahee.rss_v2.data.time.model.TimeChannel;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
@@ -30,6 +30,9 @@ public class RemoteRepository {
     }
 
     private AsyncTask<Void, Void, Void> fetchReutersDataAsync;
+    private AsyncTask<Void, Void, Void> fetchWWFDataAsync;
+    private AsyncTask<Void, Void, Void> fetchTIMEDataAsync;
+
 
     public void fetchReutersData(){
         fetchReutersDataAsync = new FetchReutersDataAsync(mRssClient).execute();
@@ -44,18 +47,34 @@ public class RemoteRepository {
         fetchReutersDataAsync = null;
     }
 
+    public void cancelWWFAsync(){
+        if (fetchWWFDataAsync.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchWWFDataAsync.cancel(true);
+        }
+        fetchWWFDataAsync = null;
+    }
+
+    public void cancelTIMEAsync(){
+        if (fetchTIMEDataAsync.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchTIMEDataAsync.cancel(true);
+        }
+        fetchTIMEDataAsync = null;
+    }
 
 
-    public MutableLiveData<ArrayList<ChannelObj>> getReutersChannelMutableLiveData(){
+
+    public MutableLiveData<ArrayList<ChannelReuters>> getReutersChannelMutableLiveData(){
         return mRssClient.getmChannelMutableLiveData();
     }
 
-    public MutableLiveData<ArrayList<ArticleObj>> getReutersArticleMutableLiveData(){
+    public MutableLiveData<ArrayList<ArticleReuters>> getReutersArticleMutableLiveData(){
         return mRssClient.getmArticleMutableLiveData();
     }
 
     //Time news
-    public void fetchTimeData(){new FetchTimeDataAsync(mRssClient).execute();}
+    public void fetchTimeData(){
+        fetchTIMEDataAsync = new FetchTimeDataAsync(mRssClient).execute();
+    }
     public MutableLiveData<ArrayList<TimeChannel>> getTimeChannelLiveData(){
         return mRssClient.getmTimeChannelLiveData();
     }
@@ -65,7 +84,9 @@ public class RemoteRepository {
     }
 
     //WWF articles
-    public void fetchWWFData(){new FetchWWFDataAsync(mRssClient).execute();}
+    public void fetchWWFData(){
+        fetchWWFDataAsync = new FetchWWFDataAsync(mRssClient).execute();
+    }
     public MutableLiveData<ArrayList<WWFChannel>> getWwfChannelLiveData(){
         return  mRssClient.getmWwfChannelLiveData();
     }

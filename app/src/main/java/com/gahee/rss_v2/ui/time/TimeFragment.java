@@ -71,11 +71,11 @@ public class TimeFragment extends Fragment {
         View fragmentView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_time, container, false);
         textView = fragmentView.findViewById(R.id.time_channel_title);
 
-        remoteViewModel.getTimeChannelLiveData().observe(this, timeChannels -> {
+        remoteViewModel.getTimeChannelMutableLiveData().observe(this, timeChannels -> {
             textView.setText(timeChannels.get(0).getmChannelTitle());
         });
 
-        remoteViewModel.getTimeArticleLiveData().observe(this, timeArticles -> {
+        remoteViewModel.getTimeArticleMutableLiveData().observe(this, timeArticles -> {
 
             //fragmentView pager that displays text
             viewPagerTime = fragmentView.findViewById(R.id.view_pager_time_outer);
