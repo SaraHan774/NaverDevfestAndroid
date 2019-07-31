@@ -111,11 +111,9 @@ public class TimeInnerPagerAdapter extends PagerAdapter {
 
                 ImageButton imageButton = view.findViewById(R.id.custom_fab_play_youtube);
                 imageButton.setVisibility(View.VISIBLE);
-
-                imageButton.setOnClickListener(view1 -> {
-                    watchYoutubeVideo(context, timeArticles.getmYoutubeLinkIds().get(position - imageLength));
-                    Log.d("FAB", "instantiateItem: button clicked ");
-                });
+                //image button is visible but user has to click on the view itself to get onClick event.
+                view.setOnClickListener(view1 ->
+                        watchYoutubeVideo(context, timeArticles.getmYoutubeLinkIds().get(position - imageLength)));
 
                 textView.setPadding(0, 0, 0, 0);
             }

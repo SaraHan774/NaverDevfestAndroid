@@ -95,6 +95,10 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBarUtil wwfProgress;
     private RemoteViewModel remoteViewModel;
 
+    private TextView tv_reuters_search_result;
+    private TextView tv_wwf_search_result;
+    private TextView tv_time_search_result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: ");
 
         findProgressBarsById();
+        tv_reuters_search_result = findViewById(R.id.search_result_reuters);
+        tv_wwf_search_result = findViewById(R.id.search_result_wwf);
+        tv_time_search_result = findViewById(R.id.search_result_time);
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -193,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         final SearchView searchView = (SearchView) menu.findItem(R.id.news_search_icon).getActionView();
 
+
         searchView.setFocusable(false);
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -207,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                 searchThroughTIMEArticles(query);
 
 
+
                 StringBuffer stringBuffer = new StringBuffer();
 
                 if((searchResultListReuters != null && searchResultListReuters.size() != 0 ||
@@ -215,22 +226,24 @@ public class MainActivity extends AppCompatActivity {
                     if(stringBuffer.length() != 0){
                         stringBuffer.setLength(0);
                     }
-
+                    setSearchResultStringVisibility(View.VISIBLE);
                     if(searchResultListReuters != null && searchResultListReuters.size() != 0) {
                         remoteViewModel.getReutersArticleMutableLiveData().setValue(searchResultListReuters);
                     }
                     stringBuffer.append("REUTERS : found " + searchResultListReuters.size() + " results\n");
+                    tv_reuters_search_result.setText(getString(R.string.search_results) + String.valueOf(searchResultListReuters.size()));
 
 
-                    if(searchResultListWWF != null || searchResultListWWF.size() != 0){
-                        Log.d("FFF", "onQueryTextSubmit: " + searchResultListWWF.size());
+                    if(searchResultListWWF != null && searchResultListWWF.size() != 0){
                         remoteViewModel.getWwfArticleMutableLiveData().setValue(searchResultListWWF);
                     }
                     stringBuffer.append("WWF : found " + searchResultListWWF.size() + " results\n");
+                    tv_wwf_search_result.setText(getString(R.string.search_results) + String.valueOf(searchResultListWWF.size()));
 
                     if(searchResultListTIME != null && searchResultListTIME.size() != 0) {
                         remoteViewModel.getTimeArticleMutableLiveData().setValue(searchResultListTIME);
                     }
+                    tv_time_search_result.setText(getString(R.string.search_results) + String.valueOf(searchResultListTIME.size()));
                     stringBuffer.append("TIME : found " + searchResultListTIME.size() + " results\n");
 
                     Toast.makeText(MainActivity.this, stringBuffer.toString(), Toast.LENGTH_SHORT).show();
@@ -261,9 +274,26 @@ public class MainActivity extends AppCompatActivity {
                     remoteViewModel.fetchWWFDataFromRepo();
                 }
                 Toast.makeText(MainActivity.this, "Search Finished", Toast.LENGTH_SHORT).show();
+
+                setSearchResultStringVisibility(View.INVISIBLE);
+
                 searchView.setIconified(true);
             }
         });
+    }
+
+    private void setSearchResultStringVisibility(int visibility){
+        switch (visibility){
+            case View.VISIBLE:
+                tv_reuters_search_result.setVisibility(View.VISIBLE);
+                tv_wwf_search_result.setVisibility(View.VISIBLE);
+                tv_time_search_result.setVisibility(View.VISIBLE);
+                break;
+            case View.INVISIBLE:
+                tv_reuters_search_result.setVisibility(View.INVISIBLE);
+                tv_wwf_search_result.setVisibility(View.INVISIBLE);
+                tv_time_search_result.setVisibility(View.INVISIBLE);
+        }
     }
 
 

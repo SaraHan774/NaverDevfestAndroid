@@ -10,21 +10,41 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/search_result_time"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintBottom_toTopOf="@+id/card_view_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.14" />
+
+
+    <TextView
         android:id="@+id/time_channel_title"
-        android:paddingStart="@dimen/view_margin_min"
-        android:paddingEnd="@dimen/view_margin_min"
-        android:background="@color/colorTransparentBlack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/view_margin_min"
-        android:layout_marginTop="@dimen/view_margin_1x"
         android:layout_marginEnd="@dimen/view_margin_min"
+        android:background="@color/colorTransparentBlack"
+        android:paddingStart="@dimen/view_margin_min"
+        android:paddingEnd="@dimen/view_margin_min"
+        android:textColor="@color/colorWhite"
         android:textSize="@dimen/text_size_large"
         android:textStyle="italic|bold"
-        android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager_time_inner"

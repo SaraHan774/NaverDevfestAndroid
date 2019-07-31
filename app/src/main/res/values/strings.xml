@@ -20,5 +20,6 @@
     <string name="search_time">TIME</string>
     <string name="search_wwf">WWF</string>
     <string name="search_contains">contains search results</string>
+    <string name="search_results">SEARCH RESULTS\t:\t\t</string>
 
 </resources>
