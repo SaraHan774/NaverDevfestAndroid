@@ -211,8 +211,6 @@ public class MainActivity extends AppCompatActivity {
                 searchThroughWWFArticles(query);
                 searchThroughTIMEArticles(query);
 
-
-
                 StringBuilder stringBuilder = new StringBuilder();
 
                 if((searchResultListReuters.size() != 0 ||
@@ -244,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                     return true;
                 }
+                Toast.makeText(MainActivity.this, getString(R.string.no_result), Toast.LENGTH_SHORT).show();
                 return false;
             }
 

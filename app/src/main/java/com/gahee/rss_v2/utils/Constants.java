@@ -24,7 +24,7 @@ public class Constants {
 
 
     public static final int REUTERS_SLIDER_TIME_INTERVAL = 15000;
-    public static final int WWF_SLIDER_TIME_INTERVAL = 16000;
+    public static final int WWF_SLIDER_TIME_INTERVAL = 12000;
     public static final int TIME_INNER_SLIDER_TIME_INTERVAL = 3500;
 
     public static final String YOUTUBE_WATCH_BASE_URL = "http://www.youtube.com/watch?v=";

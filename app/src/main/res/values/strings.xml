@@ -28,5 +28,6 @@
     <string name="found_wwf">WWF : found</string>
     <string name="found_time">TIME : found</string>
     <string name="search_finished">Search Finished</string>
+    <string name="no_result">NO RESULT !</string>
 
 </resources>

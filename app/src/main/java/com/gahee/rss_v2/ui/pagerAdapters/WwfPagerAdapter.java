@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.gahee.rss_v2.ui.activity.MainActivity;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.wwf.model.WWFArticle;
-import com.gahee.rss_v2.utils.MyAnimationUtils;
 import com.gahee.rss_v2.utils.StringUtils;
 
 
@@ -105,7 +104,7 @@ public class WwfPagerAdapter extends PagerAdapter {
 
         if(article.getExtractedMediaLinks().size() > 0){
             Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new ImageSliderTimer(article.getExtractedMediaLinks(), imageSwitcher), 0, 4000);
+            timer.scheduleAtFixedRate(new ImageSliderTimer(article.getExtractedMediaLinks(), imageSwitcher), 0, 3000);
         }
 
 
@@ -131,7 +130,7 @@ public class WwfPagerAdapter extends PagerAdapter {
 
                         if(index < imageLinks.size()){
                             Glide.with(mContext).load(imageLinks.get(index++))
-                                    .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
+                                    .transition(GenericTransitionOptions.with(R.anim.grow))
                                     .placeholder(R.drawable.scrim_gradient_up_and_down)
                                     .error(R.drawable.scrim_gradient_up_and_down)
                                     .into((ImageView) imageSwitcher.getCurrentView());
@@ -139,9 +138,9 @@ public class WwfPagerAdapter extends PagerAdapter {
                         }else{
                             index = 0;
                             Glide.with(mContext).load(imageLinks.get(index++))
-                                    .transition(GenericTransitionOptions.with(MyAnimationUtils.setRandomGrowAnimation()))
-                                    .placeholder(R.drawable.wwf_logo)
-                                    .error(R.drawable.wwf_logo)
+                                    .transition(GenericTransitionOptions.with(R.anim.grow))
+                                    .placeholder(R.drawable.scrim_gradient_up_and_down)
+                                    .error(R.drawable.scrim_gradient_up_and_down)
                                     .into((ImageView) imageSwitcher.getCurrentView());
 
                         }

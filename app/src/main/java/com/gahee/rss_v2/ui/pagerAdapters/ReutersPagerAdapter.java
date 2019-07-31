@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.gahee.rss_v2.data.reuters.model.ArticleReuters;
@@ -44,10 +46,6 @@ public class ReutersPagerAdapter extends PagerAdapter {
         mArticleReuters = articleReuters;
     }
 
-    private void saveInstantiationStatus(boolean isFirstInstantiation){
-        this.isFirstInstantiation = isFirstInstantiation;
-        bundle.putBoolean("key", isFirstInstantiation);
-    }
 
     @Override
     public int getCount() {
@@ -62,9 +60,6 @@ public class ReutersPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        if(position == 0 && !isFirstInstantiation){
-            saveInstantiationStatus(true);
-        }
         View view = LayoutInflater.from(mContext).inflate(R.layout.main_reuters_slider, container, false);
 
         final ArticleReuters articleReuters = mArticleReuters.get(position);
@@ -91,16 +86,16 @@ public class ReutersPagerAdapter extends PagerAdapter {
         FrameLayout frameLayout = view.findViewById(R.id.reuters_outer_slider_container);
         frameLayout.setTag(TAG_REUTERS_FRAME + position);
 
-        PlayerView playerView = view.findViewById(R.id.reuters_outer_video_player);
-
-        playerView.setOnClickListener(parentView -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(articleReuters.getmArticleLink()));
-            mContext.startActivity(intent);
+        LinearLayout linearLayout = ((AppCompatActivity)mContext).findViewById(R.id.place_holder_slider_progress);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(articleReuters.getmArticleLink()));
+                mContext.startActivity(intent);
+            }
         });
 
-
-        if(bundle.getBoolean("key")) {
             Animation fadeOut = AnimationUtils.loadAnimation(mContext, R.anim.description_fade_out);
             description.startAnimation(fadeOut);
             Animation slideToRight = AnimationUtils.loadAnimation(mContext, R.anim.title_slide_to_left);
@@ -135,7 +130,6 @@ public class ReutersPagerAdapter extends PagerAdapter {
                 @Override
                 public void onAnimationRepeat(Animation animation) { }
             });
-        }
         container.addView(view);
         return view;
     }
