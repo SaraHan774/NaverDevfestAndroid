@@ -1,4 +1,4 @@
-package com.gahee.rss_v2.ui;
+package com.gahee.rss_v2.ui.time;
 
 import android.util.Log;
 

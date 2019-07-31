@@ -3,15 +3,21 @@ package com.gahee.rss_v2.remoteSource.imageLabel;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
+import com.gahee.rss_v2.data.wwf.model.WWFArticle;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class ImageLabeling {
+
     private static final String TAG = "ImageLabeling";
 
     public static String sendREST(String serverUrl, String jsonPostString) throws IllegalStateException{
@@ -27,8 +33,8 @@ public class ImageLabeling {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept-Charset", "UTF-8");
-            connection.setConnectTimeout(10000);
-            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
 
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(jsonPostString.getBytes("UTF-8"));
@@ -47,33 +53,81 @@ public class ImageLabeling {
             Log.d(TAG, "sendREST: error " + e.getMessage());
             e.printStackTrace();
         }
-        Log.d(TAG, "sendREST: " + stringBuffer.toString());
         return stringBuffer.toString();
     }
 
-    //async task loader -> on load finished
-
-    private static class MyAsync extends AsyncTask<Void, Void, String>{
+    private static class ImageLabelAsync extends AsyncTask<Void, Void, String> {
         private String serverUrl;
         private String jsonPostString;
+        private WWFArticle wwfArticle;
 
-        public MyAsync(String serverUrl, String jsonPostString){
+        public ImageLabelAsync(String serverUrl, String jsonPostString, WWFArticle wwfArticle) {
             this.serverUrl = serverUrl;
             this.jsonPostString = jsonPostString;
+            this.wwfArticle = wwfArticle;
         }
+
         @Override
         protected String doInBackground(Void... voids) {
-            sendREST(serverUrl, jsonPostString);
+            return sendREST(serverUrl, jsonPostString);
+        }
+
+        @Override
+        protected void onPostExecute(String responseFromServer) {
+            new HandleResultsAsync(wwfArticle).execute(responseFromServer);
+        }
+
+    }
+
+    public static AsyncTask<Void, Void, String> generateImageLabelsFromServer(String serverUrl, String jsonPostString, WWFArticle wwfArticle){
+        ImageLabelAsync imageLabelAsync = new ImageLabelAsync(serverUrl, jsonPostString, wwfArticle);
+        return imageLabelAsync.execute();
+    }
+
+
+    public static class HandleResultsAsync extends AsyncTask<String, Void, ArrayList<String>>{
+        private WWFArticle wwfArticle;
+        private ArrayList<String> listOfImageLabelResults = new ArrayList<>();
+
+        public HandleResultsAsync(WWFArticle wwfArticle){
+            this.wwfArticle = wwfArticle;
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... strings) {
+
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+
+                JSONObject jsonObject1 = jsonObject.getJSONObject("results");
+
+                while(jsonObject1.keys().hasNext()){
+                    String currentDynamicKey = jsonObject1.keys().next();
+                    JSONArray currentJsonArray =  jsonObject1.getJSONArray(currentDynamicKey);
+                    for(int i = 0; i < currentJsonArray.length(); i++){
+                        JSONObject jsonObject2 = (JSONObject) currentJsonArray.get(i);
+                        Double score = jsonObject2.getDouble("score");
+                        String description = jsonObject2.getString("description");
+                        if(score > 0.8){
+                            listOfImageLabelResults.add(description);
+                        }
+                    }
+                }
+                wwfArticle.setImageLabelResponse(listOfImageLabelResults);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
             return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(ArrayList<String> stringArrayList) {
+            wwfArticle.setImageLabelResponse(stringArrayList);
         }
+     }
     }
 
-    public static String doBackgroundWork(String first, String second){
-        return String.valueOf(new MyAsync(first, second).execute());
-    }
 
-}

@@ -3,6 +3,7 @@ package com.gahee.rss_v2.data.wwf.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WWFArticle implements Parcelable {
@@ -13,6 +14,7 @@ public class WWFArticle implements Parcelable {
     private final String description;
     private final String contentEncoded;
     private List<String> extractedMediaLinks;
+    private ArrayList<String> imageLabelResponse;
 
     public WWFArticle(String title, String guid, String pubDate, String description, String contentEncoded) {
         this.title = title;
@@ -80,5 +82,13 @@ public class WWFArticle implements Parcelable {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setImageLabelResponse(ArrayList<String> imageLabelResponse) {
+        this.imageLabelResponse = imageLabelResponse;
+    }
+
+    public ArrayList<String> getImageLabelResponse() {
+        return imageLabelResponse;
     }
 }

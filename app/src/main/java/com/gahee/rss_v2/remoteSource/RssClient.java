@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gahee.rss_v2.data.time.tags.Content;
+import com.gahee.rss_v2.remoteSource.imageLabel.ImageLabeling;
 import com.gahee.rss_v2.utils.StringUtils;
 import com.gahee.rss_v2.data.reuters.ReutersAPI;
 import com.gahee.rss_v2.data.reuters.model.ArticleObj;
@@ -28,7 +29,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RssClient {
+import static com.gahee.rss_v2.utils.Constants.IMAGE_LABELING_SERVER_URL;
+
+public class RssClient{
 
     private static final String TAG = "RssClient";
 
@@ -213,18 +216,7 @@ public class RssClient {
                 com.gahee.rss_v2.data.time.tags.Item.Thumbnail thumbnail = item.getThumbnail();
                 String contentEncoded = item.getContentEncoded();
                 String articleLink = item.getArticleLink();
-
                 List<Content> content = item.getContent();
-
-//                Log.d(TAG,  articleTitle + "\n" + articlePubDate +"\n" + articleDescription + "\n" + thumbnail
-//                + "\n" + articleLink + "\n\n");
-
-                for(int j = 0; j < content.size(); j++){
-                    Log.d("TIMEARTICLE", "content : " + content.get(j).getTitle() + "\n"
-                     + "content link : " + content.get(j).getUrl() + "\n"
-                    + "content text : " + contentEncoded + "\n"
-                    + "==========================================");
-                }
 
                 TimeArticle timeArticle = new TimeArticle(articleTitle, articlePubDate, articleDescription, thumbnail, content,contentEncoded,articleLink);
                 StringUtils.extractYoutubeIdFromArticle(item, timeArticle);

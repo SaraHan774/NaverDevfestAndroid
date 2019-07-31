@@ -50,16 +50,6 @@ dependencies {
     //jsoup
     implementation 'org.jsoup:jsoup:1.12.1'
 
-    //youtube
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    implementation 'pub.devrel:easypermissions:0.3.0'
-    implementation('com.google.api-client:google-api-client-android:1.25.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
-    implementation('com.google.apis:google-api-services-youtube:v3-rev212-1.25.0') {
-        exclude group: 'org.apache.httpcomponents'
-    }
-
     //simpleExoPlayer
     implementation 'com.google.android.exoplayer:exoplayer-core:2.10.0'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.0'

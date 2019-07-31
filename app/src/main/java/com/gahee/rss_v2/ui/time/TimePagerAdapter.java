@@ -17,7 +17,6 @@ import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.data.time.model.TimeArticle;
-import com.gahee.rss_v2.ui.TimeArticleViewModel;
 import com.gahee.rss_v2.utils.StringUtils;
 
 import java.util.ArrayList;

@@ -42,7 +42,6 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -99,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         Log.d(TAG, "onCreate: ");
 
         findProgressBarsById();
@@ -149,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         remoteViewModel.getWwfArticleLiveData().observe(this, wwfArticles -> {
-//            this.wwfItemList = wwfArticles;
             viewPagerWWF = findViewById(R.id.view_pager_wwf_outer);
             WwfPagerAdapter pagerAdapter = new WwfPagerAdapter(MainActivity.this, wwfArticles);
             viewPagerWWF.setAdapter(pagerAdapter);
@@ -191,6 +190,9 @@ public class MainActivity extends AppCompatActivity {
                     searchResultList.clear();
                 }
                 if(searchResultList == null){
+                    //check through all the articles
+
+
 
                 }else{
 

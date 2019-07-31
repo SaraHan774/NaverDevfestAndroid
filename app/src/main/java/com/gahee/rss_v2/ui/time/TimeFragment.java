@@ -20,7 +20,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.gahee.rss_v2.R;
 import com.gahee.rss_v2.remoteSource.RemoteViewModel;
-import com.gahee.rss_v2.ui.TimeArticleViewModel;
 
 import java.util.Objects;
 import java.util.Timer;

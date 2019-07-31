@@ -75,6 +75,7 @@ public class WwfPagerAdapter extends PagerAdapter {
         TextView pubDate = view.findViewById(R.id.tv_wwf_outer_pubdate);
         pubDate.setText(StringUtils.formatWWFPubDateString(wwfArticle.get(position).getPubDate()));
 
+//        Log.d("ARTICLE CHECK", "instantiateItem: " + wwfArticle.get(position).getImageLabelResponse()); OK
 
         TextView description = view.findViewById(R.id.tv_wwf_outer_description);
         Animation fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.description_fade_in);

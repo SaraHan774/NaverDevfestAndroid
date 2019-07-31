@@ -47,9 +47,8 @@ public class TestActivity extends AppCompatActivity {
         String json = "{\"urls\":[\n" +
                 "\t\"https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/the-lion-king-mufasa-simba-1554901700.jpg\", \"https://www.indiewire.com/wp-content/uploads/2019/04/Screen-Shot-2019-04-03-at-8.20.41-AM.png\"\n" +
                 "]}";
-        
-        String result = ImageLabeling.doBackgroundWork(BASE_URL + "imageLabel", json);
-        Log.d(TAG, "onCreate: result ========" + result);
+
+//        Log.d(TAG, "onCreate: result ========" + result);
 
     }
 
