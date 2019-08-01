@@ -27,5 +27,7 @@ TIME Entertainment http://feeds2.feedburner.com/time/entertainment
 ## [Google Vision API 및 서버]
 ### Google Vision API 를 활용해 Image Labeling 을 하여 검색 결과에 반영되도록 하였습니다. 
 1.	클라이언트 쪽에서 POST를 하는 부분은 Retrofit2 대신 HttpUrlConnection 과 AsyncTask를 통해 직접 String으로 받아오도록 하였습니다. 응답의 key 값이 dynamic한 이미지 Url로 설정이 되어 응답이 돌아오기 때문에 Java 모델 클래스를 만드는 데 어려움이 있었기 때문입니다. 
+
 a.	AsyncTask 를 선택한 이유는 화면을portrait 모드로 고정시켜 놓았고, 이로 인해 흔히 AsyncTask에서 발생하는 메모리 누수가 큰 문제가 되지 않았기 때문입니다. 더불어 외부 클래스에서 액티비티이든 일반 Util파일이든 유연하게 AsyncTask.execute()를 호출할 수 있다는 장점도 있었습니다.
+
 2.	score 값이 0.8 이상인 텍스트들만 검색 결과에 반영하였습니다. 
